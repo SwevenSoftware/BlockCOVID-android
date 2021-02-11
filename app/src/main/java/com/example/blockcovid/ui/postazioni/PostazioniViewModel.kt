@@ -1,4 +1,4 @@
-package com.example.blockcovid.ui.Scanner
+package com.example.blockcovid.ui.postazioni
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -20,13 +20,22 @@
         app:menu="@menu/bottom_nav_menu" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="275dp"
+        android:layout_height="110dp"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/center_nav_menu"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="183dp"
-        tools:layout_editor_absoluteY="189dp" />
+        tools:layout_editor_absoluteX="76dp"
+        tools:layout_editor_absoluteY="247dp" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="275dp"
+        android:layout_height="110dp"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/center2_nav_menu"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="76dp"
+        tools:layout_editor_absoluteY="131dp" />
 
     <fragment
         android:id="@+id/nav_host_fragment"

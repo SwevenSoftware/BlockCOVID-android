@@ -1,4 +1,4 @@
-package com.example.blockcovid.ui.Scanner
+package com.example.blockcovid.ui.scanner
 
 import android.os.Bundle
 import android.view.LayoutInflater
