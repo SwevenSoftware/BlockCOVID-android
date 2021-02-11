@@ -1,4 +1,4 @@
-package com.example.blockcovid.ui.notifications
+package com.example.blockcovid.ui.help
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.blockcovid.R
 
-class NotificationsFragment : Fragment() {
+class HelpFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: NotificationsViewModel
+    private lateinit var helpViewModel: HelpViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        notificationsViewModel =
-                ViewModelProvider(this).get(NotificationsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_notifications, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
-        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
+        helpViewModel =
+                ViewModelProvider(this).get(HelpViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_help, container, false)
+        val textView: TextView = root.findViewById(R.id.text_help)
+        helpViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

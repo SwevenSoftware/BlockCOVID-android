@@ -3,9 +3,9 @@ package com.example.blockcovid.ui.postazioni
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class ScannerViewModel {
+class PostazioniViewModel {
     private val _text = MutableLiveData<String>().apply {
-        value = "This is a scanner Fragment"
+        value = "Immagina che qui ci sia una mappa con tutti i posti"
     }
     val text: LiveData<String> = _text
 }

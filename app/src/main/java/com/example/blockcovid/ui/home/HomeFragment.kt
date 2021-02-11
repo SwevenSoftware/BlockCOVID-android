@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.blockcovid.R
 
 class HomeFragment : Fragment() {
-
     private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(

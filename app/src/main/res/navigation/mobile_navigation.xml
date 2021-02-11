@@ -12,16 +12,16 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.blockcovid.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_help"
+        android:name="com.example.blockcovid.ui.help.HelpFragment"
+        android:label="@string/title_help"
+        tools:layout="@layout/fragment_help" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.blockcovid.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_settings"
+        android:name="com.example.blockcovid.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
 
     <fragment
         android:id="@+id/navigation_scanner"
@@ -31,7 +31,7 @@
  />
     <fragment
         android:id="@+id/navigation_postazioni"
-        android:name="com.example.blockcovid.ui.postazioni.ScannerFragment"
+        android:name="com.example.blockcovid.ui.postazioni.PostazioniFragment"
         android:label="@string/title_postazioni"
         tools:layout="@layout/fragment_postazioni"
         />

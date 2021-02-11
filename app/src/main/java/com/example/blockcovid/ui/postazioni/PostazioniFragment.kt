@@ -9,21 +9,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.blockcovid.R
-import com.example.blockcovid.ui.notifications.NotificationsViewModel
+import com.example.blockcovid.ui.settings.SettingsViewModel
 
-class ScannerFragment : Fragment(){
-    private lateinit var PostazioniViewModel: NotificationsViewModel
+class PostazioniFragment : Fragment(){
+    private lateinit var postazioniViewModel: SettingsViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        PostazioniViewModel =
-                ViewModelProvider(this).get(NotificationsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_notifications, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
-        PostazioniViewModel.text.observe(viewLifecycleOwner, Observer {
+        postazioniViewModel =
+                ViewModelProvider(this).get(SettingsViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_postazioni, container, false)
+        val textView: TextView = root.findViewById(R.id.text_postazioni)
+        postazioniViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

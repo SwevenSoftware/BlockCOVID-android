@@ -1,13 +1,13 @@
-package com.example.blockcovid.ui.dashboard
+package com.example.blockcovid.ui.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DashboardViewModel : ViewModel() {
+class SettingsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+        value = "Wow qui ci sono molte impostazioni!"
     }
     val text: LiveData<String> = _text
 }
