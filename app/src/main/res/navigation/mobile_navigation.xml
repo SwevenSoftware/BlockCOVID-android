@@ -23,17 +23,4 @@
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
 
-    <fragment
-        android:id="@+id/navigation_scanner"
-        android:name="com.example.blockcovid.ui.scanner.ScannerFragment"
-        android:label="@string/title_scanner"
-        tools:layout="@layout/fragment_scanner"
- />
-    <fragment
-        android:id="@+id/navigation_postazioni"
-        android:name="com.example.blockcovid.ui.postazioni.PostazioniFragment"
-        android:label="@string/title_postazioni"
-        tools:layout="@layout/fragment_postazioni"
-        />
-
 </navigation>
