@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Button
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -25,9 +26,18 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        val btnScanner = findViewById<Button>(R.id.btnScanner)
-        btnScanner.setOnClickListener {
-            navController.navigate(R.id.action_navigation_home_to_navigation_scanner)
-        }
+    }
+
+    fun goScanner(view: View) {
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_scanner)
+    }
+
+    fun goPostazioni(view: View) {
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_postazioni)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

@@ -12,7 +12,7 @@ import com.example.blockcovid.R
 import com.example.blockcovid.ui.settings.SettingsViewModel
 
 class PostazioniFragment : Fragment(){
-    private lateinit var postazioniViewModel: SettingsViewModel
+    private lateinit var postazioniViewModel: PostazioniViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -20,7 +20,7 @@ class PostazioniFragment : Fragment(){
             savedInstanceState: Bundle?
     ): View? {
         postazioniViewModel =
-                ViewModelProvider(this).get(SettingsViewModel::class.java)
+                ViewModelProvider(this).get(PostazioniViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_postazioni, container, false)
         val textView: TextView = root.findViewById(R.id.text_postazioni)
         postazioniViewModel.text.observe(viewLifecycleOwner, Observer {
