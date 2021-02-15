@@ -9,21 +9,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.blockcovid.R
-import com.example.blockcovid.ui.settings.SettingsViewModel
 
-class ScannerFragment : Fragment(){
-    private lateinit var ScannerViewModel: SettingsViewModel
+class ScannerFragment : Fragment() {
+
+    private lateinit var scannerViewModel: ScannerViewModel
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        ScannerViewModel =
-                ViewModelProvider(this).get(SettingsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_settings, container, false)
+        scannerViewModel =
+            ViewModelProvider(this).get(ScannerViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_scanner, container, false)
         val textView: TextView = root.findViewById(R.id.text_scanner)
-        ScannerViewModel.text.observe(viewLifecycleOwner, Observer {
+        scannerViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
