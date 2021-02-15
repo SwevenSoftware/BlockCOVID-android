@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.blockcovid.R
-import com.example.blockcovid.ui.settings.SettingsViewModel
 
 class PostazioniFragment : Fragment(){
     private lateinit var postazioniViewModel: PostazioniViewModel
