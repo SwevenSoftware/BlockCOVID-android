@@ -8,22 +8,19 @@ import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
 import android.view.View
-import android.widget.ScrollView
-import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.blockcovid.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
     // NFC adapter for checking NFC state in the device
-    private var nfcAdapter : NfcAdapter? = null
-
-    private val tvMessages = findViewById<TextView>(R.id.tv_messages)
-    private val svMessages = findViewById<ScrollView>(R.id.sv_messages)
+    private var nfcAdapter: NfcAdapter? = null
 
     // Pending intent for NFC intent foreground dispatch.
     // Used to read all NDEF tags while the app is running in the foreground.
@@ -31,12 +28,13 @@ class MainActivity : AppCompatActivity() {
     // Optional: filter NDEF tags this app receives through the pending intent.
     //private var nfcIntentFilters: Array<IntentFilter>? = null
 
-    private val logText = "logText"
+    private val logText = "logText: "
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -45,11 +43,6 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        // Restore saved text if available
-        if (savedInstanceState != null) {
-            tvMessages.text = savedInstanceState.getCharSequence(logText)
-        }
 
         // Check if NFC is supported and enabled
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
@@ -82,9 +75,6 @@ class MainActivity : AppCompatActivity() {
             logMessage("Found intent in onCreate", intent.action.toString())
             processIntent(intent)
         }
-
-        // Make sure the text view is scrolled down so that the latest messages are visible
-        scrollDown()
     }
 
     fun goScanner(view: View) {
@@ -93,6 +83,10 @@ class MainActivity : AppCompatActivity() {
 
     fun goPostazioni(view: View) {
         findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_postazioni)
+    }
+
+    fun refreshLogs(view: View) {
+        println(logText)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -176,7 +170,6 @@ class MainActivity : AppCompatActivity() {
             if (curMsg != null) {
                 // Print generic information about the NDEF message
                 logMessage("Message", curMsg.toString())
-                // The NDEF message usually contains 1+ records - print the number of recoreds
                 logMessage("Records", curMsg.records.size.toString())
 
                 // Loop through all the records contained in the message
@@ -197,22 +190,12 @@ class MainActivity : AppCompatActivity() {
     // Utility functions
 
     /**
-     * Save contents of the text view to the state. Ensures the text view contents survive
-     * screen rotation.
-     */
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putCharSequence(logText, tvMessages.text)
-        super.onSaveInstanceState(outState)
-    }
-
-    /**
      * Log a message to the debug text view.
      * @param header title text of the message, printed in bold
      * @param text optional parameter containing details about the message. Printed in plain text.
      */
     private fun logMessage(header: String, text: String?) {
-        tvMessages.append(if (text.isNullOrBlank()) fromHtml("<b>$header</b><br>") else fromHtml("<b>$header</b>: $text<br>"))
-        scrollDown()
+        logText.plus(if (text.isNullOrBlank()) fromHtml("<b>$header</b><br>") else fromHtml("<b>$header</b>: $text<br>"))
     }
 
     /**
@@ -227,16 +210,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             @Suppress("DEPRECATION")
             Html.fromHtml(html)
-        }
-    }
-
-    /**
-     * Scroll the ScrollView to the bottom, so that the latest appended messages are visible.
-     */
-    private fun scrollDown() {
-
-        svMessages.post {
-            svMessages.smoothScrollTo(0, svMessages.bottom)
         }
     }
 }
