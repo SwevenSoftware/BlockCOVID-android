@@ -21,10 +21,10 @@ class PostazioniFragment : Fragment(){
         postazioniViewModel =
                 ViewModelProvider(this).get(PostazioniViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_postazioni, container, false)
-        val textView: TextView = root.findViewById(R.id.text_postazioni)
-        postazioniViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+        //val textView: TextView = root.findViewById(R.id.text_postazioni)
+//       postazioniViewModel.text.observe(viewLifecycleOwner, Observer {
+//            textView.text = it
+//        })
         return root
     }
 }
