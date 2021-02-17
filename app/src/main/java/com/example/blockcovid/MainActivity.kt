@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private var nfcPendingIntent: PendingIntent? = null
     // Optional: filter NDEF tags this app receives through the pending intent.
     //private var nfcIntentFilters: Array<IntentFilter>? = null
-
+    private var deskList = intArrayOf(0, 0, 0, 0)
     private var logText = "logText: "
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +95,75 @@ class MainActivity : AppCompatActivity() {
         tvMessages.text = logText
         svMessages.post {
             svMessages.smoothScrollTo(0, svMessages.bottom)
+        }
+    }
+
+    fun deskColor(view: View) {
+        when (view.id) {
+            R.id.imageButton1 -> {
+                when (deskList[0]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0] = 0
+                    }
+                }
+            }
+            R.id.imageButton2 -> {
+                when (deskList[1]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[1] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[1] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[1] = 0
+                    }
+                }
+            }
+            R.id.imageButton3 -> {
+                when (deskList[2]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[2] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[2] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[2] = 0
+                    }
+                }
+            }
+            R.id.imageButton4 -> {
+                when (deskList[3]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[3] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[3] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[3] = 0
+                    }
+                }
+            }
         }
     }
 
