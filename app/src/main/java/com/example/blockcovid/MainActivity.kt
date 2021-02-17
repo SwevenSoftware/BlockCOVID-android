@@ -7,8 +7,9 @@ import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
-import android.util.Log
 import android.view.View
+import android.widget.ScrollView
+import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -89,6 +90,12 @@ class MainActivity : AppCompatActivity() {
 
     fun refreshLogs(view: View) {
         println(logText)
+        val tvMessages = findViewById<TextView>(R.id.tv_messages)
+        val svMessages = findViewById<ScrollView>(R.id.sv_messages)
+        tvMessages.text = logText
+        svMessages.post {
+            svMessages.smoothScrollTo(0, svMessages.bottom)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
