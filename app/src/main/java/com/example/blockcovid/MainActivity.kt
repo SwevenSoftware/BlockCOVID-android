@@ -7,6 +7,7 @@ import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
+import android.util.Log
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     // Optional: filter NDEF tags this app receives through the pending intent.
     //private var nfcIntentFilters: Array<IntentFilter>? = null
 
-    private val logText = "logText: "
+    private var logText = "logText: "
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         // Check if NFC is supported and enabled
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        logMessage("NFC Adapter", nfcAdapter.toString())
         logMessage("NFC supported", (nfcAdapter != null).toString())
         logMessage("NFC enabled", (nfcAdapter?.isEnabled).toString())
 
@@ -195,7 +197,7 @@ class MainActivity : AppCompatActivity() {
      * @param text optional parameter containing details about the message. Printed in plain text.
      */
     private fun logMessage(header: String, text: String?) {
-        logText.plus(if (text.isNullOrBlank()) fromHtml("<b>$header</b><br>") else fromHtml("<b>$header</b>: $text<br>"))
+        logText = logText.plus(if (text.isNullOrBlank()) fromHtml("<b>$header</b><br>") else fromHtml("<b>$header</b>: $text<br>"))
     }
 
     /**
