@@ -12,10 +12,11 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@drawable/green_desk"
-        android:onClick="deskColor"
+        android:onClick="goPrenotazioni"
         android:rotation="180"
         app:layout_constraintBottom_toTopOf="@+id/imageButton3"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton2" />
+        app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+        />
 
     <ImageButton
         android:id="@+id/imageButton2"

@@ -52,6 +52,22 @@
             app:destination="@id/navigation_home"
             app:popUpTo="@id/navigation_home"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_navigation_postazioni_to_navigation_prenotazioni"
+            app:destination="@id/navigation_prenotazioni"
+            app:popUpTo="@id/navigation_postazioni"
+            app:popUpToInclusive="true"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_prenotazioni"
+        android:name="com.example.blockcovid.ui.prenotazioni.PrenotazioniFragment"
+        android:label="@string/title_prenotazioni"
+        tools:layout="@layout/fragment_prenotazioni" >
+        <action
+            android:id="@+id/action_navigation_prenotazioni_to_navigation_postazioni"
+            app:destination="@id/navigation_postazioni"
+            app:popUpTo="@id/navigation_postazioni"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

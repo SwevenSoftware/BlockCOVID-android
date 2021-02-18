@@ -60,18 +60,6 @@ class MainActivity : AppCompatActivity() {
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0)
 
-        // Optional: Setup an intent filter from code for a specific NDEF intent
-        // Use this code if you are only interested in a specific intent and don't want to
-        // interfere with other NFC tags.
-        // In this example, the code is commented out so that we get all NDEF messages,
-        // in order to analyze different NDEF-formatted NFC tag contents.
-        //val ndef = IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED)
-        //ndef.addCategory(Intent.CATEGORY_DEFAULT)
-        //ndef.addDataScheme("https")
-        //ndef.addDataAuthority("*.andreasjakl.com", null)
-        //ndef.addDataPath("/", PatternMatcher.PATTERN_PREFIX)
-        // More information: https://stackoverflow.com/questions/30642465/nfc-tag-is-not-discovered-for-action-ndef-discovered-action-even-if-it-contains
-        //nfcIntentFilters = arrayOf(ndef)
 
         if (intent != null) {
             // Check if the app was started via an NDEF intent
@@ -88,6 +76,9 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_postazioni)
     }
 
+    fun goPrenotazioni(view: View) {
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_postazioni_to_navigation_prenotazioni)
+    }
     fun refreshLogs(view: View) {
         println(logText)
         val tvMessages = findViewById<TextView>(R.id.tv_messages)
