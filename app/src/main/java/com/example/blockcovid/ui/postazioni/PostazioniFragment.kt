@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.blockcovid.R
 
-
 class PostazioniFragment : Fragment(){
     private lateinit var postazioniViewModel: PostazioniViewModel
 
@@ -17,12 +16,7 @@ class PostazioniFragment : Fragment(){
     ): View? {
         postazioniViewModel =
                 ViewModelProvider(this).get(PostazioniViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_postazioni, container, false)
-        //val textView: TextView = root.findViewById(R.id.text_postazioni)
-//       postazioniViewModel.text.observe(viewLifecycleOwner, Observer {
-//            textView.text = it
-//        })
-        return root
+        return inflater.inflate(R.layout.fragment_postazioni, container, false)
     }
 
 

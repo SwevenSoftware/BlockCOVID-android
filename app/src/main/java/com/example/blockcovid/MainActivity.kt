@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private var nfcPendingIntent: PendingIntent? = null
     // Optional: filter NDEF tags this app receives through the pending intent.
     //private var nfcIntentFilters: Array<IntentFilter>? = null
-    private var deskList = intArrayOf(0, 0, 0, 0)
+    private var deskList = intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
     private var logText = "logText: "
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
     fun goPrenotazioni(view: View) {
         findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_postazioni_to_navigation_prenotazioni)
     }
+
     fun refreshLogs(view: View) {
         println(logText)
         val tvMessages = findViewById<TextView>(R.id.tv_messages)
@@ -152,6 +153,86 @@ class MainActivity : AppCompatActivity() {
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
                         deskList[3] = 0
+                    }
+                }
+            }
+            R.id.imageButton5 -> {
+                when (deskList[4]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[4] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[4] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[4] = 0
+                    }
+                }
+            }
+            R.id.imageButton6 -> {
+                when (deskList[5]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[5] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[5] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[5] = 0
+                    }
+                }
+            }
+            R.id.imageButton7 -> {
+                when (deskList[6]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[6] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[6] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[6] = 0
+                    }
+                }
+            }
+            R.id.imageButton8 -> {
+                when (deskList[7]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[7] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[7] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[7] = 0
+                    }
+                }
+            }
+            R.id.imageButton9 -> {
+                when (deskList[8]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[8]=1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[8]= 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[8]= 0
                     }
                 }
             }

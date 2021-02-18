@@ -54,9 +54,7 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_navigation_postazioni_to_navigation_prenotazioni"
-            app:destination="@id/navigation_prenotazioni"
-            app:popUpTo="@id/navigation_postazioni"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/navigation_prenotazioni" />
     </fragment>
 
     <fragment
