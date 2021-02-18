@@ -200,6 +200,7 @@ class MainActivity : AppCompatActivity() {
      * accordingly and parse the NDEF messages.
      * @param checkIntent the intent to parse and handle if it's the right type
      */
+
     private fun processIntent(checkIntent: Intent) {
         // Check if intent has the action of a discovered NFC tag
         // with NDEF formatted contents
@@ -282,6 +283,7 @@ class MainActivity : AppCompatActivity() {
      * Android N. This method chooses the right variant depending on the OS.
      * @param html HTML-formatted string to convert to a Spanned text.
      */
+
     private fun fromHtml(html: String): Spanned {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
