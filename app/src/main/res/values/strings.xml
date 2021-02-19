@@ -5,6 +5,10 @@
     <string name="title_settings">Impostazioni</string>
     <string name="title_scanner">Scanner</string>
     <string name="title_postazioni">Postazioni</string>
+    <string name="title_stanza1">Stanza 1</string>
+    <string name="title_stanza2">Stanza 2</string>
+    <string name="title_goStanza1">Vai a Stanza 1</string>
+    <string name="title_goStanza2">Vai a Stanza 2</string>
     <string name="title_prenotazioni">Prenotazioni</string>
     <string name="title_log">Log</string>
 </resources>

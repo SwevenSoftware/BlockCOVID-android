@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private var nfcPendingIntent: PendingIntent? = null
     // Optional: filter NDEF tags this app receives through the pending intent.
     //private var nfcIntentFilters: Array<IntentFilter>? = null
-    private var deskList = intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
+    var deskList = Array(2) {Array(9) {0} }
     private var logText = "logText: "
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,18 +73,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goPostazioni(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_postazioni)
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_stanza1)
     }
 
-    fun goPrenotazioni(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_postazioni_to_navigation_prenotazioni)
+    fun goPrenotazioni1(view: View) {
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza1_to_navigation_prenotazioni)
     }
-    fun goStanza2(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_postazioni_to_navigation_postazioni2)
+
+    fun goPrenotazioni2(view: View) {
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza2_to_navigation_prenotazioni)
     }
+
     fun goStanza1(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_postazioni2_to_navigation_postazioni)
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza2_to_navigation_stanza1)
     }
+
+    fun goStanza2(view: View) {
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza1_to_navigation_stanza2)
+    }
+
     fun refreshLogs(view: View) {
         println(logText)
         val tvMessages = findViewById<TextView>(R.id.tv_messages)
@@ -95,154 +102,154 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun deskColor(view: View) {
+    /*fun deskColor(view: View) {
         when (view.id) {
-            R.id.imageButton1 -> {
-                when (deskList[0]) {
+            R.id.imageButton00 -> {
+                when (deskList[0][0]) {
                     0 -> {
                         view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0] = 1
+                        deskList[0][0] = 1
                     }
                     1 -> {
                         view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0] = 2
+                        deskList[0][0] = 2
                     }
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0] = 0
+                        deskList[0][0] = 0
                     }
                 }
             }
-            R.id.imageButton2 -> {
-                when (deskList[1]) {
+            R.id.imageButton01 -> {
+                when (deskList[0][1]) {
                     0 -> {
                         view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[1] = 1
+                        deskList[0][1] = 1
                     }
                     1 -> {
                         view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[1] = 2
+                        deskList[0][1] = 2
                     }
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[1] = 0
+                        deskList[0][1] = 0
                     }
                 }
             }
-            R.id.imageButton3 -> {
-                when (deskList[2]) {
+            R.id.imageButton02 -> {
+                when (deskList[0][2]) {
                     0 -> {
                         view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[2] = 1
+                        deskList[0][2] = 1
                     }
                     1 -> {
                         view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[2] = 2
+                        deskList[0][2] = 2
                     }
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[2] = 0
+                        deskList[0][2] = 0
                     }
                 }
             }
-            R.id.imageButton4 -> {
-                when (deskList[3]) {
+            R.id.imageButton03 -> {
+                when (deskList[0][3]) {
                     0 -> {
                         view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[3] = 1
+                        deskList[0][3] = 1
                     }
                     1 -> {
                         view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[3] = 2
+                        deskList[0][3] = 2
                     }
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[3] = 0
+                        deskList[0][3] = 0
                     }
                 }
             }
-            R.id.imageButton5 -> {
-                when (deskList[4]) {
+            R.id.imageButton04 -> {
+                when (deskList[0][4]) {
                     0 -> {
                         view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[4] = 1
+                        deskList[0][4] = 1
                     }
                     1 -> {
                         view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[4] = 2
+                        deskList[0][4] = 2
                     }
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[4] = 0
+                        deskList[0][4] = 0
                     }
                 }
             }
-            R.id.imageButton6 -> {
-                when (deskList[5]) {
+            R.id.imageButton05 -> {
+                when (deskList[0][5]) {
                     0 -> {
                         view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[5] = 1
+                        deskList[0][5] = 1
                     }
                     1 -> {
                         view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[5] = 2
+                        deskList[0][5] = 2
                     }
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[5] = 0
+                        deskList[0][5] = 0
                     }
                 }
             }
-            R.id.imageButton7 -> {
-                when (deskList[6]) {
+            R.id.imageButton06 -> {
+                when (deskList[0][6]) {
                     0 -> {
                         view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[6] = 1
+                        deskList[0][6] = 1
                     }
                     1 -> {
                         view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[6] = 2
+                        deskList[0][6] = 2
                     }
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[6] = 0
+                        deskList[0][6] = 0
                     }
                 }
             }
-            R.id.imageButton8 -> {
-                when (deskList[7]) {
+            R.id.imageButton07 -> {
+                when (deskList[0][7]) {
                     0 -> {
                         view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[7] = 1
+                        deskList[0][7] = 1
                     }
                     1 -> {
                         view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[7] = 2
+                        deskList[0][7] = 2
                     }
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[7] = 0
+                        deskList[0][7] = 0
                     }
                 }
             }
-            R.id.imageButton9 -> {
-                when (deskList[8]) {
+            R.id.imageButton07 -> {
+                when (deskList[0][8]) {
                     0 -> {
                         view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[8]=1
+                        deskList[0][8]=1
                     }
                     1 -> {
                         view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[8]= 2
+                        deskList[0][8]= 2
                     }
                     2 -> {
                         view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[8]= 0
+                        deskList[0][8]= 0
                     }
                 }
             }
         }
-    }
+    }*/
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
