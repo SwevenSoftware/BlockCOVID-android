@@ -34,13 +34,7 @@
         android:id="@+id/navigation_scanner"
         android:name="com.example.blockcovid.ui.scanner.ScannerFragment"
         android:label="@string/title_scanner"
-        tools:layout="@layout/fragment_scanner" >
-        <action
-            android:id="@+id/action_navigation_scanner_to_navigation_home"
-            app:destination="@id/navigation_home"
-            app:popUpTo="@id/navigation_home"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_scanner" />
 
     <fragment
         android:id="@+id/navigation_hubstanze"
@@ -48,14 +42,20 @@
         android:label="@string/title_hubstanze"
         tools:layout="@layout/fragment_hubstanze" >
         <action
-            android:id="@+id/action_navigation_hubstanze_to_navigation_stanza2"
-            app:destination="@id/navigation_stanza2" />
+            android:id="@+id/action_navigation_hubstanze_to_navigation_prenotazioni"
+            app:destination="@id/navigation_prenotazioni"
+            app:popUpTo="@id/navigation_hubstanze"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_navigation_hubstanze_to_navigation_stanza1"
-            app:destination="@id/navigation_stanza1" />
+            app:destination="@id/navigation_stanza1"
+            app:popUpTo="@id/navigation_hubstanze"
+            app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_navigation_hubstanze_to_navigation_prenotazioni"
-            app:destination="@id/navigation_prenotazioni" />
+            android:id="@+id/action_navigation_hubstanze_to_navigation_stanza2"
+            app:destination="@id/navigation_stanza2"
+            app:popUpTo="@id/navigation_hubstanze"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
