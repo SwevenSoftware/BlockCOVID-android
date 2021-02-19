@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<com.otaliastudios.zoom.ZoomLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<com.otaliastudios.zoom.ZoomLayout
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical|horizontal"
@@ -59,6 +63,7 @@
             android:id="@+id/imageButton3"
             android:layout_width="85dp"
             android:layout_height="85dp"
+            android:layout_marginStart="64dp"
             android:background="@drawable/green_desk"
             android:onClick="deskColor"
             android:paddingTop="10dp"
@@ -100,6 +105,7 @@
             android:id="@+id/imageButton7"
             android:layout_width="85dp"
             android:layout_height="85dp"
+            android:layout_marginStart="64dp"
             android:background="@drawable/green_desk"
             android:onClick="deskColor"
             app:layout_constraintStart_toEndOf="@+id/imageButton6"
@@ -118,13 +124,42 @@
             android:id="@+id/imageButton9"
             android:layout_width="85dp"
             android:layout_height="85dp"
-            android:layout_marginStart="400dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginStart="284dp"
+            android:layout_marginTop="176dp"
             android:background="@drawable/green_desk"
             android:onClick="deskColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageButton7" />
 
+        <ImageButton
+            android:id="@+id/imageButton10"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_marginStart="284dp"
+            android:layout_marginTop="96dp"
+            android:background="@drawable/green_desk"
+            android:onClick="deskColor"
+            android:rotation="180"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageButton7" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.otaliastudios.zoom.ZoomLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="124dp"
+        android:layout_marginEnd="124dp"
+        android:layout_marginBottom="76dp"
+        android:onClick="goStanza2"
+        android:text="Vai a Stanza2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

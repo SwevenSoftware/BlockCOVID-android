@@ -79,7 +79,12 @@ class MainActivity : AppCompatActivity() {
     fun goPrenotazioni(view: View) {
         findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_postazioni_to_navigation_prenotazioni)
     }
-
+    fun goStanza2(view: View) {
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_postazioni_to_navigation_postazioni2)
+    }
+    fun goStanza1(view: View) {
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_postazioni2_to_navigation_postazioni)
+    }
     fun refreshLogs(view: View) {
         println(logText)
         val tvMessages = findViewById<TextView>(R.id.tv_messages)
