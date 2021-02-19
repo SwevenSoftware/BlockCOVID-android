@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/stanza2">
 
     <com.otaliastudios.zoom.ZoomLayout
 
@@ -42,22 +43,24 @@
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 android:rotation="180"
                 app:layout_constraintBottom_toTopOf="@+id/imageButton14"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/title_stanza2" />
 
             <ImageButton
                 android:id="@+id/imageButton11"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 android:rotation="180"
                 app:layout_constraintBottom_toTopOf="@+id/imageButton15"
                 app:layout_constraintStart_toEndOf="@+id/imageButton10"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/title_stanza2" />
 
             <ImageButton
                 android:id="@+id/imageButton12"
@@ -65,41 +68,45 @@
                 android:layout_height="85dp"
                 android:layout_marginStart="64dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 android:paddingTop="10dp"
                 android:rotation="180"
                 app:layout_constraintBottom_toTopOf="@+id/imageButton16"
                 app:layout_constraintStart_toEndOf="@+id/imageButton11"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/title_stanza2" />
 
             <ImageButton
                 android:id="@+id/imageButton13"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 android:rotation="180"
                 app:layout_constraintBottom_toTopOf="@+id/imageButton17"
                 app:layout_constraintStart_toEndOf="@+id/imageButton12"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/title_stanza2" />
 
             <ImageButton
                 android:id="@+id/imageButton14"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton10" />
+                app:layout_constraintTop_toBottomOf="@+id/imageButton10"
+                android:contentDescription="@string/title_stanza2" />
 
             <ImageButton
                 android:id="@+id/imageButton15"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toEndOf="@+id/imageButton14"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton11" />
+                app:layout_constraintTop_toBottomOf="@+id/imageButton11"
+                android:contentDescription="@string/title_stanza2"/>
 
             <ImageButton
                 android:id="@+id/imageButton16"
@@ -107,27 +114,30 @@
                 android:layout_height="85dp"
                 android:layout_marginStart="64dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toEndOf="@+id/imageButton15"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton12" />
+                app:layout_constraintTop_toBottomOf="@+id/imageButton12"
+                android:contentDescription="@string/title_stanza2" />
 
             <ImageButton
                 android:id="@+id/imageButton17"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toEndOf="@+id/imageButton16"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton13" />
+                app:layout_constraintTop_toBottomOf="@+id/imageButton13"
+                android:contentDescription="@string/title_stanza2" />
 
             <ImageButton
                 android:id="@+id/imageButton18"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton19" />
+                app:layout_constraintTop_toBottomOf="@+id/imageButton19"
+                android:contentDescription="@string/title_stanza2" />
 
             <ImageButton
                 android:id="@+id/imageButton19"
@@ -135,10 +145,11 @@
                 android:layout_height="85dp"
                 android:layout_marginTop="96dp"
                 android:background="@drawable/green_desk"
-                android:onClick="goPrenotazioni2"
+                android:onClick="goPrenotazioni"
                 android:rotation="180"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton14" />
+                app:layout_constraintTop_toBottomOf="@+id/imageButton14"
+                android:contentDescription="@string/title_stanza2" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -146,7 +157,7 @@
     </com.otaliastudios.zoom.ZoomLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/goStanza21"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="124dp"

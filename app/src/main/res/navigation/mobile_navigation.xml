@@ -43,23 +43,29 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_hubstanze"
+        android:name="com.example.blockcovid.ui.hubstanze.HubStanzeFragment"
+        android:label="@string/title_hubstanze"
+        tools:layout="@layout/fragment_hubstanze" >
+        <action
+            android:id="@+id/action_navigation_hubstanze_to_navigation_stanza2"
+            app:destination="@id/navigation_stanza2" />
+        <action
+            android:id="@+id/action_navigation_hubstanze_to_navigation_stanza1"
+            app:destination="@id/navigation_stanza1" />
+        <action
+            android:id="@+id/action_navigation_hubstanze_to_navigation_prenotazioni"
+            app:destination="@id/navigation_prenotazioni" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_stanza1"
         android:name="com.example.blockcovid.ui.stanza1.Stanza1Fragment"
         android:label="@string/title_stanza1"
         tools:layout="@layout/fragment_stanza1" >
         <action
-            android:id="@+id/action_navigation_stanza1_to_navigation_home"
-            app:destination="@id/navigation_home"
-            app:popUpTo="@id/navigation_home"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_navigation_stanza1_to_navigation_prenotazioni"
-            app:destination="@id/navigation_prenotazioni" />
-        <action
-            android:id="@+id/action_navigation_stanza1_to_navigation_stanza2"
-            app:destination="@id/navigation_stanza2"
-            app:popUpTo="@id/navigation_stanza2"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_navigation_stanza1_to_navigation_hubstanze"
+            app:destination="@id/navigation_hubstanze" />
     </fragment>
 
     <fragment
@@ -68,35 +74,14 @@
         android:label="@string/title_stanza2"
         tools:layout="@layout/fragment_stanza2" >
         <action
-            android:id="@+id/action_navigation_stanza2_to_navigation_stanza1"
-            app:destination="@id/navigation_stanza1"
-            app:popUpTo="@id/navigation_stanza1"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_navigation_stanza2_to_navigation_home"
-            app:destination="@id/navigation_home"
-            app:popUpTo="@id/navigation_home"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_navigation_stanza2_to_navigation_prenotazioni"
-            app:destination="@id/navigation_prenotazioni" />
+            android:id="@+id/action_navigation_stanza2_to_navigation_hubstanze"
+            app:destination="@id/navigation_hubstanze" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_prenotazioni"
         android:name="com.example.blockcovid.ui.prenotazioni.PrenotazioniFragment"
         android:label="@string/title_prenotazioni"
-        tools:layout="@layout/fragment_prenotazioni" >
-        <action
-            android:id="@+id/action_navigation_prenotazioni_to_navigation_postazioni"
-            app:destination="@id/navigation_stanza1"
-            app:popUpTo="@id/navigation_stanza1"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_navigation_prenotazioni_to_navigation_stanza2"
-            app:destination="@id/navigation_stanza2"
-            app:popUpTo="@id/navigation_stanza2"
-            app:popUpToInclusive="true" />
-    </fragment>
+        tools:layout="@layout/fragment_prenotazioni" />
 
 </navigation>

@@ -76,21 +76,36 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_stanza1)
     }
 
-    fun goPrenotazioni1(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza1_to_navigation_prenotazioni)
-    }
-
-    fun goPrenotazioni2(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza2_to_navigation_prenotazioni)
+    fun goPrenotazioni(view: View) {
+        when (view.contentDescription) {
+            "Stanza 1" -> {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza1_to_navigation_hubstanze)
+            }
+            "Stanza 2" -> {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza2_to_navigation_hubstanze)
+            }
+        }
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_hubstanze_to_navigation_prenotazioni)
     }
 
     fun goStanza1(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza2_to_navigation_stanza1)
+        when (view.id) {
+            R.id.goStanza21 -> {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza2_to_navigation_hubstanze)
+            }
+        }
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_hubstanze_to_navigation_stanza1)
     }
 
     fun goStanza2(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza1_to_navigation_stanza2)
+        when (view.id) {
+            R.id.goStanza12 -> {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza1_to_navigation_hubstanze)
+            }
+        }
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_hubstanze_to_navigation_stanza2)
     }
+
 
     fun refreshLogs(view: View) {
         println(logText)
