@@ -18,6 +18,4 @@ class Stanza1Fragment : Fragment(){
                 ViewModelProvider(this).get(Stanza1ViewModel::class.java)
         return inflater.inflate(R.layout.fragment_stanza1, container, false)
     }
-
-
 }

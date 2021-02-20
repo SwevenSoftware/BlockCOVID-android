@@ -161,7 +161,6 @@
                 android:tag="@string/title_stanza2"
                 android:contentDescription="S0209" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.otaliastudios.zoom.ZoomLayout>

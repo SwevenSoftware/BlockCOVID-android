@@ -1,7 +1,10 @@
 package com.example.blockcovid
 
 import android.app.PendingIntent
+import android.app.TimePickerDialog
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.os.Bundle
@@ -19,6 +22,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.blockcovid.databinding.ActivityMainBinding
 import com.example.blockcovid.ui.stanza1.Stanza1FragmentDirections
 import com.example.blockcovid.ui.stanza2.Stanza2FragmentDirections
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -119,6 +123,25 @@ class MainActivity : AppCompatActivity() {
         svMessages.post {
             svMessages.smoothScrollTo(0, svMessages.bottom)
         }
+    }
+
+    fun openTimePicker(view: View) {
+        val cal = Calendar.getInstance()
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+            cal.set(Calendar.HOUR_OF_DAY, hour)
+            cal.set(Calendar.MINUTE, minute)
+            when (view.id) {
+                R.id.editOrarioArrivo -> {
+                    val orarioArrivo = findViewById<TextView>(R.id.editOrarioArrivo)
+                    orarioArrivo.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
+                }
+                R.id.editOrarioUscita -> {
+                    val orarioUscita = findViewById<TextView>(R.id.editOrarioUscita)
+                    orarioUscita.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
+                }
+            }
+        }
+        TimePickerDialog(this, 2, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
     }
 
     /*fun deskColor(view: View) {
