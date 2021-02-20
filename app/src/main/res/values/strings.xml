@@ -11,5 +11,6 @@
     <string name="title_goStanza1">Vai a Stanza 1</string>
     <string name="title_goStanza2">Vai a Stanza 2</string>
     <string name="title_prenotazioni">Prenotazioni</string>
+    <string name="title_prenota">Prenota</string>
     <string name="title_log">Log</string>
 </resources>

@@ -1,87 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.blockcovid.MainActivity">
-
-    <EditText
-        android:id="@+id/editTextTime3"
-        android:layout_width="115dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="2dp"
-        android:ems="10"
-        android:inputType="time"
-        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName3"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTime" />
-
-    <EditText
-        android:id="@+id/editTextTextPersonName3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginLeft="27dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Selezione orario di uscita"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+    tools:context="com.example.blockcovid.MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/postazioneSelezionata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="96dp"
-        android:layout_marginRight="96dp"
-        android:text="@string/title_postazioni"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextTextPersonName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginLeft="27dp"
-        android:layout_marginTop="31dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Postazione Prenotata"
+        android:text="Postazione selezionata:"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextTime"
-        android:layout_width="115dp"
-        android:layout_height="43dp"
+    <TextView
+        android:id="@+id/idPostazionePrenotata"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="47dp"
-        android:layout_marginRight="47dp"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/postazioneSelezionata"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/orarioArrivo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
+        android:text="Seleziona orario di arrivo:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postazioneSelezionata" />
+
+    <EditText
+        android:id="@+id/editOrarioArrivo"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
         android:inputType="time"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/orarioArrivo"
+        app:layout_constraintTop_toBottomOf="@+id/idPostazionePrenotata" />
 
-    <EditText
-        android:id="@+id/editTextTextPersonName2"
+    <TextView
+        android:id="@+id/orarioUscita"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginLeft="27dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Selezione orario di arrivo"
+        android:text="Seleziona orario di uscita:"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/orarioArrivo" />
+
+    <EditText
+        android:id="@+id/editOrarioUscita"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:inputType="time"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/orarioUscita"
+        app:layout_constraintTop_toBottomOf="@+id/editOrarioArrivo" />
+
+    <TextView
+        android:id="@+id/dataPrenotazione"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:ems="14"
+        android:text="Seleziona giorno della prenotazione:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/orarioUscita" />
+
+    <CalendarView
+        android:id="@+id/selezionaData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:maxDate="01/01/2023"
+        android:minDate="01/01/2021"
+        app:layout_constraintBottom_toTopOf="@+id/prenota"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dataPrenotazione" />
+
+    <Button
+        android:id="@+id/prenota"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:text="@string/title_prenota"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
