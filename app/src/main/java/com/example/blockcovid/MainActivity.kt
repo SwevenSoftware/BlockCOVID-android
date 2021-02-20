@@ -17,6 +17,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.blockcovid.databinding.ActivityMainBinding
+import com.example.blockcovid.ui.stanza1.Stanza1FragmentDirections
+import com.example.blockcovid.ui.stanza2.Stanza2FragmentDirections
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private var nfcPendingIntent: PendingIntent? = null
     // Optional: filter NDEF tags this app receives through the pending intent.
     //private var nfcIntentFilters: Array<IntentFilter>? = null
-    var deskList = Array(2) {Array(9) {0} }
+    //var deskList = Array(2) {Array(9) {0} }
     private var logText = "logText: "
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,15 +79,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goPrenotazioni(view: View) {
-        when (view.contentDescription) {
+        val idPostazione = view.contentDescription.toString()
+        when (view.tag) {
             "Stanza 1" -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza1_to_navigation_hubstanze)
+                val action = Stanza1FragmentDirections.actionNavigationStanza1ToNavigationPrenotazioni(idPostazione)
+                findNavController(R.id.nav_host_fragment).navigate(action)
             }
             "Stanza 2" -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_stanza2_to_navigation_hubstanze)
+                val action = Stanza2FragmentDirections.actionNavigationStanza2ToNavigationPrenotazioni(idPostazione)
+                findNavController(R.id.nav_host_fragment).navigate(action)
             }
         }
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_hubstanze_to_navigation_prenotazioni)
     }
 
     fun goStanza1(view: View) {

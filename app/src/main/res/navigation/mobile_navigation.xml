@@ -42,11 +42,6 @@
         android:label="@string/title_hubstanze"
         tools:layout="@layout/fragment_hubstanze" >
         <action
-            android:id="@+id/action_navigation_hubstanze_to_navigation_prenotazioni"
-            app:destination="@id/navigation_prenotazioni"
-            app:popUpTo="@id/navigation_hubstanze"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_navigation_hubstanze_to_navigation_stanza1"
             app:destination="@id/navigation_stanza1"
             app:popUpTo="@id/navigation_hubstanze"
@@ -66,6 +61,9 @@
         <action
             android:id="@+id/action_navigation_stanza1_to_navigation_hubstanze"
             app:destination="@id/navigation_hubstanze" />
+        <action
+            android:id="@+id/action_navigation_stanza1_to_navigation_prenotazioni"
+            app:destination="@id/navigation_prenotazioni" />
     </fragment>
 
     <fragment
@@ -76,12 +74,20 @@
         <action
             android:id="@+id/action_navigation_stanza2_to_navigation_hubstanze"
             app:destination="@id/navigation_hubstanze" />
+        <action
+            android:id="@+id/action_navigation_stanza2_to_navigation_prenotazioni"
+            app:destination="@id/navigation_prenotazioni" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_prenotazioni"
         android:name="com.example.blockcovid.ui.prenotazioni.PrenotazioniFragment"
         android:label="@string/title_prenotazioni"
-        tools:layout="@layout/fragment_prenotazioni" />
+        tools:layout="@layout/fragment_prenotazioni" >
+        <argument
+            android:name="deskId"
+            app:argType="string"
+            android:defaultValue="default" />
+    </fragment>
 
 </navigation>

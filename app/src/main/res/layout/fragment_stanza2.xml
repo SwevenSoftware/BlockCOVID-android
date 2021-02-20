@@ -48,7 +48,8 @@
                 app:layout_constraintBottom_toTopOf="@+id/imageButton14"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/title_stanza2" />
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0200" />
 
             <ImageButton
                 android:id="@+id/imageButton11"
@@ -60,7 +61,8 @@
                 app:layout_constraintBottom_toTopOf="@+id/imageButton15"
                 app:layout_constraintStart_toEndOf="@+id/imageButton10"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/title_stanza2" />
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0201" />
 
             <ImageButton
                 android:id="@+id/imageButton12"
@@ -74,7 +76,8 @@
                 app:layout_constraintBottom_toTopOf="@+id/imageButton16"
                 app:layout_constraintStart_toEndOf="@+id/imageButton11"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/title_stanza2" />
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0202" />
 
             <ImageButton
                 android:id="@+id/imageButton13"
@@ -86,7 +89,8 @@
                 app:layout_constraintBottom_toTopOf="@+id/imageButton17"
                 app:layout_constraintStart_toEndOf="@+id/imageButton12"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/title_stanza2" />
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0203" />
 
             <ImageButton
                 android:id="@+id/imageButton14"
@@ -96,7 +100,8 @@
                 android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton10"
-                android:contentDescription="@string/title_stanza2" />
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0204" />
 
             <ImageButton
                 android:id="@+id/imageButton15"
@@ -106,7 +111,8 @@
                 android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toEndOf="@+id/imageButton14"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton11"
-                android:contentDescription="@string/title_stanza2"/>
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0205" />
 
             <ImageButton
                 android:id="@+id/imageButton16"
@@ -117,7 +123,8 @@
                 android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toEndOf="@+id/imageButton15"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton12"
-                android:contentDescription="@string/title_stanza2" />
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0206" />
 
             <ImageButton
                 android:id="@+id/imageButton17"
@@ -127,7 +134,8 @@
                 android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toEndOf="@+id/imageButton16"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton13"
-                android:contentDescription="@string/title_stanza2" />
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0207" />
 
             <ImageButton
                 android:id="@+id/imageButton18"
@@ -137,7 +145,8 @@
                 android:onClick="goPrenotazioni"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton19"
-                android:contentDescription="@string/title_stanza2" />
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0208" />
 
             <ImageButton
                 android:id="@+id/imageButton19"
@@ -149,7 +158,8 @@
                 android:rotation="180"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton14"
-                android:contentDescription="@string/title_stanza2" />
+                android:tag="@string/title_stanza2"
+                android:contentDescription="S0209" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
