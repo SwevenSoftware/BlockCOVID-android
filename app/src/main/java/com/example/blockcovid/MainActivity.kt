@@ -13,6 +13,7 @@ import android.text.Editable
 import android.text.Html
 import android.text.Spanned
 import android.text.TextWatcher
+import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ScrollView
@@ -94,8 +95,8 @@ class MainActivity : AppCompatActivity() {
 */
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        toolbar = findViewById(R.id.toolbar_login)
-        setSupportActionBar(toolbar)
+        //val toolbar = findViewById(R.id.toolbar_login)
+        //setSupportActionBar(toolbar)
 /*
         email.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.message, 0, 0, 0)
         password.setCompoundDrawablesRelativeWithIntrinsicBounds(Password, 0, 0, 0)
@@ -268,6 +269,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.top_nav_menu, menu)
+        return true
+    }
 
     fun goScanner(view: View) {
         findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_scanner)
@@ -308,7 +314,6 @@ class MainActivity : AppCompatActivity() {
         }
         findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_hubstanze_to_navigation_stanza2)
     }
-
 
     fun refreshLogs(view: View) {
         println(logText)

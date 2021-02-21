@@ -31,6 +31,12 @@
         tools:layout="@layout/fragment_settings" />
 
     <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.example.blockcovid.ui.login.LoginFragment"
+        android:label="@string/title_login"
+        tools:layout="@layout/fragment_login" />
+
+    <fragment
         android:id="@+id/navigation_scanner"
         android:name="com.example.blockcovid.ui.scanner.ScannerFragment"
         android:label="@string/title_scanner"
