@@ -36,6 +36,8 @@
         android:label="@string/title_login"
         tools:layout="@layout/fragment_login" />
 
+    <action android:id="@+id/action_global_navigation_login" app:destination="@id/navigation_login"/>
+
     <fragment
         android:id="@+id/navigation_scanner"
         android:name="com.example.blockcovid.ui.scanner.ScannerFragment"
@@ -43,47 +45,18 @@
         tools:layout="@layout/fragment_scanner" />
 
     <fragment
-        android:id="@+id/navigation_hubstanze"
-        android:name="com.example.blockcovid.ui.hubstanze.HubStanzeFragment"
-        android:label="@string/title_hubstanze"
-        tools:layout="@layout/fragment_hubstanze" >
-        <action
-            android:id="@+id/action_navigation_hubstanze_to_navigation_stanza1"
-            app:destination="@id/navigation_stanza1"
-            app:popUpTo="@id/navigation_hubstanze"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_navigation_hubstanze_to_navigation_stanza2"
-            app:destination="@id/navigation_stanza2"
-            app:popUpTo="@id/navigation_hubstanze"
-            app:popUpToInclusive="true" />
-    </fragment>
-
-    <fragment
         android:id="@+id/navigation_stanza1"
         android:name="com.example.blockcovid.ui.stanza1.Stanza1Fragment"
         android:label="@string/title_stanza1"
-        tools:layout="@layout/fragment_stanza1" >
-        <action
-            android:id="@+id/action_navigation_stanza1_to_navigation_hubstanze"
-            app:destination="@id/navigation_hubstanze" />
-        <action
-            android:id="@+id/action_navigation_stanza1_to_navigation_prenotazioni"
-            app:destination="@id/navigation_prenotazioni" />
-    </fragment>
+        tools:layout="@layout/fragment_stanza1" />
+    <action android:id="@+id/action_global_navigation_stanza1" app:destination="@id/navigation_stanza1"/>
 
     <fragment
         android:id="@+id/navigation_stanza2"
         android:name="com.example.blockcovid.ui.stanza2.Stanza2Fragment"
         android:label="@string/title_stanza2"
-        tools:layout="@layout/fragment_stanza2" >
-        <action
-            android:id="@+id/action_navigation_stanza2_to_navigation_hubstanze"
-            app:destination="@id/navigation_hubstanze" />
-        <action
-            android:id="@+id/action_navigation_stanza2_to_navigation_prenotazioni"
-            app:destination="@id/navigation_prenotazioni" />
-    </fragment>
+        tools:layout="@layout/fragment_stanza2" />
+    <action android:id="@+id/action_global_navigation_stanza2" app:destination="@id/navigation_stanza2"/>
 
     <fragment
         android:id="@+id/navigation_prenotazioni"
@@ -95,5 +68,6 @@
             app:argType="string"
             android:defaultValue="default" />
     </fragment>
+    <action android:id="@+id/action_global_navigation_prenotazioni" app:destination="@id/navigation_prenotazioni"/>
 
 </navigation>

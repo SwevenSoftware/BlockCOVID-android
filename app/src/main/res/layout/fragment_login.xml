@@ -4,38 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-
-    <androidx.appcompat.widget.Toolbar
-
-        android:id="@+id/toolbar_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        app:title="      Log In"
-        app:titleTextColor="#000000" />
+    tools:context="com.example.blockcovid.MainActivity">
 
     <EditText
-
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_login"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="100dp"
         android:drawablePadding="10dp"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:paddingBottom="20dp">
-
-
-    </EditText>
-
+        android:paddingBottom="20dp"
+        android:autofillHints="emailAddress"/>
 
     <EditText
-
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,22 +30,21 @@
         android:drawablePadding="10dp"
         android:paddingBottom="20dp"
         android:hint="Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:autofillHints="password" />
 
     <TextView
-
         android:id="@+id/forgot_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/password"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="25dp"
-        android:text="Forgot Password"
+        android:text="Password dimenticata"
         android:textColor="#8F8686"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <Button
-
         android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -71,13 +54,12 @@
         android:layout_marginRight="20dp"
         android:text="Log In"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textAllCaps="false"
         android:background="#00008b"
         android:enabled="false"/>
 
-    <RadioButton
-
+    <CheckBox
         android:id="@+id/remember_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,7 +67,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:text="Remember Password"
+        android:text="Ricorda password"
         android:textSize="12dp"
         android:checked="false"/>
 
