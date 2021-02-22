@@ -93,10 +93,10 @@ class MainActivity : AppCompatActivity() {
     }
 */
     override fun onCreate(savedInstanceState: Bundle?) {
-
+/*
         toolbar = findViewById(R.id.toolbar_login)
         setSupportActionBar(toolbar)
-/*
+
         email.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.message, 0, 0, 0)
         password.setCompoundDrawablesRelativeWithIntrinsicBounds(Password, 0, 0, 0)
 
