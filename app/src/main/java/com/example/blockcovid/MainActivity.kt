@@ -21,7 +21,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager.widget.ViewPager
 import com.example.blockcovid.databinding.ActivityMainBinding
+import com.example.blockcovid.ui.adapter1.ViewPagerAdapter
+import com.example.blockcovid.ui.stanza1.Stanza1Fragment
+import com.example.blockcovid.ui.stanza2.Stanza2Fragment
+import com.google.android.material.tabs.TabLayout
 import java.util.*
 
 
@@ -72,6 +77,17 @@ class MainActivity : AppCompatActivity() {
             logMessage("Found intent in onCreate", intent.action.toString())
             processIntent(intent)
         }
+        setUpTabs()
+    }
+
+    private fun setUpTabs() {
+        val tabs = findViewById<TabLayout>(R.id.tabLayout)
+        val viewPager = findViewById<ViewPager>(R.id.viewPager)
+        val adapter = ViewPagerAdapter(supportFragmentManager)
+        adapter.addFragment(Stanza1Fragment(), "Stanza 1")
+        adapter.addFragment(Stanza2Fragment(), "Stanza 2")
+        viewPager.adapter = adapter
+        tabs.setupWithViewPager(viewPager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
