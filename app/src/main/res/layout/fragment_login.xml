@@ -19,7 +19,6 @@
         android:paddingBottom="20dp"
         android:autofillHints="emailAddress"/>
 
-
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
@@ -71,6 +70,5 @@
         android:text="Ricorda password"
         android:textSize="12sp"
         android:checked="false"/>
-
 
 </RelativeLayout>
