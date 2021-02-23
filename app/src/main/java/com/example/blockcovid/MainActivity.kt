@@ -23,7 +23,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
 import com.example.blockcovid.databinding.ActivityMainBinding
-import com.example.blockcovid.ui.adapter1.ViewPagerAdapter
+import com.example.blockcovid.ui.adapter.ViewPagerAdapter
 import com.example.blockcovid.ui.stanza1.Stanza1Fragment
 import com.example.blockcovid.ui.stanza2.Stanza2Fragment
 import com.google.android.material.tabs.TabLayout
