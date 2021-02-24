@@ -8,7 +8,6 @@ import com.example.blockcovid.R
 
 class Stanza1Fragment : Fragment(){
     private lateinit var stanza1ViewModel: Stanza1ViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

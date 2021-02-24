@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_scanner"
             app:destination="@id/navigation_scanner" />
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_stanza1"
-            app:destination="@id/navigation_stanza1" />
     </fragment>
 
     <fragment
@@ -30,12 +27,19 @@
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
 
-    <fragment
+    <activity
         android:id="@+id/navigation_login"
-        android:name="com.example.blockcovid.ui.login.LoginFragment"
+        android:name="com.example.blockcovid.ui.login.LoginActivity"
         android:label="@string/title_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/activity_login" />
     <action android:id="@+id/action_global_navigation_login" app:destination="@id/navigation_login"/>
+
+    <activity
+        android:id="@+id/navigation_tab"
+        android:name="com.example.blockcovid.ui.tabs.TabActivity"
+        android:label="@string/title_postazioni"
+        tools:layout="@layout/activity_tab" />
+    <action android:id="@+id/action_global_navigation_tab" app:destination="@id/navigation_tab"/>
 
     <fragment
         android:id="@+id/navigation_scanner"
@@ -48,14 +52,12 @@
         android:name="com.example.blockcovid.ui.stanza1.Stanza1Fragment"
         android:label="@string/title_stanza1"
         tools:layout="@layout/fragment_stanza1" />
-    <action android:id="@+id/action_global_navigation_stanza1" app:destination="@id/navigation_stanza1"/>
 
     <fragment
         android:id="@+id/navigation_stanza2"
         android:name="com.example.blockcovid.ui.stanza2.Stanza2Fragment"
         android:label="@string/title_stanza2"
         tools:layout="@layout/fragment_stanza2" />
-    <action android:id="@+id/action_global_navigation_stanza2" app:destination="@id/navigation_stanza2"/>
 
     <fragment
         android:id="@+id/navigation_prenotazioni"
@@ -69,4 +71,10 @@
     </fragment>
     <action android:id="@+id/action_global_navigation_prenotazioni" app:destination="@id/navigation_prenotazioni"/>
 
+    <activity
+        android:id="@+id/navigation_main"
+        android:name="com.example.blockcovid.MainActivity"
+        android:label="@string/title_log"
+        tools:layout="@layout/activity_main" />
+    <action android:id="@+id/action_global_navigation_main" app:destination="@id/navigation_main"/>
 </navigation>

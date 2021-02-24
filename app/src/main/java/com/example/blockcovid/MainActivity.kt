@@ -23,7 +23,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
 import com.example.blockcovid.databinding.ActivityMainBinding
-import com.example.blockcovid.ui.adapter.ViewPagerAdapter
+
 import com.example.blockcovid.ui.stanza1.Stanza1Fragment
 import com.example.blockcovid.ui.stanza2.Stanza2Fragment
 import com.google.android.material.tabs.TabLayout
@@ -45,13 +45,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(setOf(
             R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -77,18 +75,8 @@ class MainActivity : AppCompatActivity() {
             logMessage("Found intent in onCreate", intent.action.toString())
             processIntent(intent)
         }
-        setUpTabs()
     }
 
-    private fun setUpTabs() {
-        val tabs = findViewById<TabLayout>(R.id.tabLayout)
-        val viewPager = findViewById<ViewPager>(R.id.viewPager)
-        val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(Stanza1Fragment(), "Stanza 1")
-        adapter.addFragment(Stanza2Fragment(), "Stanza 2")
-        viewPager.adapter = adapter
-        tabs.setupWithViewPager(viewPager)
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -114,22 +102,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goPostazioni(view: View) {
-        view.findNavController().navigate(R.id.action_navigation_home_to_navigation_stanza1)
+        view.findNavController().navigate(R.id.action_global_navigation_tab)
     }
 
-    fun goPrenotazioni(view: View) {
-        val idPostazione = view.contentDescription.toString()
-        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(idPostazione)
-        view.findNavController().navigate(action)
-    }
-
-    fun goStanza1(view: View) {
-        view.findNavController().navigate(R.id.action_global_navigation_stanza1)
-    }
-
-    fun goStanza2(view: View) {
-        view.findNavController().navigate(R.id.action_global_navigation_stanza2)
-    }
+//    fun goPrenotazioni(view: View) {
+//        val idPostazione = view.contentDescription.toString()
+//        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(idPostazione)
+//        view.findNavController().navigate(action)
+//    }
 
     fun refreshLogs(view: View) {
         println(logText)
