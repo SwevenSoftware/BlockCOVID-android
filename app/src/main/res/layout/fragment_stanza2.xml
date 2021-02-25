@@ -165,5 +165,17 @@
 
     </com.otaliastudios.zoom.ZoomLayout>
 
+    <Button
+        android:id="@+id/goStanza1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="124dp"
+        android:layout_marginEnd="124dp"
+        android:layout_marginBottom="60dp"
+        android:onClick="goStanza1"
+        android:text="@string/title_goStanza1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

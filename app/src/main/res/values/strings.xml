@@ -14,15 +14,13 @@
     <string name="title_prenotazioni">Prenotazioni</string>
     <string name="title_prenota">Prenota</string>
     <string name="title_log">Log</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Login</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Accedi o registrati</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_email">Not a valid email</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome">"Benvenuto"</string>
+    <string name="invalid_email">Email non valida</string>
+    <string name="invalid_password">Password deve essere di almeno 5 caratteri</string>
+    <string name="login_failed">"Login fallito"</string>
 </resources>

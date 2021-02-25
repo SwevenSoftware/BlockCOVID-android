@@ -102,14 +102,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goPostazioni(view: View) {
-        view.findNavController().navigate(R.id.action_global_navigation_tab)
+        view.findNavController().navigate(R.id.action_navigation_home_to_navigation_stanza1)
     }
 
-//    fun goPrenotazioni(view: View) {
-//        val idPostazione = view.contentDescription.toString()
-//        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(idPostazione)
-//        view.findNavController().navigate(action)
-//    }
+    fun goStanza1(view: View) {
+        view.findNavController().navigate(R.id.action_global_navigation_stanza1)
+    }
+
+    fun goStanza2(view: View) {
+        view.findNavController().navigate(R.id.action_global_navigation_stanza2)
+    }
+
+
+    fun goPrenotazioni(view: View) {
+        val idPostazione = view.contentDescription.toString()
+        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(idPostazione)
+        view.findNavController().navigate(action)
+    }
 
     fun refreshLogs(view: View) {
         println(logText)
@@ -375,7 +384,7 @@ class MainActivity : AppCompatActivity() {
                         logMessage("- URI", curRecord.toUri().toString())
                     } else {
                         // Other NDEF Tags - simply print the payload
-                        logMessage("- Contents", curRecord.payload.contentToString())
+                        logMessage("- Contents", curRecord.payload.decodeToString().drop(3))
                     }
                 }
             }
