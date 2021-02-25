@@ -1,20 +1,33 @@
 package com.example.blockcovid
 
 import android.app.PendingIntent
+import android.app.TimePickerDialog
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.ScrollView
+import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager.widget.ViewPager
 import com.example.blockcovid.databinding.ActivityMainBinding
+
+import com.example.blockcovid.ui.stanza1.Stanza1Fragment
+import com.example.blockcovid.ui.stanza2.Stanza2Fragment
+import com.google.android.material.tabs.TabLayout
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,18 +40,16 @@ class MainActivity : AppCompatActivity() {
     private var nfcPendingIntent: PendingIntent? = null
     // Optional: filter NDEF tags this app receives through the pending intent.
     //private var nfcIntentFilters: Array<IntentFilter>? = null
-
-    private val logText = "logText: "
+    //var deskList = Array(2) {Array(9) {0} }
+    private var logText = "logText: "
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(setOf(
             R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -46,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         // Check if NFC is supported and enabled
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        logMessage("NFC Adapter", nfcAdapter.toString())
         logMessage("NFC supported", (nfcAdapter != null).toString())
         logMessage("NFC enabled", (nfcAdapter?.isEnabled).toString())
 
@@ -57,18 +69,6 @@ class MainActivity : AppCompatActivity() {
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0)
 
-        // Optional: Setup an intent filter from code for a specific NDEF intent
-        // Use this code if you are only interested in a specific intent and don't want to
-        // interfere with other NFC tags.
-        // In this example, the code is commented out so that we get all NDEF messages,
-        // in order to analyze different NDEF-formatted NFC tag contents.
-        //val ndef = IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED)
-        //ndef.addCategory(Intent.CATEGORY_DEFAULT)
-        //ndef.addDataScheme("https")
-        //ndef.addDataAuthority("*.andreasjakl.com", null)
-        //ndef.addDataPath("/", PatternMatcher.PATTERN_PREFIX)
-        // More information: https://stackoverflow.com/questions/30642465/nfc-tag-is-not-discovered-for-action-ndef-discovered-action-even-if-it-contains
-        //nfcIntentFilters = arrayOf(ndef)
 
         if (intent != null) {
             // Check if the app was started via an NDEF intent
@@ -77,22 +77,226 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun goScanner(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_scanner)
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.top_nav_menu, menu)
+        return true
     }
 
-    fun goPostazioni(view: View) {
-        findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_postazioni)
-    }
-
-    fun refreshLogs(view: View) {
-        println(logText)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == R.id.navigation_login) {
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_login)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+
+    fun goScanner(view: View) {
+        view.findNavController().navigate(R.id.action_navigation_home_to_navigation_scanner)
+    }
+
+    fun goPostazioni(view: View) {
+        view.findNavController().navigate(R.id.action_navigation_home_to_navigation_stanza1)
+    }
+
+    fun goStanza1(view: View) {
+        view.findNavController().navigate(R.id.action_global_navigation_stanza1)
+    }
+
+    fun goStanza2(view: View) {
+        view.findNavController().navigate(R.id.action_global_navigation_stanza2)
+    }
+
+
+    fun goPrenotazioni(view: View) {
+        val idPostazione = view.contentDescription.toString()
+        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(idPostazione)
+        view.findNavController().navigate(action)
+    }
+
+    fun refreshLogs(view: View) {
+        println(logText)
+        val tvMessages = findViewById<TextView>(R.id.tv_messages)
+        val svMessages = findViewById<ScrollView>(R.id.sv_messages)
+        tvMessages.text = logText
+        svMessages.post {
+            svMessages.smoothScrollTo(0, svMessages.bottom)
+        }
+    }
+
+    fun openTimePicker(view: View) {
+        val cal = Calendar.getInstance()
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+            cal.set(Calendar.HOUR_OF_DAY, hour)
+            cal.set(Calendar.MINUTE, minute)
+            when (view.id) {
+                R.id.editOrarioArrivo -> {
+                    val orarioArrivo = findViewById<TextView>(R.id.editOrarioArrivo)
+                    orarioArrivo.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
+                }
+                R.id.editOrarioUscita -> {
+                    val orarioUscita = findViewById<TextView>(R.id.editOrarioUscita)
+                    orarioUscita.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
+                }
+            }
+        }
+        TimePickerDialog(this, 2, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+    }
+
+    /*fun deskColor(view: View) {
+        when (view.id) {
+            R.id.imageButton00 -> {
+                when (deskList[0][0]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0][0] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0][0] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0][0] = 0
+                    }
+                }
+            }
+            R.id.imageButton01 -> {
+                when (deskList[0][1]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0][1] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0][1] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0][1] = 0
+                    }
+                }
+            }
+            R.id.imageButton02 -> {
+                when (deskList[0][2]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0][2] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0][2] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0][2] = 0
+                    }
+                }
+            }
+            R.id.imageButton03 -> {
+                when (deskList[0][3]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0][3] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0][3] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0][3] = 0
+                    }
+                }
+            }
+            R.id.imageButton04 -> {
+                when (deskList[0][4]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0][4] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0][4] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0][4] = 0
+                    }
+                }
+            }
+            R.id.imageButton05 -> {
+                when (deskList[0][5]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0][5] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0][5] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0][5] = 0
+                    }
+                }
+            }
+            R.id.imageButton06 -> {
+                when (deskList[0][6]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0][6] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0][6] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0][6] = 0
+                    }
+                }
+            }
+            R.id.imageButton07 -> {
+                when (deskList[0][7]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0][7] = 1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0][7] = 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0][7] = 0
+                    }
+                }
+            }
+            R.id.imageButton07 -> {
+                when (deskList[0][8]) {
+                    0 -> {
+                        view.setBackgroundResource(R.drawable.blue_desk)
+                        deskList[0][8]=1
+                    }
+                    1 -> {
+                        view.setBackgroundResource(R.drawable.red_desk)
+                        deskList[0][8]= 2
+                    }
+                    2 -> {
+                        view.setBackgroundResource(R.drawable.green_desk)
+                        deskList[0][8]= 0
+                    }
+                }
+            }
+        }
+    }*/
 
     override fun onResume() {
         super.onResume()
@@ -122,6 +326,7 @@ class MainActivity : AppCompatActivity() {
      * accordingly and parse the NDEF messages.
      * @param checkIntent the intent to parse and handle if it's the right type
      */
+
     private fun processIntent(checkIntent: Intent) {
         // Check if intent has the action of a discovered NFC tag
         // with NDEF formatted contents
@@ -179,7 +384,7 @@ class MainActivity : AppCompatActivity() {
                         logMessage("- URI", curRecord.toUri().toString())
                     } else {
                         // Other NDEF Tags - simply print the payload
-                        logMessage("- Contents", curRecord.payload.contentToString())
+                        logMessage("- Contents", curRecord.payload.decodeToString().drop(3))
                     }
                 }
             }
@@ -195,7 +400,7 @@ class MainActivity : AppCompatActivity() {
      * @param text optional parameter containing details about the message. Printed in plain text.
      */
     private fun logMessage(header: String, text: String?) {
-        logText.plus(if (text.isNullOrBlank()) fromHtml("<b>$header</b><br>") else fromHtml("<b>$header</b>: $text<br>"))
+        logText = logText.plus(if (text.isNullOrBlank()) fromHtml("<b>$header</b><br>") else fromHtml("<b>$header</b>: $text<br>"))
     }
 
     /**
@@ -204,6 +409,7 @@ class MainActivity : AppCompatActivity() {
      * Android N. This method chooses the right variant depending on the OS.
      * @param html HTML-formatted string to convert to a Spanned text.
      */
+
     private fun fromHtml(html: String): Spanned {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
