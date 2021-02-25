@@ -9,6 +9,7 @@
 
     <Button
         android:id="@+id/log"
+        android:background="@drawable/gradient_button"
         android:layout_width="200dp"
         android:layout_height="100dp"
         android:layout_marginStart="105dp"

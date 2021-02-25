@@ -13,6 +13,7 @@
 
     <EditText
         android:id="@+id/email"
+        android:background="@drawable/curvy_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -27,6 +28,7 @@
 
     <EditText
         android:id="@+id/password"
+        android:background="@drawable/curvy_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/email"
@@ -46,21 +48,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:background="@drawable/curvy_top"
         android:text="Password dimenticata"
         android:textColor="#8F8686"
-        android:textSize="15sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <Button
         android:id="@+id/login_button"
+        android:background="@drawable/gradient_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/forgot_password"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:background="#00008b"
         android:enabled="false"
         android:text="Log In"
         android:textAllCaps="false"
