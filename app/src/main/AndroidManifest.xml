@@ -3,10 +3,9 @@
     package="com.example.blockcovid">
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
 
-    <uses-feature
-        android:name="android.hardware.nfc"
-        android:required="true" />
 
     <application
         android:allowBackup="true"
