@@ -15,13 +15,5 @@ class User {
     @SerializedName("password")
     @Expose
     var password: String? = null
-    @Multipart
-    @PUT("user/photo")
-    open fun updateUser(
-        @Part("photo") photo: RequestBody?,
-        @Part("description") description: RequestBody?
-    ): Call<User?>? {
-        return
-    }
 }
 
