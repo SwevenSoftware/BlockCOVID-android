@@ -6,7 +6,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -34,9 +37,16 @@ class LoginRepository(val dataSource: LoginDataSource) {
     }
 
     fun login(username: String, password: String): Result<LoggedInUser> {
+        val BASE_URL = "http://localhost:8080"
+        val TIMEOUT = 10
+        var retrofit: Retrofit? = null
+        val okHttpClientBuilder = OkHttpClient.Builder()
+        okHttpClientBuilder.connectTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://localhost:8080")
+        retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .client(okHttpClientBuilder.build())
             .build()
 
         val service = retrofit.create(APIUser::class.java)
