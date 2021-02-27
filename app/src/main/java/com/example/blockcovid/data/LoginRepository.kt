@@ -1,11 +1,8 @@
 package com.example.blockcovid.data
 
 import com.example.blockcovid.data.model.LoggedInUser
-import com.example.blockcovid.services.users.APIUser
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.blockcovid.services.APIUser
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -37,17 +34,18 @@ class LoginRepository(val dataSource: LoginDataSource) {
     }
 
     fun login(username: String, password: String): Result<LoggedInUser> {
-        val BASE_URL = "http://localhost:8080"
+
+        val BASE_URL = "http://192.168.1.91:8080"
         val TIMEOUT = 10
-        var retrofit: Retrofit? = null
+        val retrofit: Retrofit?
         val okHttpClientBuilder = OkHttpClient.Builder()
         okHttpClientBuilder.connectTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)
 
         retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .client(okHttpClientBuilder.build())
-            .build()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build()
 
         val service = retrofit.create(APIUser::class.java)
 
@@ -55,33 +53,25 @@ class LoginRepository(val dataSource: LoginDataSource) {
         fields["username"] = (username)
         fields["password"] = (password)
 
-        val result = dataSource.login(username, password)
+        var token = ""
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = service.uploadLogin(fields)
+            val response = service.loginUser(fields)
             if (response.isSuccessful) {
                 withContext(Dispatchers.Main) {
-                    // Convert raw JSON to pretty JSON using GSON library
-                    //val gson = GsonBuilder().setPrettyPrinting().create()
-                    //val prettyJson = gson.toJson(
-                    //    JsonParser.parseString(
-                    //        response.body()
-                    //            ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
-                    //    )
-                    //)
-                    //Log.d("Pretty Printed JSON :", prettyJson)
-                    val logResponse = response.body()?.toString()
-                    println(logResponse)
-                    if (result is Result.Success) {
-                        setLoggedInUser(result.data)
-                    } else {
-                        result is Result.Error
-                        //Log.e("RETROFIT_ERROR", response.code().toString())
-
-                    }
+                    token = response.body()?.string().toString()
+                    print("Token: ")
+                    println(token)
                 }
             }
         }
+
+        val result = dataSource.login(username, password, token)
+
+        if (result is Result.Success) {
+            setLoggedInUser(result.data)
+        }
+
         return result
     }
 

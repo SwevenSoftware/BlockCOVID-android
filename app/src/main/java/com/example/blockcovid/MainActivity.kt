@@ -22,6 +22,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
+import com.example.blockcovid.data.LoginRepository
+import com.example.blockcovid.data.model.LoggedInUser
 import com.example.blockcovid.databinding.ActivityMainBinding
 
 import com.example.blockcovid.ui.stanza1.Stanza1Fragment
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.navigation_login) {
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_login)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_account)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -95,6 +97,14 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    fun goLogin(view: View) {
+        view.findNavController().navigate(R.id.action_global_navigation_login)
+    }
+
+    fun logout(view: View) {
+        // call logout function
     }
 
     fun goScanner(view: View) {
@@ -112,7 +122,6 @@ class MainActivity : AppCompatActivity() {
     fun goStanza2(view: View) {
         view.findNavController().navigate(R.id.action_global_navigation_stanza2)
     }
-
 
     fun goPrenotazioni(view: View) {
         val idPostazione = view.contentDescription.toString()

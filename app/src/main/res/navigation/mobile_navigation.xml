@@ -38,6 +38,13 @@
     <action android:id="@+id/action_global_navigation_login" app:destination="@id/navigation_login"/>
 
     <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.example.blockcovid.ui.account.AccountFragment"
+        android:label="@string/title_account"
+        tools:layout="@layout/fragment_account" />
+    <action android:id="@+id/action_global_navigation_account" app:destination="@id/navigation_account"/>
+
+    <fragment
         android:id="@+id/navigation_scanner"
         android:name="com.example.blockcovid.ui.scanner.ScannerFragment"
         android:label="@string/title_scanner"
