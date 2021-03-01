@@ -8,34 +8,57 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/postazioneSelezionata"
+        android:id="@+id/stanzaSelezionata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:text="Postazione selezionata:"
+        android:text="Stanza selezionata:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/idPostazionePrenotata"
+        android:id="@+id/idStanzaPrenotata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="16dp"
         android:textSize="16sp"
         android:textColor="@color/purple_200"
-        app:layout_constraintStart_toEndOf="@+id/postazioneSelezionata"
+        app:layout_constraintStart_toEndOf="@+id/stanzaSelezionata"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/postazioneSelezionata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:text="Postazione selezionata:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stanzaSelezionata" />
+
+    <TextView
+        android:id="@+id/idPostazionePrenotata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/purple_200"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/postazioneSelezionata"
+        app:layout_constraintTop_toBottomOf="@id/idStanzaPrenotata" />
 
     <TextView
         android:id="@+id/orarioArrivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:text="Seleziona orario di arrivo:"
         android:textSize="16sp"
@@ -47,12 +70,12 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:inputType="time"
-        android:textSize="16sp"
-        android:textAlignment="center"
+        android:layout_marginTop="4dp"
         android:focusable="false"
+        android:inputType="time"
         android:onClick="openTimePicker"
+        android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/orarioArrivo"
         app:layout_constraintTop_toBottomOf="@+id/idPostazionePrenotata" />
 
@@ -61,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:text="Seleziona orario di uscita:"
         android:textSize="16sp"
@@ -73,12 +96,11 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
-        android:inputType="time"
-        android:textSize="16sp"
-        android:textAlignment="center"
         android:focusable="false"
+        android:inputType="time"
         android:onClick="openTimePicker"
+        android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/orarioUscita"
         app:layout_constraintTop_toBottomOf="@+id/editOrarioArrivo" />
 
@@ -87,7 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:ems="14"
         android:text="Seleziona giorno della prenotazione:"
         android:textSize="16sp"
@@ -111,6 +133,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
+        android:onClick="prenota"
         android:text="@string/title_prenota"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

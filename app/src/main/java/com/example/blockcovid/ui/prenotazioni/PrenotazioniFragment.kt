@@ -24,9 +24,12 @@ class PrenotazioniFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val tv: TextView = view.findViewById(R.id.idPostazionePrenotata)
-        val amount = args.deskId
-        tv.text = amount
+        val textDesk: TextView = view.findViewById(R.id.idPostazionePrenotata)
+        val textRoom: TextView = view.findViewById(R.id.idStanzaPrenotata)
+        val deskId = args.deskId
+        val roomId = args.roomId
+        textDesk.text = deskId
+        textRoom.text = roomId
     }
 
 }

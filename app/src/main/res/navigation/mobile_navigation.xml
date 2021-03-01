@@ -77,6 +77,10 @@
         <argument
             android:name="deskId"
             app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="roomId"
+            app:argType="string"
             android:defaultValue="default" />
     </fragment>
     <action android:id="@+id/action_global_navigation_prenotazioni" app:destination="@id/navigation_prenotazioni"/>

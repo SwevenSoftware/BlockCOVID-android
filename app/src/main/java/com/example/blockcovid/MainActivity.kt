@@ -142,9 +142,14 @@ class MainActivity : AppCompatActivity() {
         view.findNavController().navigate(R.id.action_global_navigation_stanza2)
     }
 
+    fun prenota(view: View) {
+
+    }
+
     fun goPrenotazioni(view: View) {
-        val idPostazione = view.contentDescription.toString()
-        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(idPostazione)
+        val deskId = view.contentDescription.toString()
+        val roomId = view.tag.toString()
+        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(deskId, roomId)
         view.findNavController().navigate(action)
     }
 
