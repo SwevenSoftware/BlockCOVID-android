@@ -13,16 +13,17 @@ import android.text.Spanned
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.CalendarView
-import android.widget.CalendarView.OnDateChangeListener
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.blockcovid.databinding.ActivityMainBinding
+import com.example.blockcovid.ui.prenotazioni.PrenotazioniViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.File
 import java.util.*
@@ -72,13 +73,7 @@ class MainActivity : AppCompatActivity() {
             logMessage("Found intent in onCreate", intent.action.toString())
             processIntent(intent)
         }
-
-        val calendario = findViewById<CalendarView>(R.id.selezionaData)
-        calendario.setOnDateChangeListener(OnDateChangeListener {
-            view, year, month, dayOfMonth -> val curDate = dayOfMonth.toString()
-        })
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -152,14 +147,17 @@ class MainActivity : AppCompatActivity() {
     fun prenota(view: View) {
         val nameRoom = findViewById<TextView>(R.id.idStanzaPrenotata).text.toString()
         val idDesk = findViewById<TextView>(R.id.idPostazionePrenotata).text.toString().toInt()
-        val date = findViewById<CalendarView>(R.id.selezionaData).date
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ITALIAN)
-        val dateString = formatter.format(Date(date))
+        var date = ""
+        val viewModel: PrenotazioniViewModel by viewModels()
+        viewModel.selectedItem.observe(this, Observer { item ->
+            date = item
+        })
+
         val from = findViewById<TextView>(R.id.editOrarioArrivo).text.toString()
         val to = findViewById<TextView>(R.id.editOrarioUscita).text.toString()
         println(nameRoom)
         println(idDesk)
-        println(dateString)
+        println(date)
         println(from)
         println(to)
     }
