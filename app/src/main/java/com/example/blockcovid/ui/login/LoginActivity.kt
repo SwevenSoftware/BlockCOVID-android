@@ -14,8 +14,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-
 import com.example.blockcovid.R
+import java.io.File
 
 class LoginActivity : AppCompatActivity() {
 
@@ -57,6 +57,7 @@ class LoginActivity : AppCompatActivity() {
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
+                saveToken(loginResult.success)
             }
             setResult(Activity.RESULT_OK)
 
@@ -94,6 +95,16 @@ class LoginActivity : AppCompatActivity() {
                 loading.visibility = View.VISIBLE
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
+        }
+    }
+
+    private fun saveToken(model: LoggedInUserView) {
+        val context = applicationContext
+        val token = model.token
+        File.createTempFile("token", null, context.cacheDir)
+        val cacheFile = File(context.cacheDir, "token")
+        if (token != null) {
+            cacheFile.writeText(token)
         }
     }
 

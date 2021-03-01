@@ -10,12 +10,8 @@ class LoginDataSource {
 
     fun login(username: String, password: String, token: String): Result<LoggedInUser> {
         try {
-            if(token != "") {
-                val user = LoggedInUser(java.util.UUID.randomUUID().toString(), username, token)
-                return Result.Success(user)
-            } else {
-                return Result.Error(IOException("Error logging in"))
-            }
+            val user = LoggedInUser(java.util.UUID.randomUUID().toString(), username, token)
+            return Result.Success(user)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
         }

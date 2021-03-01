@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
+import androidx.lifecycle.viewModelScope
 import com.example.blockcovid.data.LoginRepository
 import com.example.blockcovid.data.Result
-
 import com.example.blockcovid.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -19,13 +21,14 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = loginRepository.login(username, password)
 
-        if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+            if (result is Result.Success) {
+                _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = result.data.displayName, token = result.data.token)))
+            } else {
+                _loginResult.postValue(LoginResult(error = R.string.login_failed))
+            }
         }
     }
 

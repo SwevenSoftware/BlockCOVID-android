@@ -6,6 +6,7 @@ import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -33,7 +34,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    suspend fun login(username: String, password: String): Result<LoggedInUser> {
 
         val BASE_URL = "http://192.168.1.91:8080"
         val TIMEOUT = 10
@@ -54,25 +55,20 @@ class LoginRepository(val dataSource: LoginDataSource) {
         fields["password"] = (password)
 
         var token = ""
+        val response = service.loginUser(fields)
+        return if (response.isSuccessful) {
+            token = response.body()?.string().toString()
+            print("Token: ")
+            println(token)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = service.loginUser(fields)
-            if (response.isSuccessful) {
-                withContext(Dispatchers.Main) {
-                    token = response.body()?.string().toString()
-                    print("Token: ")
-                    println(token)
-                }
+            val result = dataSource.login(username, password, token)
+            if (result is Result.Success) {
+                setLoggedInUser(result.data)
             }
+            return result
+        } else {
+            Result.Error(IOException("Error logging in"))
         }
-
-        val result = dataSource.login(username, password, token)
-
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
-        }
-
-        return result
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {

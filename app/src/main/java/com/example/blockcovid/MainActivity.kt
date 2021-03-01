@@ -21,14 +21,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager.widget.ViewPager
-import com.example.blockcovid.data.LoginRepository
-import com.example.blockcovid.data.model.LoggedInUser
 import com.example.blockcovid.databinding.ActivityMainBinding
-
-import com.example.blockcovid.ui.stanza1.Stanza1Fragment
-import com.example.blockcovid.ui.stanza2.Stanza2Fragment
-import com.google.android.material.tabs.TabLayout
+import java.io.File
 import java.util.*
 
 
@@ -71,7 +65,6 @@ class MainActivity : AppCompatActivity() {
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0)
 
-
         if (intent != null) {
             // Check if the app was started via an NDEF intent
             logMessage("Found intent in onCreate", intent.action.toString())
@@ -89,7 +82,13 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.navigation_login) {
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_account)
+            val context = applicationContext
+            val cacheFile = File(context.cacheDir, "token")
+            if(cacheFile.exists()) {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_account)
+            } else {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_login)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -99,12 +98,32 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    fun goLogin(view: View) {
-        view.findNavController().navigate(R.id.action_global_navigation_login)
+    fun printToken(view: View) {
+        val context = applicationContext
+        val cacheFile = File(context.cacheDir, "token")
+        if(cacheFile.exists()) {
+            val token = cacheFile.readText()
+            println(token)
+        }
     }
 
     fun logout(view: View) {
-        // call logout function
+        val context = applicationContext
+        val cacheFile = File(context.cacheDir, "token")
+        if(cacheFile.exists()) {
+            cacheFile.delete()
+            view.findNavController().navigate(R.id.action_global_navigation_login)
+        }
+    }
+
+    fun checkLogged(view: View) {
+        val context = applicationContext
+        val cacheFile = File(context.cacheDir, "token")
+        if(cacheFile.exists()) {
+            println("Logged in")
+        } else {
+            println("Logged out")
+        }
     }
 
     fun goScanner(view: View) {

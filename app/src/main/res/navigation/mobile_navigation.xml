@@ -17,6 +17,11 @@
             android:id="@+id/action_navigation_home_to_navigation_stanza1"
             app:destination="@id/navigation_stanza1" />
     </fragment>
+    <action
+        android:id="@+id/action_global_navigation_home"
+        app:destination="@id/navigation_home"
+        app:popUpTo="@id/navigation_home"
+        app:popUpToInclusive="true" />
 
     <fragment
         android:id="@+id/navigation_help"
