@@ -13,7 +13,7 @@ interface APIReserve {
     @POST("/rooms/{nameRoom}/reserve")
     suspend fun deskReserve(@Path("nameRoom") nameRoom : String,
                             @Query ("idDesk") idDesk: Int,
-                            @Query ("date") date: Int,
+                            @Query ("date") date: String,
                             @Query ("from") from: String,
                             @Query ("to") to: String,
                             @Header("Authorization") Autorization: String

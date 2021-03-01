@@ -13,15 +13,17 @@ import android.text.Spanned
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.CalendarView
+import android.widget.CalendarView.OnDateChangeListener
 import android.widget.ScrollView
 import android.widget.TextView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.blockcovid.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.File
 import java.util.*
 
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
+                R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -63,13 +65,18 @@ class MainActivity : AppCompatActivity() {
         // will fill in the intent with the details of the discovered tag before delivering to
         // this activity.
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
-            Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0)
+                Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0)
 
         if (intent != null) {
             // Check if the app was started via an NDEF intent
             logMessage("Found intent in onCreate", intent.action.toString())
             processIntent(intent)
         }
+
+        val calendario = findViewById<CalendarView>(R.id.selezionaData)
+        calendario.setOnDateChangeListener(OnDateChangeListener {
+            view, year, month, dayOfMonth -> val curDate = dayOfMonth.toString()
+        })
     }
 
 
@@ -143,7 +150,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun prenota(view: View) {
-
+        val nameRoom = findViewById<TextView>(R.id.idStanzaPrenotata).text.toString()
+        val idDesk = findViewById<TextView>(R.id.idPostazionePrenotata).text.toString().toInt()
+        val date = findViewById<CalendarView>(R.id.selezionaData).date
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ITALIAN)
+        val dateString = formatter.format(Date(date))
+        val from = findViewById<TextView>(R.id.editOrarioArrivo).text.toString()
+        val to = findViewById<TextView>(R.id.editOrarioUscita).text.toString()
+        println(nameRoom)
+        println(idDesk)
+        println(dateString)
+        println(from)
+        println(to)
     }
 
     fun goPrenotazioni(view: View) {

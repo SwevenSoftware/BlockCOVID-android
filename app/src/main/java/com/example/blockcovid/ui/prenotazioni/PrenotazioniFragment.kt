@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.blockcovid.R
+import com.example.blockcovid.databinding.ActivityMainBinding
 
 class PrenotazioniFragment : Fragment(){
     private lateinit var prenotazioniViewModel: PrenotazioniViewModel
