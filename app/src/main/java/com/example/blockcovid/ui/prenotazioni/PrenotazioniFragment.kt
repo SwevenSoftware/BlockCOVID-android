@@ -49,8 +49,6 @@ class PrenotazioniFragment : Fragment(){
             val date = formatter.parse(selectedDate).time
             val correctDate = formatter.format(Date(date))
             viewModel.selectItem(correctDate)
-            println(selectedDate)
-            println(correctDate)
         }
     }
 }
