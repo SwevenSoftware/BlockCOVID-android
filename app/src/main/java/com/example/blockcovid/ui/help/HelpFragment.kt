@@ -19,7 +19,6 @@ class HelpFragment : Fragment() {
     ): View? {
         helpViewModel =
                 ViewModelProvider(this).get(HelpViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_help, container, false)
-        return root
+        return inflater.inflate(R.layout.fragment_help, container, false)
     }
 }

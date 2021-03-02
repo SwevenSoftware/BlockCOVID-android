@@ -2,7 +2,6 @@ package com.example.blockcovid.data
 
 import com.example.blockcovid.data.model.LoggedInUser
 import com.example.blockcovid.services.APIUser
-import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
