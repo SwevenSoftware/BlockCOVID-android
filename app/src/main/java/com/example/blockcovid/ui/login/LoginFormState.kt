@@ -1,7 +1,7 @@
 package com.example.blockcovid.ui.login
 
 /**
- * Data validation state of the login form.
+ * Stato di convalida dei dati del modulo di accesso.
  */
 data class LoginFormState(
     val usernameError: Int? = null,

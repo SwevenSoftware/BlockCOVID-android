@@ -1,10 +1,9 @@
 package com.example.blockcovid.ui.login
 
 /**
- * User details post authentication that is exposed to the UI
+ * I dettagli utente dopo l'autenticazione esposta all'interfaccia utente
  */
 data class LoggedInUserView(
     val displayName: String,
     val token: String?
-    //... other data fields that may be accessible to the UI
 )

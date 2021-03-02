@@ -1,7 +1,7 @@
 package com.example.blockcovid.data.model
 
 /**
- * Data class that captures user information for logged in users retrieved from LoginRepository
+ * Classe di dati che cattura le informazioni sugli utenti per gli utenti che hanno effettuato l'accesso recuperate da LoginRepository
  */
 data class LoggedInUser(
         val userId: String,

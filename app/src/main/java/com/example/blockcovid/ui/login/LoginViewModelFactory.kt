@@ -6,8 +6,8 @@ import com.example.blockcovid.data.LoginDataSource
 import com.example.blockcovid.data.LoginRepository
 
 /**
- * ViewModel provider factory to instantiate LoginViewModel.
- * Required given LoginViewModel has a non-empty constructor
+ * Factory di provider ViewModel per istanziare LoginViewModel.
+ * Obbligatorio dato che LoginViewModel ha un costruttore non vuoto
  */
 class LoginViewModelFactory : ViewModelProvider.Factory {
 

@@ -1,14 +1,11 @@
 package com.example.blockcovid.ui.prenotazioni
 
-import android.content.Context
+
 import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.*
 import android.widget.CalendarView
-import android.widget.CalendarView.OnDateChangeListener
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider

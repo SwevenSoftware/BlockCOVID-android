@@ -10,8 +10,8 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
- * Class that requests authentication and user information from the remote data source and
- * maintains an in-memory cache of login status and user credentials information.
+ * Classe che richiede l'autenticazione e le informazioni sull'utente dall'origine dati remota e
+  * mantiene una cache in memoria dello stato di accesso e delle informazioni sulle credenziali dell'utente.
  */
 
 class LoginRepository(val dataSource: LoginDataSource) {

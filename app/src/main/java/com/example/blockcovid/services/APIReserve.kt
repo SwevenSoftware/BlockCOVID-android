@@ -3,10 +3,9 @@ package com.example.blockcovid.services
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
-import java.time.LocalTime
 
 /**
- * API for getting User list from https://reqres.in/api/users?&page=1
+ * API per ottenere l'elenco prenotazioni
  */
 interface APIReserve {
     @Multipart

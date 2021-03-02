@@ -7,7 +7,7 @@ import java.util.HashMap
 
 
 /**
- * API for getting User list from https://reqres.in/api/users?&page=1
+ * Api per ottenere l'elenco utenti
  */
 interface APIUser {
     @Multipart

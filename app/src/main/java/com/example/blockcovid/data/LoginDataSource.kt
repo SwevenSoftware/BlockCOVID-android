@@ -4,7 +4,7 @@ import com.example.blockcovid.data.model.LoggedInUser
 import java.io.IOException
 
 /**
- * Class that handles authentication w/ login credentials and retrieves user information.
+ * Classe che gestisce l'autenticazione con le credenziali di accesso e recupera le informazioni sull'utente.
  */
 class LoginDataSource {
 

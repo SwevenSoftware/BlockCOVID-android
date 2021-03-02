@@ -36,8 +36,6 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
-
-            // disable login button unless both username / password is valid
             login.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
@@ -61,7 +59,6 @@ class LoginActivity : AppCompatActivity() {
             }
             setResult(Activity.RESULT_OK)
 
-            //Complete and destroy login activity once successful
             finish()
         })
 
@@ -125,7 +122,7 @@ class LoginActivity : AppCompatActivity() {
 }
 
 /**
- * Extension function to simplify setting an afterTextChanged action to EditText components.
+ * Funzione di estensione per semplificare l'impostazione di un'azione afterTextChanged sui componenti EditText.
  */
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {

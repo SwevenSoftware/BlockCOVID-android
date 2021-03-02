@@ -1,7 +1,7 @@
 package com.example.blockcovid.ui.login
 
 /**
- * Authentication result : success (user details) or error message.
+ * Risultato dell'autenticazione: successo (dettagli utente) o messaggio di errore.
  */
 data class LoginResult(
     val success: LoggedInUserView? = null,

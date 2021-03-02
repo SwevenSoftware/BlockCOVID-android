@@ -1,8 +1,8 @@
 package com.example.blockcovid.data
 
 /**
- * A generic class that holds a value with its loading status.
- * @param <T>
+ *Una classe generica che contiene un valore con il suo stato di caricamento
+ *
  */
 sealed class Result<out T : Any> {
 
