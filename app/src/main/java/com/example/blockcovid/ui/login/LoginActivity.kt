@@ -14,8 +14,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-
 import com.example.blockcovid.R
+import java.io.File
 
 class LoginActivity : AppCompatActivity() {
 
@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        val email = findViewById<EditText>(R.id.email)
+        val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login_button)
         val loading = findViewById<ProgressBar>(R.id.loading)
@@ -40,8 +40,8 @@ class LoginActivity : AppCompatActivity() {
             // disable login button unless both username / password is valid
             login.isEnabled = loginState.isDataValid
 
-            if (loginState.emailError != null) {
-                email.error = getString(loginState.emailError)
+            if (loginState.usernameError != null) {
+                username.error = getString(loginState.usernameError)
             }
             if (loginState.passwordError != null) {
                 password.error = getString(loginState.passwordError)
@@ -57,6 +57,7 @@ class LoginActivity : AppCompatActivity() {
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
+                saveToken(loginResult.success)
             }
             setResult(Activity.RESULT_OK)
 
@@ -64,9 +65,9 @@ class LoginActivity : AppCompatActivity() {
             finish()
         })
 
-        email.afterTextChanged {
+        username.afterTextChanged {
             loginViewModel.loginDataChanged(
-                email.text.toString(),
+                username.text.toString(),
                 password.text.toString()
             )
         }
@@ -74,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
         password.apply {
             afterTextChanged {
                 loginViewModel.loginDataChanged(
-                    email.text.toString(),
+                    username.text.toString(),
                     password.text.toString()
                 )
             }
@@ -83,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         loginViewModel.login(
-                            email.text.toString(),
+                            username.text.toString(),
                             password.text.toString()
                         )
                 }
@@ -92,8 +93,18 @@ class LoginActivity : AppCompatActivity() {
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                loginViewModel.login(email.text.toString(), password.text.toString())
+                loginViewModel.login(username.text.toString(), password.text.toString())
             }
+        }
+    }
+
+    private fun saveToken(model: LoggedInUserView) {
+        val context = applicationContext
+        val token = model.token
+        File.createTempFile("token", null, context.cacheDir)
+        val cacheFile = File(context.cacheDir, "token")
+        if (token != null) {
+            cacheFile.writeText(token)
         }
     }
 

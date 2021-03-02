@@ -4,10 +4,11 @@
     <string name="title_help">Aiuto</string>
     <string name="title_settings">Impostazioni</string>
     <string name="title_login">Login</string>
+    <string name="title_account">Account</string>
     <string name="title_scanner">Scanner</string>
     <string name="title_postazioni">Postazioni</string>
-    <string name="title_stanza1">Stanza 1</string>
-    <string name="title_stanza2">Stanza 2</string>
+    <string name="title_stanza1">Stanza1</string>
+    <string name="title_stanza2">Stanza2</string>
     <string name="title_hubstanze">Hub Stanze</string>
     <string name="title_goStanza1">Vai a Stanza 1</string>
     <string name="title_goStanza2">Vai a Stanza 2</string>
@@ -15,12 +16,13 @@
     <string name="title_prenota">Prenota</string>
     <string name="title_log">Log</string>
     <string name="title_activity_login">Login</string>
-    <string name="prompt_email">Email</string>
+    <string name="title_activity_logout">Logout</string>
+    <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Accedi o registrati</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Benvenuto"</string>
-    <string name="invalid_email">Email non valida</string>
+    <string name="invalid_username">Username non valido</string>
     <string name="invalid_password">Password deve essere di almeno 5 caratteri</string>
     <string name="login_failed">"Login fallito"</string>
 </resources>

@@ -15,19 +15,31 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ScrollView
 import android.widget.TextView
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager.widget.ViewPager
 import com.example.blockcovid.databinding.ActivityMainBinding
-
-import com.example.blockcovid.ui.stanza1.Stanza1Fragment
-import com.example.blockcovid.ui.stanza2.Stanza2Fragment
-import com.google.android.material.tabs.TabLayout
+import com.example.blockcovid.services.APIReserve
+import com.example.blockcovid.ui.prenotazioni.PrenotazioniViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.io.File
 import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.withContext
+import java.time.LocalTime
 
 
 class MainActivity : AppCompatActivity() {
@@ -51,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
+                R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -67,8 +79,7 @@ class MainActivity : AppCompatActivity() {
         // will fill in the intent with the details of the discovered tag before delivering to
         // this activity.
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
-            Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0)
-
+                Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0)
 
         if (intent != null) {
             // Check if the app was started via an NDEF intent
@@ -76,7 +87,6 @@ class MainActivity : AppCompatActivity() {
             processIntent(intent)
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -87,7 +97,13 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.navigation_login) {
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_login)
+            val context = applicationContext
+            val cacheFile = File(context.cacheDir, "token")
+            if(cacheFile.exists()) {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_account)
+            } else {
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_login)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -95,6 +111,34 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    fun printToken(view: View) {
+        val context = applicationContext
+        val cacheFile = File(context.cacheDir, "token")
+        if(cacheFile.exists()) {
+            val token = cacheFile.readText()
+            println(token)
+        }
+    }
+
+    fun logout(view: View) {
+        val context = applicationContext
+        val cacheFile = File(context.cacheDir, "token")
+        if(cacheFile.exists()) {
+            cacheFile.delete()
+            view.findNavController().navigate(R.id.action_global_navigation_login)
+        }
+    }
+
+    fun checkLogged(view: View) {
+        val context = applicationContext
+        val cacheFile = File(context.cacheDir, "token")
+        if(cacheFile.exists()) {
+            println("Logged in")
+        } else {
+            println("Logged out")
+        }
     }
 
     fun goScanner(view: View) {
@@ -113,10 +157,68 @@ class MainActivity : AppCompatActivity() {
         view.findNavController().navigate(R.id.action_global_navigation_stanza2)
     }
 
+    fun prenota(view: View) {
+        val nameRoom = findViewById<TextView>(R.id.idStanzaPrenotata).text.toString()
+        val idDesk = findViewById<TextView>(R.id.idPostazionePrenotata).text.toString().toInt()
+        var date = ""
+        val viewModel: PrenotazioniViewModel by viewModels()
+        viewModel.selectedItem.observe(this, Observer { item ->
+            date = item
+        })
+        val formatter = SimpleDateFormat("HH:mm", Locale.ITALIAN)
+        val from = findViewById<TextView>(R.id.editOrarioArrivo).text.toString()
+        val to = findViewById<TextView>(R.id.editOrarioUscita).text.toString()
+        //val toTime = formatter.parse(to).time
+        //var trueTo: Time = Time(fromTime)
+        val context = applicationContext
+        val cacheFile = File(context.cacheDir, "token")
+        var authorization = ""
+        if(cacheFile.exists()) {
+            authorization = cacheFile.readText()
+        }
+        println(nameRoom)
+        println(idDesk)
+        println(date)
+        println(from)
+        println(to)
+        println(authorization)
+
+        val BASE_URL = "http://192.168.1.91:8080"
+        val TIMEOUT = 10
+        val retrofit: Retrofit?
+        val okHttpClientBuilder = OkHttpClient.Builder()
+        okHttpClientBuilder.connectTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)
+
+        retrofit = Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build()
+
+        val service = retrofit.create(APIReserve::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = service.deskReserve(nameRoom, idDesk, date, from, to, authorization)
+            if (response.isSuccessful) {
+                withContext(Dispatchers.Main) {
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val responseJson = gson.toJson(JsonParser.parseString(response.body()?.string()))
+                    print("Response: ")
+                    println(responseJson)
+                    Toast.makeText(
+                            applicationContext,
+                            "Postazione prenotata",
+                            Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
 
     fun goPrenotazioni(view: View) {
-        val idPostazione = view.contentDescription.toString()
-        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(idPostazione)
+        val deskId = view.contentDescription.toString()
+        val roomId = view.tag.toString()
+        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(deskId, roomId)
         view.findNavController().navigate(action)
     }
 
