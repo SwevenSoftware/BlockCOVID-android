@@ -46,7 +46,8 @@ class PrenotazioniFragment : Fragment(){
 
         val selezionaData: CalendarView = view.findViewById(R.id.selezionaData)
         selezionaData.setOnDateChangeListener { _, year, month, day ->
-            selectedDate = "$year-$month-$day"
+            val realmonth = month + 1
+            selectedDate = "$year-$realmonth-$day"
             val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ITALIAN)
             val date = formatter.parse(selectedDate).time
             val correctDate = formatter.format(Date(date))

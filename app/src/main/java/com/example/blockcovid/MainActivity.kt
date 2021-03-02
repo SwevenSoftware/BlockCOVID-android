@@ -15,6 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -23,10 +24,22 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.blockcovid.databinding.ActivityMainBinding
+import com.example.blockcovid.services.APIReserve
 import com.example.blockcovid.ui.prenotazioni.PrenotazioniViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.File
 import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.withContext
+import java.time.LocalTime
 
 
 class MainActivity : AppCompatActivity() {
@@ -152,14 +165,54 @@ class MainActivity : AppCompatActivity() {
         viewModel.selectedItem.observe(this, Observer { item ->
             date = item
         })
-
+        val formatter = SimpleDateFormat("HH:mm", Locale.ITALIAN)
         val from = findViewById<TextView>(R.id.editOrarioArrivo).text.toString()
         val to = findViewById<TextView>(R.id.editOrarioUscita).text.toString()
+        //val toTime = formatter.parse(to).time
+        //var trueTo: Time = Time(fromTime)
+        val context = applicationContext
+        val cacheFile = File(context.cacheDir, "token")
+        var authorization = ""
+        if(cacheFile.exists()) {
+            authorization = cacheFile.readText()
+        }
         println(nameRoom)
         println(idDesk)
         println(date)
         println(from)
         println(to)
+        println(authorization)
+
+        val BASE_URL = "http://192.168.1.91:8080"
+        val TIMEOUT = 10
+        val retrofit: Retrofit?
+        val okHttpClientBuilder = OkHttpClient.Builder()
+        okHttpClientBuilder.connectTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)
+
+        retrofit = Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build()
+
+        val service = retrofit.create(APIReserve::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = service.deskReserve(nameRoom, idDesk, date, from, to, authorization)
+            if (response.isSuccessful) {
+                withContext(Dispatchers.Main) {
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val responseJson = gson.toJson(JsonParser.parseString(response.body()?.string()))
+                    print("Response: ")
+                    println(responseJson)
+                    Toast.makeText(
+                            applicationContext,
+                            "Postazione prenotata",
+                            Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
     }
 
     fun goPrenotazioni(view: View) {
