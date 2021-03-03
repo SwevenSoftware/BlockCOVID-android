@@ -34,6 +34,9 @@ class PrenotazioniFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        // Prende i valori del numero della postazione ed il nome della stanza dal fragment della stanza
+        // per poi mostrarli nella TextView
         val textDesk: TextView = view.findViewById(R.id.idPostazionePrenotata)
         val textRoom: TextView = view.findViewById(R.id.idStanzaPrenotata)
         val deskId = args.deskId
@@ -41,6 +44,7 @@ class PrenotazioniFragment : Fragment(){
         textDesk.text = deskId
         textRoom.text = roomId
 
+        // Invia la data selezionata sul calendario alla MainActivity per poi poterla inviare al server
         val selezionaData: CalendarView = view.findViewById(R.id.selezionaData)
         selezionaData.setOnDateChangeListener { _, year, month, day ->
             val realmonth = month + 1
@@ -49,8 +53,6 @@ class PrenotazioniFragment : Fragment(){
             val date = formatter.parse(selectedDate).time
             val correctDate = formatter.format(Date(date))
             viewModel.selectItem(correctDate)
-            println(selectedDate)
-            println(correctDate)
         }
     }
 }

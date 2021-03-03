@@ -39,20 +39,16 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.withContext
-import java.time.LocalTime
 
 
 class MainActivity : AppCompatActivity() {
 
-    // NFC adapter for checking NFC state in the device
+    // Controllo dello stato dell'adattatore NFC
     private var nfcAdapter: NfcAdapter? = null
 
-    // Pending intent for NFC intent foreground dispatch.
-    // Used to read all NDEF tags while the app is running in the foreground.
+    // Lettura NFC tags mentre l'applicazione e' attiva in primo piano
     private var nfcPendingIntent: PendingIntent? = null
-    // Optional: filter NDEF tags this app receives through the pending intent.
-    //private var nfcIntentFilters: Array<IntentFilter>? = null
-    //var deskList = Array(2) {Array(9) {0} }
+
     private var logText = "logText: "
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,33 +63,35 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // Check if NFC is supported and enabled
+        // Controlla se NFC è supportato e abilitato
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         logMessage("NFC Adapter", nfcAdapter.toString())
         logMessage("NFC supported", (nfcAdapter != null).toString())
         logMessage("NFC enabled", (nfcAdapter?.isEnabled).toString())
 
 
-        // Read all tags when app is running and in the foreground
-        // Create a generic PendingIntent that will be deliver to this activity. The NFC stack
-        // will fill in the intent with the details of the discovered tag before delivering to
-        // this activity.
+        // Leggi tutti i tag quando l'app è in esecuzione e in primo piano.
+        // Crea un PendingIntent generico che verrà consegnato a questa attività. Lo stack NFC
+        // riempirà l'Intent con i dettagli del tag scoperto prima di
+        // consegnarlo a questa attività.
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
                 Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0)
 
         if (intent != null) {
-            // Check if the app was started via an NDEF intent
+            // Controlla se l'app è stata avviata tramite un intento NFC
             logMessage("Found intent in onCreate", intent.action.toString())
             processIntent(intent)
         }
     }
 
+    // Funzione per far apparire il pulsante Profilo in alto a destra
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.top_nav_menu, menu)
         return true
     }
 
+    // Funzione per linkare la pagina di Account/Login tramite il pulsante in alto a destra dello schermo se si e' loggati o no rispettivamente
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.navigation_login) {
@@ -108,11 +106,13 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    // Funzione per far funzionare il bottone per tornare indietro situato in alto a sinistra dello schermo
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
+    // Funzione per stampare il token personale su console - debug
     fun printToken(view: View) {
         val context = applicationContext
         val cacheFile = File(context.cacheDir, "token")
@@ -122,6 +122,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Funzione per fare il logout, elimina il file token dalla cache
     fun logout(view: View) {
         val context = applicationContext
         val cacheFile = File(context.cacheDir, "token")
@@ -131,6 +132,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Funzione per stampare su console se si e' attualmente loggati o meno - debug
     fun checkLogged(view: View) {
         val context = applicationContext
         val cacheFile = File(context.cacheDir, "token")
@@ -141,22 +143,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Funzione per navigare da Home a Scanner (bottone Scanner)
     fun goScanner(view: View) {
         view.findNavController().navigate(R.id.action_navigation_home_to_navigation_scanner)
     }
 
+    // Funzione per navigare da Home a Stanza1 (bottone Postazioni)
     fun goPostazioni(view: View) {
         view.findNavController().navigate(R.id.action_navigation_home_to_navigation_stanza1)
     }
 
+    // Funzione per navigare al fragment Stanza1 (globale)
     fun goStanza1(view: View) {
         view.findNavController().navigate(R.id.action_global_navigation_stanza1)
     }
 
+    // Funzione per navigare al fragment Stanza2 (globale)
     fun goStanza2(view: View) {
         view.findNavController().navigate(R.id.action_global_navigation_stanza2)
     }
 
+    // Funzione per inviare la richiesta POST al server per prenotare una postazione
     fun prenota(view: View) {
         val nameRoom = findViewById<TextView>(R.id.idStanzaPrenotata).text.toString()
         val idDesk = findViewById<TextView>(R.id.idPostazionePrenotata).text.toString().toInt()
@@ -165,23 +172,14 @@ class MainActivity : AppCompatActivity() {
         viewModel.selectedItem.observe(this, Observer { item ->
             date = item
         })
-        val formatter = SimpleDateFormat("HH:mm", Locale.ITALIAN)
         val from = findViewById<TextView>(R.id.editOrarioArrivo).text.toString()
         val to = findViewById<TextView>(R.id.editOrarioUscita).text.toString()
-        //val toTime = formatter.parse(to).time
-        //var trueTo: Time = Time(fromTime)
         val context = applicationContext
         val cacheFile = File(context.cacheDir, "token")
         var authorization = ""
         if(cacheFile.exists()) {
             authorization = cacheFile.readText()
         }
-        println(nameRoom)
-        println(idDesk)
-        println(date)
-        println(from)
-        println(to)
-        println(authorization)
 
         val BASE_URL = "http://192.168.1.91:8080"
         val TIMEOUT = 10
@@ -215,6 +213,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Funzione per navigare al fragment Postazioni (globale)
     fun goPrenotazioni(view: View) {
         val deskId = view.contentDescription.toString()
         val roomId = view.tag.toString()
@@ -222,6 +221,7 @@ class MainActivity : AppCompatActivity() {
         view.findNavController().navigate(action)
     }
 
+    // Funzione per aggiornare il log dei messaggi NFC letti
     fun refreshLogs(view: View) {
         println(logText)
         val tvMessages = findViewById<TextView>(R.id.tv_messages)
@@ -232,6 +232,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Funzione per aprire il TimePicker all'interno di Prenotazioni
     fun openTimePicker(view: View) {
         val cal = Calendar.getInstance()
         val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
@@ -251,241 +252,73 @@ class MainActivity : AppCompatActivity() {
         TimePickerDialog(this, 2, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
     }
 
-    /*fun deskColor(view: View) {
-        when (view.id) {
-            R.id.imageButton00 -> {
-                when (deskList[0][0]) {
-                    0 -> {
-                        view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0][0] = 1
-                    }
-                    1 -> {
-                        view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0][0] = 2
-                    }
-                    2 -> {
-                        view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0][0] = 0
-                    }
-                }
-            }
-            R.id.imageButton01 -> {
-                when (deskList[0][1]) {
-                    0 -> {
-                        view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0][1] = 1
-                    }
-                    1 -> {
-                        view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0][1] = 2
-                    }
-                    2 -> {
-                        view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0][1] = 0
-                    }
-                }
-            }
-            R.id.imageButton02 -> {
-                when (deskList[0][2]) {
-                    0 -> {
-                        view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0][2] = 1
-                    }
-                    1 -> {
-                        view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0][2] = 2
-                    }
-                    2 -> {
-                        view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0][2] = 0
-                    }
-                }
-            }
-            R.id.imageButton03 -> {
-                when (deskList[0][3]) {
-                    0 -> {
-                        view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0][3] = 1
-                    }
-                    1 -> {
-                        view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0][3] = 2
-                    }
-                    2 -> {
-                        view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0][3] = 0
-                    }
-                }
-            }
-            R.id.imageButton04 -> {
-                when (deskList[0][4]) {
-                    0 -> {
-                        view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0][4] = 1
-                    }
-                    1 -> {
-                        view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0][4] = 2
-                    }
-                    2 -> {
-                        view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0][4] = 0
-                    }
-                }
-            }
-            R.id.imageButton05 -> {
-                when (deskList[0][5]) {
-                    0 -> {
-                        view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0][5] = 1
-                    }
-                    1 -> {
-                        view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0][5] = 2
-                    }
-                    2 -> {
-                        view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0][5] = 0
-                    }
-                }
-            }
-            R.id.imageButton06 -> {
-                when (deskList[0][6]) {
-                    0 -> {
-                        view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0][6] = 1
-                    }
-                    1 -> {
-                        view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0][6] = 2
-                    }
-                    2 -> {
-                        view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0][6] = 0
-                    }
-                }
-            }
-            R.id.imageButton07 -> {
-                when (deskList[0][7]) {
-                    0 -> {
-                        view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0][7] = 1
-                    }
-                    1 -> {
-                        view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0][7] = 2
-                    }
-                    2 -> {
-                        view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0][7] = 0
-                    }
-                }
-            }
-            R.id.imageButton07 -> {
-                when (deskList[0][8]) {
-                    0 -> {
-                        view.setBackgroundResource(R.drawable.blue_desk)
-                        deskList[0][8]=1
-                    }
-                    1 -> {
-                        view.setBackgroundResource(R.drawable.red_desk)
-                        deskList[0][8]= 2
-                    }
-                    2 -> {
-                        view.setBackgroundResource(R.drawable.green_desk)
-                        deskList[0][8]= 0
-                    }
-                }
-            }
-        }
-    }*/
-
     override fun onResume() {
         super.onResume()
-        // Get all NDEF discovered intents
-        // Makes sure the app gets all discovered NDEF messages as long as it's in the foreground.
+        // Ottieni tutti gli intenti scoperti NFC
+        // Si assicura che l'app riceva tutti i messaggi NFC rilevati fintanto che è in primo piano.
         nfcAdapter?.enableForegroundDispatch(this, nfcPendingIntent, null, null)
-        // Alternative: only get specific HTTP NDEF intent
-        //nfcAdapter?.enableForegroundDispatch(this, nfcPendingIntent, nfcIntentFilters, null);
     }
 
     override fun onPause() {
         super.onPause()
-        // Disable foreground dispatch, as this activity is no longer in the foreground
+        // Disabilita l'invio in primo piano quando questa attività non è più in primo piano
         nfcAdapter?.disableForegroundDispatch(this)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         logMessage("Found intent in onNewIntent", intent?.action.toString())
-        // If we got an intent while the app is running, also check if it's a new NDEF message
-        // that was discovered
+        // Se abbiamo un intento mentre l'app è in esecuzione, controlla anche se si tratta di un nuovo messaggio NDEF
+        // che è stato scoperto
         if (intent != null) processIntent(intent)
     }
 
     /**
-     * Check if the Intent has the action "ACTION_NDEF_DISCOVERED". If yes, handle it
-     * accordingly and parse the NDEF messages.
-     * @param checkIntent the intent to parse and handle if it's the right type
+     * Controlla se l'Intent ha l'azione "ACTION_NDEF_DISCOVERED". Se sì, viene gestito
+     * di conseguenza e si analizzano i messaggi NFC.
      */
 
     private fun processIntent(checkIntent: Intent) {
-        // Check if intent has the action of a discovered NFC tag
-        // with NDEF formatted contents
+        // Controlla se l'Intent ha l'azione di un tag NFC scoperto
+        // con contenuti formattati NDEF
         if (checkIntent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
             logMessage("New NDEF intent", checkIntent.toString())
 
-            // Retrieve the raw NDEF message from the tag
+            // Recupera il messaggio NDEF grezzo dal tag
             val rawMessages = checkIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
             if (rawMessages != null) {
                 logMessage("Raw messages", rawMessages.size.toString())
             }
 
-            // Complete variant: parse NDEF messages
             if (rawMessages != null) {
-                val messages = arrayOfNulls<NdefMessage?>(rawMessages.size)// Array<NdefMessage>(rawMessages.size, {})
+                val messages = arrayOfNulls<NdefMessage?>(rawMessages.size)
                 for (i in rawMessages.indices) {
                     messages[i] = rawMessages[i] as NdefMessage
                 }
-                // Process the messages array.
+                // Elabora l'array di messaggi.
                 processNdefMessages(messages)
             }
-
-            // Simple variant: assume we have 1x URI record
-            //if (rawMessages != null && rawMessages.isNotEmpty()) {
-            //    val ndefMsg = rawMessages[0] as NdefMessage
-            //    if (ndefMsg.records != null && ndefMsg.records.isNotEmpty()) {
-            //        val ndefRecord = ndefMsg.records[0]
-            //        if (ndefRecord.toUri() != null) {
-            //            logMessage("URI detected", ndefRecord.toUri().toString())
-            //        } else {
-            //            // Other NFC Tags
-            //            logMessage("Payload", ndefRecord.payload.contentToString())
-            //        }
-            //    }
-            //}
-
         }
     }
 
     /**
-     * Parse the NDEF message contents and print these to the on-screen log.
+     * Analizza il contenuto del messaggio NDEF e lo stampa nel log.
      */
     private fun processNdefMessages(ndefMessages: Array<NdefMessage?>) {
-        // Go through all NDEF messages found on the NFC tag
+        // Passa attraverso tutti i messaggi NDEF trovati sul tag NFC
         for (curMsg in ndefMessages) {
             if (curMsg != null) {
-                // Print generic information about the NDEF message
+                // Stampa informazioni generiche sul messaggio NDEF
                 logMessage("Message", curMsg.toString())
                 logMessage("Records", curMsg.records.size.toString())
 
-                // Loop through all the records contained in the message
+                // Scorri tutti i record contenuti nel messaggio
                 for (curRecord in curMsg.records) {
                     if (curRecord.toUri() != null) {
                         // URI NDEF Tag
                         logMessage("- URI", curRecord.toUri().toString())
                     } else {
-                        // Other NDEF Tags - simply print the payload
+                        // Altri tag NDEF: stampa semplicemente il payload
                         logMessage("- Contents", curRecord.payload.decodeToString().drop(3))
                     }
                 }
@@ -493,23 +326,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // --------------------------------------------------------------------------------
-    // Utility functions
-
     /**
-     * Log a message to the debug text view.
-     * @param header title text of the message, printed in bold
-     * @param text optional parameter containing details about the message. Printed in plain text.
+     * Registra un messaggio nella visualizzazione del testo di debug.
+     * @param header testo del titolo del messaggio, stampato in grassetto
+     * @param text parametro facoltativo contenente i dettagli sul messaggio. Stampato in testo normale.
      */
     private fun logMessage(header: String, text: String?) {
         logText = logText.plus(if (text.isNullOrBlank()) fromHtml("<b>$header</b><br>") else fromHtml("<b>$header</b>: $text<br>"))
     }
 
     /**
-     * Convert HTML formatted strings to spanned (styled) text, for inserting to the TextView.
-     * Externalized into an own function as the fromHtml(html) method was deprecated with
-     * Android N. This method chooses the right variant depending on the OS.
-     * @param html HTML-formatted string to convert to a Spanned text.
+     * Converte stringhe formattate HTML in testo con spanning (con stile), per l'inserimento in TextView.
+     * Esternalizzato in una funzione propria poiché il metodo fromHtml (html) è stato deprecato
+     * con Android N. Questo metodo sceglie la variante giusta a seconda del sistema operativo.
+     * @param html stringa in formato HTML da convertire in un testo con spanning.
      */
 
     private fun fromHtml(html: String): Spanned {
