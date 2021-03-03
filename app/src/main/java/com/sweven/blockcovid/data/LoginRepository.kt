@@ -35,7 +35,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
 
     suspend fun login(username: String, password: String): Result<LoggedInUser> {
 
-        val BASE_URL = "http://192.168.1.91:8080"
+        val BASE_URL = "http://192.168.210.30:8080"
         val TIMEOUT = 10
         val retrofit: Retrofit?
         val okHttpClientBuilder = OkHttpClient.Builder()

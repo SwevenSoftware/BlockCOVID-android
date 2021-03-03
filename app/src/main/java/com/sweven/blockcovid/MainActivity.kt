@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
             authorization = cacheFile.readText()
         }
 
-        val BASE_URL = "http://192.168.1.91:8080"
+        val BASE_URL = "http://192.168.210.30:8080"
         val TIMEOUT = 10
         val retrofit: Retrofit?
         val okHttpClientBuilder = OkHttpClient.Builder()
