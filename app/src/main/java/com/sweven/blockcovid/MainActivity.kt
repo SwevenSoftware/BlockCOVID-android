@@ -106,16 +106,6 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    // Funzione per stampare il token personale su console - debug
-    fun printToken(view: View) {
-        val context = applicationContext
-        val cacheFile = File(context.cacheDir, "token")
-        if(cacheFile.exists()) {
-            val token = cacheFile.readText()
-            println(token)
-        }
-    }
-
     // Funzione per fare il logout, elimina il file token dalla cache
     fun logout(view: View) {
         val context = applicationContext
@@ -123,17 +113,6 @@ class MainActivity : AppCompatActivity() {
         if(cacheFile.exists()) {
             cacheFile.delete()
             view.findNavController().navigate(R.id.action_global_navigation_login)
-        }
-    }
-
-    // Funzione per stampare su console se si e' attualmente loggati o meno - debug
-    fun checkLogged(view: View) {
-        val context = applicationContext
-        val cacheFile = File(context.cacheDir, "token")
-        if(cacheFile.exists()) {
-            println("Logged in")
-        } else {
-            println("Logged out")
         }
     }
 
