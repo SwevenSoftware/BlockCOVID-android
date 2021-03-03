@@ -32,26 +32,12 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     }
 
     fun loginDataChanged(email: String, password: String) {
-        if (!isEmailValid(email)) {
+        if (!InputChecks.isEmailValid(email)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!isPasswordValid(password)) {
+        } else if (!InputChecks.isPasswordValid(password)) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
         }
-    }
-
-    // Un controllo di convalida del nome utente
-    private fun isEmailValid(email: String): Boolean {
-        return if (email.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(email).matches()
-        } else {
-            email.isNotBlank()
-        }
-    }
-
-    // Un controllo di convalida della password
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
     }
 }

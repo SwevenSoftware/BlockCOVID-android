@@ -203,6 +203,14 @@ class MainActivity : AppCompatActivity() {
                             Toast.LENGTH_LONG
                     ).show()
                 }
+            } else {
+                runOnUiThread {
+                    Toast.makeText(
+                        applicationContext,
+                        "Prenotazione fallita",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }

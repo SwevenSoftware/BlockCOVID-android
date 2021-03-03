@@ -54,15 +54,17 @@ class LoginActivity : AppCompatActivity() {
             loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
+                username.text.clear()
+                password.text.clear()
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
                 saveToken(loginResult.success)
+                setResult(Activity.RESULT_OK)
+                val i = Intent(this, MainActivity::class.java)
+                startActivity(i)
+                finish()
             }
-            setResult(Activity.RESULT_OK)
-            val i = Intent(this, MainActivity::class.java)
-            startActivity(i)
-            finish()
         })
 
         username.afterTextChanged {
