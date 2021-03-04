@@ -17,9 +17,11 @@ class StartActivity : AppCompatActivity() {
         if(cacheFile.exists()) {
             val i = Intent(this, MainActivity::class.java)
             startActivity(i)
+            finish()
         } else {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
+            finish()
         }
     }
 }

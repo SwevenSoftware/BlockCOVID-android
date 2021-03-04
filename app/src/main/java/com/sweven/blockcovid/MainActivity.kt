@@ -29,15 +29,12 @@ import com.sweven.blockcovid.ui.prenotazioni.PrenotazioniViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
+import com.sweven.blockcovid.services.ServerImola
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.File
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.withContext
 
 
@@ -154,17 +151,7 @@ class MainActivity : AppCompatActivity() {
             authorization = cacheFile.readText()
         }
 
-        val BASE_URL = "http://192.168.210.30:8080"
-        val TIMEOUT = 10
-        val retrofit: Retrofit?
-        val okHttpClientBuilder = OkHttpClient.Builder()
-        okHttpClientBuilder.connectTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)
-
-        retrofit = Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .client(okHttpClientBuilder.build())
-                .build()
+        val retrofit = ServerImola.connectServer()
 
         val service = retrofit.create(APIReserve::class.java)
 
