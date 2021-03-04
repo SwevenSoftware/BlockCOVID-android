@@ -5,12 +5,8 @@ import android.util.Patterns
 object InputChecks {
 
     // Un controllo di convalida del nome utente
-    fun isEmailValid(email: String): Boolean {
-        return if (email.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(email).matches()
-        } else {
-            email.isNotBlank()
-        }
+    fun isUsernameValid(username: String): Boolean {
+        return username.isNotEmpty()
     }
 
     // Un controllo di convalida della password
