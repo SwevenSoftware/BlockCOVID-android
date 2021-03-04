@@ -20,14 +20,14 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class fullrun {
+class FullRunTest {
 
     @Rule
     @JvmField
     var mActivityTestRule = ActivityTestRule(StartActivity::class.java)
 
     @Test
-    fun fullrun() {
+    fun fullRunTest() {
         val appCompatEditText = onView(
             allOf(
                 withId(R.id.username),
