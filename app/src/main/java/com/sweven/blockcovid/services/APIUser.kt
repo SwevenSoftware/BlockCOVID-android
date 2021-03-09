@@ -2,9 +2,11 @@ package com.sweven.blockcovid.services
 
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.*
 import java.util.HashMap
-
+import retrofit2.http.Multipart
+import retrofit2.http.Headers
+import retrofit2.http.POST
+import retrofit2.http.PartMap
 
 /**
  * Api per ottenere l'elenco utenti

@@ -11,5 +11,4 @@ class PrenotazioniViewModel : ViewModel() {
     fun selectItem(item: String) {
         mutableSelectedItem.value = item
     }
-
 }
