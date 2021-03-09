@@ -287,6 +287,7 @@ class MainActivity : AppCompatActivity() {
                         logMessage("- URI", curRecord.toUri().toString())
                     } else {
                         // Altri tag NDEF: stampa semplicemente il payload
+                        // il drop(3) serve ad eliminare i primi caratteri di default dal content
                         logMessage("- Contents", curRecord.payload.decodeToString().drop(3))
                     }
                 }
@@ -300,7 +301,10 @@ class MainActivity : AppCompatActivity() {
      * @param text parametro facoltativo contenente i dettagli sul messaggio. Stampato in testo normale.
      */
     private fun logMessage(header: String, text: String?) {
-        logText = logText.plus(if (text.isNullOrBlank()) fromHtml("<b>$header</b><br>") else fromHtml("<b>$header</b>: $text<br>"))
+        logText = logText.plus(if (text.isNullOrBlank())
+            fromHtml("<b>$header</b><br>")
+        else
+            fromHtml("<b>$header</b>: $text<br>"))
     }
 
     /**
