@@ -22,28 +22,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView5"
-        android:layout_width="107dp"
-        android:layout_height="29dp"
-        android:layout_marginTop="28dp"
+        android:id="@+id/showUsername"
+        android:layout_width="102dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="288dp"
-        android:layout_weight="3"
+        android:layout_marginBottom="12dp"
+        android:layout_weight="4"
         android:text="@string/prompt_username"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="104dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="360dp"
-        android:layout_weight="4"
-        android:text="@string/prompt_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.012"
+        app:layout_constraintHorizontal_bias="0.225"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

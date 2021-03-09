@@ -93,6 +93,12 @@ class MainActivity : AppCompatActivity() {
         val id = item.itemId
         if (id == R.id.navigation_login) {
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_account)
+            val showuser = findViewById<TextView>(R.id.showUsername)
+            val context = applicationContext
+            val cacheFile = File(context.cacheDir, "username")
+            if(cacheFile.exists()) {
+                showuser.text= cacheFile.readText()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -107,6 +113,10 @@ class MainActivity : AppCompatActivity() {
     fun logout(view: View) {
         val context = applicationContext
         val cacheFile = File(context.cacheDir, "token")
+        val cacheUser = File(context.cacheDir,"username")
+        if(cacheUser.exists()) {
+            cacheUser.delete()
+        }
         if(cacheFile.exists()) {
             cacheFile.delete()
             view.findNavController().navigate(R.id.action_global_navigation_login)

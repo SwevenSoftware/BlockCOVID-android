@@ -21,4 +21,5 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             ViewModelProvider(this).get(AccountViewModel::class.java)
         return inflater.inflate(R.layout.fragment_account, container, false)
     }
+
 }

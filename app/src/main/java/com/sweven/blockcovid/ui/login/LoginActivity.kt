@@ -11,10 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import com.sweven.blockcovid.MainActivity
 import com.sweven.blockcovid.R
 import java.io.File
@@ -60,6 +57,7 @@ class LoginActivity : AppCompatActivity() {
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
                 saveToken(loginResult.success)
+                saveUsername(loginResult.success)
                 setResult(Activity.RESULT_OK)
                 val i = Intent(this, MainActivity::class.java)
                 startActivity(i)
@@ -107,6 +105,16 @@ class LoginActivity : AppCompatActivity() {
         val cacheFile = File(context.cacheDir, "token")
         if (token != null) {
             cacheFile.writeText(token)
+        }
+    }
+
+    private fun saveUsername(model: LoggedInUserView) {
+        val context = applicationContext
+        val username = model.displayName
+        File.createTempFile("username", null, context.cacheDir)
+        val cacheFile = File(context.cacheDir, "username")
+        if (username != null) {
+            cacheFile.writeText(username)
         }
     }
 
