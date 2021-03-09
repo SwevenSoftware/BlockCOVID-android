@@ -19,7 +19,7 @@ class StartActivity : AppCompatActivity() {
             startActivity(i)
             finish()
         } else {
-            val i = Intent(this, LoginActivity::class.java)
+            val i = Intent(this, MainActivity::class.java)
             startActivity(i)
             finish()
         }
