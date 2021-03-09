@@ -13,7 +13,7 @@
         android:layout_marginStart="23dp"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="23dp"
-        android:text="Avvicina il telefono ad un tag RFID,\npoi vai su Home > Scanner e premi\nil pulsante Log per leggerne il contenuto"
+        android:text="@string/help_string"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

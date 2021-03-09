@@ -14,7 +14,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:text="Stanza selezionata:"
+        android:text="@string/selected_room"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,7 +37,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:text="Postazione selezionata:"
+        android:text="@string/selected_desk"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/stanzaSelezionata" />
@@ -60,7 +60,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:text="Seleziona orario di arrivo:"
+        android:text="@string/select_time_to"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/postazioneSelezionata" />
@@ -86,7 +86,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:text="Seleziona orario di uscita:"
+        android:text="@string/select_time_from"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/orarioArrivo" />
@@ -111,7 +111,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ems="14"
-        android:text="Seleziona giorno della prenotazione:"
+        android:text="@string/select_day"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/orarioUscita" />
