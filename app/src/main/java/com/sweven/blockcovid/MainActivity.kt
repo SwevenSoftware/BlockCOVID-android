@@ -25,7 +25,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.sweven.blockcovid.databinding.ActivityMainBinding
 import com.sweven.blockcovid.services.APIReserve
-import com.sweven.blockcovid.ui.prenotazioni.PrenotazioniViewModel
+import com.sweven.blockcovid.ui.reservation.ReservationViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -119,31 +119,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Funzione per navigare da Home a Stanza1 (bottone Postazioni)
-    fun goPostazioni(view: View) {
-        view.findNavController().navigate(R.id.action_navigation_home_to_navigation_stanza1)
+    fun goDesks(view: View) {
+        view.findNavController().navigate(R.id.action_navigation_home_to_navigation_room1)
     }
 
     // Funzione per navigare al fragment Stanza1 (globale)
-    fun goStanza1(view: View) {
-        view.findNavController().navigate(R.id.action_global_navigation_stanza1)
+    fun goRoom1(view: View) {
+        view.findNavController().navigate(R.id.action_global_navigation_room1)
     }
 
     // Funzione per navigare al fragment Stanza2 (globale)
-    fun goStanza2(view: View) {
-        view.findNavController().navigate(R.id.action_global_navigation_stanza2)
+    fun goRoom2(view: View) {
+        view.findNavController().navigate(R.id.action_global_navigation_room2)
     }
 
     // Funzione per inviare la richiesta POST al server per prenotare una postazione
-    fun prenota(view: View) {
-        val nameRoom = findViewById<TextView>(R.id.idStanzaPrenotata).text.toString()
-        val idDesk = findViewById<TextView>(R.id.idPostazionePrenotata).text.toString().toInt()
+    fun reserve(view: View) {
+        val nameRoom = findViewById<TextView>(R.id.idReservedRoom).text.toString()
+        val idDesk = findViewById<TextView>(R.id.idReservedDesk).text.toString().toInt()
         var date = ""
-        val viewModel: PrenotazioniViewModel by viewModels()
+        val viewModel: ReservationViewModel by viewModels()
         viewModel.selectedItem.observe(this, Observer { item ->
             date = item
         })
-        val from = findViewById<TextView>(R.id.editOrarioArrivo).text.toString()
-        val to = findViewById<TextView>(R.id.editOrarioUscita).text.toString()
+        val from = findViewById<TextView>(R.id.editArrivalTime).text.toString()
+        val to = findViewById<TextView>(R.id.editExitTime).text.toString()
         val context = applicationContext
         val cacheFile = File(context.cacheDir, "token")
         var authorization = ""
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
                     println(responseJson)
                     Toast.makeText(
                             applicationContext,
-                            "Postazione prenotata",
+                            getString(R.string.desk_reserved),
                             Toast.LENGTH_LONG
                     ).show()
                 }
@@ -173,7 +173,7 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     Toast.makeText(
                         applicationContext,
-                        "Prenotazione fallita",
+                        getString(R.string.reservation_failed),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Funzione per navigare al fragment Postazioni (globale)
-    fun goPrenotazioni(view: View) {
+    fun goReservation(view: View) {
         val deskId = view.contentDescription.toString()
         val roomId = view.tag.toString()
         val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(deskId, roomId)
@@ -207,12 +207,12 @@ class MainActivity : AppCompatActivity() {
             cal.set(Calendar.HOUR_OF_DAY, hour)
             cal.set(Calendar.MINUTE, minute)
             when (view.id) {
-                R.id.editOrarioArrivo -> {
-                    val orarioArrivo = findViewById<TextView>(R.id.editOrarioArrivo)
+                R.id.editArrivalTime -> {
+                    val orarioArrivo = findViewById<TextView>(R.id.editArrivalTime)
                     orarioArrivo.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
                 }
-                R.id.editOrarioUscita -> {
-                    val orarioUscita = findViewById<TextView>(R.id.editOrarioUscita)
+                R.id.editExitTime -> {
+                    val orarioUscita = findViewById<TextView>(R.id.editExitTime)
                     orarioUscita.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
                 }
             }

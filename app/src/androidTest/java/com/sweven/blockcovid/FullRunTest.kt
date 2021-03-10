@@ -195,7 +195,7 @@ class FullRunTest {
 
         val materialButton4 = onView(
             allOf(
-                withId(R.id.postazioni), withText("Postazioni"),
+                withId(R.id.desks), withText("Postazioni"),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
@@ -225,7 +225,7 @@ class FullRunTest {
 
         val appCompatEditText4 = onView(
             allOf(
-                withId(R.id.editOrarioArrivo),
+                withId(R.id.editArrivalTime),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
@@ -255,7 +255,7 @@ class FullRunTest {
 
         val appCompatEditText5 = onView(
             allOf(
-                withId(R.id.editOrarioUscita),
+                withId(R.id.editExitTime),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
@@ -286,7 +286,7 @@ class FullRunTest {
 
         val materialButton7 = onView(
             allOf(
-                withId(R.id.prenota), withText("Prenota"),
+                withId(R.id.reserveButton), withText("Prenota"),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),

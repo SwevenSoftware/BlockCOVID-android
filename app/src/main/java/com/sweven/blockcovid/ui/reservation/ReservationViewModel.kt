@@ -1,10 +1,10 @@
-package com.sweven.blockcovid.ui.prenotazioni
+package com.sweven.blockcovid.ui.reservation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class PrenotazioniViewModel : ViewModel() {
+class ReservationViewModel : ViewModel() {
     private val mutableSelectedItem = MutableLiveData<String>()
     val selectedItem: LiveData<String> get() = mutableSelectedItem
 
