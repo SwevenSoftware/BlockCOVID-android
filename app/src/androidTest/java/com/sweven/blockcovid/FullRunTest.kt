@@ -102,7 +102,7 @@ class FullRunTest {
 
         val materialButton2 = onView(
             allOf(
-                withId(R.id.btnScanner), withText("Scanner"),
+                withId(R.id.scanner_button), withText("Scanner"),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
@@ -117,7 +117,7 @@ class FullRunTest {
 
         val materialButton3 = onView(
             allOf(
-                withId(R.id.log), withText("Log"),
+                withId(R.id.log_button), withText("Log"),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
@@ -195,7 +195,7 @@ class FullRunTest {
 
         val materialButton4 = onView(
             allOf(
-                withId(R.id.desks), withText("Postazioni"),
+                withId(R.id.desks_button), withText("Postazioni"),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
@@ -225,7 +225,7 @@ class FullRunTest {
 
         val appCompatEditText4 = onView(
             allOf(
-                withId(R.id.editArrivalTime),
+                withId(R.id.edit_arrival_time),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
@@ -255,7 +255,7 @@ class FullRunTest {
 
         val appCompatEditText5 = onView(
             allOf(
-                withId(R.id.editExitTime),
+                withId(R.id.edit_exit_time),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
@@ -286,7 +286,7 @@ class FullRunTest {
 
         val materialButton7 = onView(
             allOf(
-                withId(R.id.reserveButton), withText("Prenota"),
+                withId(R.id.reserve_button), withText("Prenota"),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
@@ -316,7 +316,7 @@ class FullRunTest {
 
         val materialButton8 = onView(
             allOf(
-                withId(R.id.btnLogout), withText("Logout"),
+                withId(R.id.logout_button), withText("Logout"),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),

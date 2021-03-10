@@ -42,6 +42,6 @@
     <string name="eight">8</string>
     <string name="nine">9</string>
     <string name="zero">0</string>
-    <string name="desk_reserved" >Successful reservation</string>
-    <string name="reservation_failed">Failed reservation</string>
+    <string name="reservation_successful" >Successful reservation</string>
+    <string name="reservation_failed">Reservation failed</string>
 </resources>

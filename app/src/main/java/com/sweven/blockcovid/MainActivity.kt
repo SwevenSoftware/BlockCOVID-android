@@ -135,15 +135,15 @@ class MainActivity : AppCompatActivity() {
 
     // Funzione per inviare la richiesta POST al server per prenotare una postazione
     fun reserve(view: View) {
-        val nameRoom = findViewById<TextView>(R.id.idReservedRoom).text.toString()
-        val idDesk = findViewById<TextView>(R.id.idReservedDesk).text.toString().toInt()
+        val nameRoom = findViewById<TextView>(R.id.id_reserved_room).text.toString()
+        val idDesk = findViewById<TextView>(R.id.id_reserved_desk).text.toString().toInt()
         var date = ""
         val viewModel: ReservationViewModel by viewModels()
         viewModel.selectedItem.observe(this, Observer { item ->
             date = item
         })
-        val from = findViewById<TextView>(R.id.editArrivalTime).text.toString()
-        val to = findViewById<TextView>(R.id.editExitTime).text.toString()
+        val from = findViewById<TextView>(R.id.edit_arrival_time).text.toString()
+        val to = findViewById<TextView>(R.id.edit_exit_time).text.toString()
         val context = applicationContext
         val cacheFile = File(context.cacheDir, "token")
         var authorization = ""
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
                     println(responseJson)
                     Toast.makeText(
                             applicationContext,
-                            getString(R.string.desk_reserved),
+                            getString(R.string.reservation_successful),
                             Toast.LENGTH_LONG
                     ).show()
                 }
@@ -207,13 +207,13 @@ class MainActivity : AppCompatActivity() {
             cal.set(Calendar.HOUR_OF_DAY, hour)
             cal.set(Calendar.MINUTE, minute)
             when (view.id) {
-                R.id.editArrivalTime -> {
-                    val orarioArrivo = findViewById<TextView>(R.id.editArrivalTime)
-                    orarioArrivo.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
+                R.id.edit_arrival_time -> {
+                    val arrivalTime = findViewById<TextView>(R.id.edit_arrival_time)
+                    arrivalTime.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
                 }
-                R.id.editExitTime -> {
-                    val orarioUscita = findViewById<TextView>(R.id.editExitTime)
-                    orarioUscita.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
+                R.id.edit_exit_time -> {
+                    val exitTime = findViewById<TextView>(R.id.edit_exit_time)
+                    exitTime.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
                 }
             }
         }
