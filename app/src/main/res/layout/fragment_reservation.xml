@@ -8,7 +8,7 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/stanzaSelezionata"
+        android:id="@+id/selected_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -20,18 +20,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/idStanzaPrenotata"
+        android:id="@+id/id_reserved_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="16dp"
         android:textSize="16sp"
         android:textColor="@color/purple_200"
-        app:layout_constraintStart_toEndOf="@+id/stanzaSelezionata"
+        app:layout_constraintStart_toEndOf="@+id/selected_room"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/postazioneSelezionata"
+        android:id="@+id/selected_desk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -40,21 +40,21 @@
         android:text="@string/selected_desk"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stanzaSelezionata" />
+        app:layout_constraintTop_toBottomOf="@id/selected_room" />
 
     <TextView
-        android:id="@+id/idPostazionePrenotata"
+        android:id="@+id/id_reserved_desk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:textColor="@color/purple_200"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/postazioneSelezionata"
-        app:layout_constraintTop_toBottomOf="@id/idStanzaPrenotata" />
+        app:layout_constraintStart_toEndOf="@+id/selected_desk"
+        app:layout_constraintTop_toBottomOf="@id/id_reserved_room" />
 
     <TextView
-        android:id="@+id/orarioArrivo"
+        android:id="@+id/arrival_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -63,10 +63,10 @@
         android:text="@string/select_time_to"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/postazioneSelezionata" />
+        app:layout_constraintTop_toBottomOf="@+id/selected_desk" />
 
     <EditText
-        android:id="@+id/editOrarioArrivo"
+        android:id="@+id/edit_arrival_time"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -76,11 +76,11 @@
         android:onClick="openTimePicker"
         android:textAlignment="center"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/orarioArrivo"
-        app:layout_constraintTop_toBottomOf="@+id/idPostazionePrenotata" />
+        app:layout_constraintStart_toEndOf="@+id/arrival_time"
+        app:layout_constraintTop_toBottomOf="@+id/id_reserved_desk" />
 
     <TextView
-        android:id="@+id/orarioUscita"
+        android:id="@+id/exit_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -89,10 +89,10 @@
         android:text="@string/select_time_from"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orarioArrivo" />
+        app:layout_constraintTop_toBottomOf="@+id/arrival_time" />
 
     <EditText
-        android:id="@+id/editOrarioUscita"
+        android:id="@+id/edit_exit_time"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -101,11 +101,11 @@
         android:onClick="openTimePicker"
         android:textAlignment="center"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/orarioUscita"
-        app:layout_constraintTop_toBottomOf="@+id/editOrarioArrivo" />
+        app:layout_constraintStart_toEndOf="@+id/exit_time"
+        app:layout_constraintTop_toBottomOf="@+id/edit_arrival_time" />
 
     <TextView
-        android:id="@+id/dataPrenotazione"
+        android:id="@+id/reservation_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -114,25 +114,25 @@
         android:text="@string/select_day"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orarioUscita" />
+        app:layout_constraintTop_toBottomOf="@+id/exit_time" />
 
     <CalendarView
-        android:id="@+id/selezionaData"
+        android:id="@+id/select_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:maxDate="01/01/2023"
         android:minDate="01/01/2021"
-        app:layout_constraintBottom_toTopOf="@+id/prenota"
+        app:layout_constraintBottom_toTopOf="@+id/reserve_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dataPrenotazione" />
+        app:layout_constraintTop_toBottomOf="@+id/reservation_date" />
 
     <Button
-        android:id="@+id/prenota"
+        android:id="@+id/reserve_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
-        android:onClick="prenota"
+        android:onClick="reserve"
         android:text="@string/title_prenota"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
