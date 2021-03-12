@@ -1,5 +1,10 @@
 package com.sweven.blockcovid.data
 
+import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
+import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.APIUser
 import com.sweven.blockcovid.services.NetworkClient
@@ -15,6 +20,8 @@ class LoginRepository(val dataSource: LoginDataSource) {
     // cache in memoria dell'oggetto loggedInUser
     var user: LoggedInUser? = null
         private set
+
+    val status = MutableLiveData<Int?>()
 
     val isLoggedIn: Boolean
         get() = user != null
@@ -40,19 +47,30 @@ class LoginRepository(val dataSource: LoginDataSource) {
         fields["password"] = (password)
 
         val response = service.loginUser(fields)
-        return if (response.isSuccessful) {
-            val token = response.body()?.string().toString()
-            print("Token: ")
-            println(token)
+        if (response.isSuccessful) {
+            if (response.errorBody() != null) {
 
-            val result = dataSource.login(username, password, token)
-            if (result is Result.Success) {
-                setLoggedInUser(result.data)
+
+                val token = response.body()?.string().toString()
+                print("Token: ")
+                println(token)
+
+                val result = dataSource.login(username, password, token)
+                if (result is Result.Success) {
+                    setLoggedInUser(result.data)
+                }
+                return result
+            } else {
+                val result = Result.Error(IOException("Error logging in"))
+                when (response.errorBody().toString()) {
+                    "404" -> status.postValue(2)
+                }
+                return result
             }
-            return result
-        } else {
-            Result.Error(IOException("Error logging in"))
+
         }
+        val result = Result.Error(IOException("Error logging in"))
+        return result
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {

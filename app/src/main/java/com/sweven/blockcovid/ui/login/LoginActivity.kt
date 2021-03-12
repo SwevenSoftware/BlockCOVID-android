@@ -17,12 +17,13 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.sweven.blockcovid.MainActivity
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.data.LoginRepository
 import java.io.File
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
-
+    private  var loginRepository: LoginRepository? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -98,7 +99,38 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
         }
+
+        loginViewModel.status.observe(this, Observer { status ->
+            status?.let {
+                when(status){
+                    0-> Toast.makeText(
+                        applicationContext,
+                        getString(R.string.timeout),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    1-> Toast.makeText(
+                        applicationContext,
+                        getString(R.string.timeout),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                loginViewModel.status.value=null
+            }
+        })
+        loginRepository?.status?.observe(this, Observer { status ->
+            status?.let {
+                when(status){
+                    2-> Toast.makeText(
+                        applicationContext,
+                        getString(R.string.timeout),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                loginViewModel.status.value=null
+            }
+        })
     }
+
 
     private fun saveToken(model: LoggedInUserView) {
         val context = applicationContext

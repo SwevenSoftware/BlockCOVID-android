@@ -44,4 +44,5 @@
     <string name="zero">0</string>
     <string name="reservation_successful">Prenotazione avvenuta</string>
     <string name="reservation_failed">Prenotazione fallita</string>
+    <string name="timeout" >timeout</string>
 </resources>
