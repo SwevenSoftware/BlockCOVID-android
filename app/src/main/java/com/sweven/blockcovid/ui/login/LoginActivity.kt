@@ -103,10 +103,16 @@ class LoginActivity : AppCompatActivity() {
     private fun saveToken(model: LoggedInUserView) {
         val context = applicationContext
         val token = model.token
+        val expiryDate = model.expiryDate
         File.createTempFile("token", null, context.cacheDir)
-        val cacheFile = File(context.cacheDir, "token")
+        File.createTempFile("expiryDate", null, context.cacheDir)
+        val cacheToken = File(context.cacheDir, "token")
+        val cacheExpiry = File(context.cacheDir, "expiryDate")
         if (token != null) {
-            cacheFile.writeText(token)
+            cacheToken.writeText(token)
+        }
+        if (expiryDate != null) {
+            cacheExpiry.writeText(expiryDate.toString())
         }
     }
 
