@@ -5,7 +5,6 @@ import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,13 +16,11 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.sweven.blockcovid.MainActivity
 import com.sweven.blockcovid.R
-import com.sweven.blockcovid.data.LoginRepository
 import java.io.File
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
-    private  var loginRepository: LoginRepository? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -99,36 +96,6 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
         }
-
-        loginViewModel.status.observe(this, Observer { status ->
-            status?.let {
-                when(status){
-                    0-> Toast.makeText(
-                        applicationContext,
-                        getString(R.string.timeout),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    1-> Toast.makeText(
-                        applicationContext,
-                        getString(R.string.timeout),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                loginViewModel.status.value=null
-            }
-        })
-        loginRepository?.status?.observe(this, Observer { status ->
-            status?.let {
-                when(status){
-                    2-> Toast.makeText(
-                        applicationContext,
-                        getString(R.string.timeout),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                loginViewModel.status.value=null
-            }
-        })
     }
 
 
@@ -153,8 +120,8 @@ class LoginActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    private fun showLoginFailed(errorString: String) {
+        Toast.makeText(applicationContext, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 }
 

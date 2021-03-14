@@ -1,14 +1,10 @@
 package com.sweven.blockcovid.data
 
-import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.sweven.blockcovid.R
+import com.google.gson.Gson
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.APIUser
+import com.sweven.blockcovid.services.ErrorBody
 import com.sweven.blockcovid.services.NetworkClient
-import java.io.IOException
 
 /**
  * Classe che richiede l'autenticazione e le informazioni sull'utente dall'origine dati remota e
@@ -20,8 +16,6 @@ class LoginRepository(val dataSource: LoginDataSource) {
     // cache in memoria dell'oggetto loggedInUser
     var user: LoggedInUser? = null
         private set
-
-    val status = MutableLiveData<Int?>()
 
     val isLoggedIn: Boolean
         get() = user != null
@@ -49,8 +43,6 @@ class LoginRepository(val dataSource: LoginDataSource) {
         val response = service.loginUser(fields)
         if (response.isSuccessful) {
             if (response.errorBody() != null) {
-
-
                 val token = response.body()?.string().toString()
                 print("Token: ")
                 println(token)
@@ -59,18 +51,18 @@ class LoginRepository(val dataSource: LoginDataSource) {
                 if (result is Result.Success) {
                     setLoggedInUser(result.data)
                 }
+                println("Successful")
                 return result
             } else {
-                val result = Result.Error(IOException("Error logging in"))
-                when (response.errorBody().toString()) {
-                    "404" -> status.postValue(2)
-                }
-                return result
+                println("Successful but error")
+                val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
+                return Result.Error(error.status.toString())
             }
-
+        } else {
+            println("Not successful")
+            val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
+            return Result.Error(error.status.toString())
         }
-        val result = Result.Error(IOException("Error logging in"))
-        return result
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {

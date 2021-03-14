@@ -1,11 +1,8 @@
 package com.sweven.blockcovid.ui.login
 
-import android.provider.Settings.Global.getString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
-import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.sweven.blockcovid.data.LoginRepository
 import com.sweven.blockcovid.data.Result
@@ -19,7 +16,6 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
-    val status = MutableLiveData<Int?>()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
@@ -38,16 +34,16 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
                             )
                         )
                     )
-                } else {
-                    _loginResult.postValue(LoginResult(error = R.string.login_failed))
+                } else if (result is Result.Error) {
+                    _loginResult.postValue(LoginResult(error = result.exception))
                 }
             } catch (exception: SocketTimeoutException) {
-                println("sockettimeout")
-                status.postValue(0)
+                println("socketexception")
+                _loginResult.postValue(LoginResult(error = "Timeout"))
             }
             catch (exception: ConnectException) {
                 println("connecttimeout")
-                status.postValue(1)
+                _loginResult.postValue(LoginResult(error = "Connection error"))
             }
         }
     }

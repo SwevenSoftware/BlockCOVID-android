@@ -44,5 +44,7 @@
     <string name="zero">0</string>
     <string name="reservation_successful" >Successful reservation</string>
     <string name="reservation_failed">Reservation failed</string>
-    <string name="timeout" >timeout</string>
+    <string name="timeout" >Timeout</string>
+    <string name="connection_error" >Connection error</string>
+    <string name="error" >Error:</string>
 </resources>

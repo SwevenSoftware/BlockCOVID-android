@@ -174,8 +174,12 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                         }
                         else{
-                            when(response.errorBody().toString()){
-                                "404"-> print("404 error")
+                            runOnUiThread {
+                                Toast.makeText(
+                                        applicationContext,
+                                        response.errorBody().toString(),
+                                        Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
                     }
@@ -183,7 +187,7 @@ class MainActivity : AppCompatActivity() {
                     runOnUiThread {
                         Toast.makeText(
                             applicationContext,
-                            getString(R.string.reservation_failed),
+                            response.errorBody().toString(),
                             Toast.LENGTH_LONG
                         ).show()
                     }
