@@ -4,9 +4,10 @@ import android.content.Context
 import com.sweven.blockcovid.R
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.security.KeyStore
 import java.security.SecureRandom
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.*
 
@@ -24,16 +25,15 @@ object ServiceGenerator {
     private fun generateSecureOkHttpClient(context: Context): OkHttpClient {
         // Create a simple builder for our http client, this is only por example purposes
         val httpClientBuilder = OkHttpClient.Builder()
-            .readTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
-
+            .readTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(10, TimeUnit.SECONDS)
         // Here you may wanna add some headers or custom setting for your builder
 
         // Get the file of our certificate
-        val caFileInputStream = context.resources.openRawResource(R.raw.my_certificate)
+        val caFileInputStream = Certificates.decodeCertificatePem.resources.openRawResource(R.raw.crt)
 
         // We're going to put our certificates in a Keystore
-        val keyStore = KeyStore.getInstance("PKCS12")
+        val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
         keyStore.load(caFileInputStream, "my file password".toCharArray())
 
         // Create a KeyManagerFactory with our specific algorithm our our public keys
@@ -78,7 +78,9 @@ object ServiceGenerator {
 
     fun generateService(context: Context): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://development.myapi.com/")
+            .baseUrl("https://192.168.210.30:8091")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .client(generateSecureOkHttpClient(context))
             .build()
     }

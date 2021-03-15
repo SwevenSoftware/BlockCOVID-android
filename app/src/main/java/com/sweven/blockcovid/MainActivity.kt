@@ -29,7 +29,7 @@ import com.sweven.blockcovid.ui.reservation.ReservationViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
-import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.ServiceGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
             authorization = cacheFile.readText()
         }
 
-        val retrofit = NetworkClient.retrofitClient
+        val retrofit = ServiceGenerator.generateService(applicationContext)
 
         val service = retrofit.create(APIReserve::class.java)
 

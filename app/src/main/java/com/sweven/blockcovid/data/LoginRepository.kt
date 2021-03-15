@@ -3,6 +3,7 @@ package com.sweven.blockcovid.data
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.APIUser
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.ServiceGenerator
 import java.io.IOException
 
 /**
@@ -31,7 +32,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
 
     suspend fun login(username: String, password: String): Result<LoggedInUser> {
 
-        val retrofit = NetworkClient.retrofitClient
+        val retrofit = ServiceGenerator.generateService(applicationContext)
 
         val service = retrofit.create(APIUser::class.java)
 
