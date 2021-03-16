@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sweven.blockcovid.ui.login.LoginActivity
 import java.io.File
+import java.time.LocalDateTime
+import java.time.ZoneOffset.UTC
 
 
 class StartActivity : AppCompatActivity() {
@@ -13,11 +15,22 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
 
         val context = applicationContext
-        val cacheFile = File(context.cacheDir, "token")
-        if(cacheFile.exists()) {
-            val i = Intent(this, MainActivity::class.java)
-            startActivity(i)
-            finish()
+        val cacheToken = File(context.cacheDir, "token")
+        if(cacheToken.exists()) {
+            val cacheExpiry = File(context.cacheDir, "expiryDate")
+            val expiryDate = cacheExpiry.readText().toLong()
+            val currentTime = LocalDateTime.now(UTC).toEpochSecond(UTC)
+            if (expiryDate > currentTime) {
+                cacheToken.delete()
+                cacheExpiry.delete()
+                val i = Intent(this, LoginActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                val i = Intent(this, MainActivity::class.java)
+                startActivity(i)
+                finish()
+            }
         } else {
             val i = Intent(this, MainActivity::class.java)
             startActivity(i)

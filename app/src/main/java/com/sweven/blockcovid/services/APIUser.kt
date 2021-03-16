@@ -1,19 +1,15 @@
 package com.sweven.blockcovid.services
 
-import okhttp3.ResponseBody
+import com.sweven.blockcovid.services.gsonReceive.Token
+import okhttp3.RequestBody
 import retrofit2.Response
-import java.util.HashMap
-import retrofit2.http.Multipart
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.PartMap
+import retrofit2.http.*
 
 /**
  * Api per ottenere l'elenco utenti
  */
 interface APIUser {
-    @Multipart
     @Headers("Accept:*/*")
     @POST("/api/login")
-    suspend fun loginUser(@PartMap map: HashMap<String?, String?>): Response<ResponseBody>
+    suspend fun loginUser(@Body requestBody: RequestBody): Response<Token>
 }

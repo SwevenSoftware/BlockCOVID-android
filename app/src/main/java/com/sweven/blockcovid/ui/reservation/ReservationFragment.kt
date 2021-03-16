@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.ui.prenotazioni
+package com.sweven.blockcovid.ui.reservation
 
 
 import android.icu.text.SimpleDateFormat
@@ -16,41 +16,41 @@ import com.sweven.blockcovid.R
 import java.util.*
 
 
-class PrenotazioniFragment : Fragment(){
-    private lateinit var prenotazioniViewModel: PrenotazioniViewModel
+class ReservationFragment : Fragment(){
+    private lateinit var reservationViewModel: ReservationViewModel
 
-    private val viewModel: PrenotazioniViewModel by activityViewModels()
+    private val viewModel: ReservationViewModel by activityViewModels()
 
     var selectedDate = ""
 
-    private val args: PrenotazioniFragmentArgs by navArgs()
+    private val args: ReservationFragmentArgs by navArgs()
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        prenotazioniViewModel =
-            ViewModelProvider(this).get(PrenotazioniViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_prenotazioni, container, false)
+        reservationViewModel =
+            ViewModelProvider(this).get(ReservationViewModel::class.java)
+        return inflater.inflate(R.layout.fragment_reservation, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         // Prende i valori del numero della postazione ed il nome della stanza dal fragment della stanza
         // per poi mostrarli nella TextView
-        val textDesk: TextView = view.findViewById(R.id.idPostazionePrenotata)
-        val textRoom: TextView = view.findViewById(R.id.idStanzaPrenotata)
+        val textDesk: TextView = view.findViewById(R.id.id_reserved_desk)
+        val textRoom: TextView = view.findViewById(R.id.id_reserved_room)
         val deskId = args.deskId
         val roomId = args.roomId
         textDesk.text = deskId
         textRoom.text = roomId
 
         // Invia la data selezionata sul calendario alla MainActivity per poi poterla inviare al server
-        val selezionaData: CalendarView = view.findViewById(R.id.selezionaData)
-        selezionaData.setOnDateChangeListener { _, year, month, day ->
-            val realmonth = month + 1
-            selectedDate = "$year-$realmonth-$day"
+        val selectDate: CalendarView = view.findViewById(R.id.select_date)
+        selectDate.setOnDateChangeListener { _, year, month, day ->
+            val realMonth = month + 1
+            selectedDate = "$year-$realMonth-$day"
             val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ITALIAN)
             val date = formatter.parse(selectedDate).time
             val correctDate = formatter.format(Date(date))

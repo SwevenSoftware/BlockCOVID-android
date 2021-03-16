@@ -1,9 +1,16 @@
 package com.sweven.blockcovid.data
 
+import com.google.gson.Gson
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.APIUser
+import com.sweven.blockcovid.services.ErrorBody
 import com.sweven.blockcovid.services.NetworkClient
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.ZoneOffset.UTC
 
 /**
  * Classe che richiede l'autenticazione e le informazioni sull'utente dall'origine dati remota e
@@ -12,7 +19,7 @@ import java.io.IOException
 
 class LoginRepository(val dataSource: LoginDataSource) {
 
-    // in-memory cache of the loggedInUser object
+    // cache in memoria dell'oggetto loggedInUser
     var user: LoggedInUser? = null
         private set
 
@@ -20,8 +27,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         get() = user != null
 
     init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
+        // Se le credenziali dell'utente verranno memorizzate nella cache nella memoria locale, si consiglia di crittografarle
         user = null
     }
 
@@ -36,29 +42,51 @@ class LoginRepository(val dataSource: LoginDataSource) {
 
         val service = retrofit.create(APIUser::class.java)
 
-        val fields: HashMap<String?, String?> = HashMap()
-        fields["username"] = (username)
-        fields["password"] = (password)
+        val jsonObject = JSONObject()
+        jsonObject.put("username", username)
+        jsonObject.put("password", password)
 
-        val response = service.loginUser(fields)
-        return if (response.isSuccessful) {
-            val token = response.body()?.string().toString()
-            print("Token: ")
-            println(token)
+        val jsonObjectString = jsonObject.toString()
+        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
-            val result = dataSource.login(username, password, token)
-            if (result is Result.Success) {
-                setLoggedInUser(result.data)
+        val response = service.loginUser(requestBody)
+        if (response.isSuccessful) {
+            if (response.errorBody() == null) {
+                val items = response.body()
+                if(items != null) {
+                    val id = items.id
+                    print("Token: ")
+                    println(id)
+
+                    val expiryDateISO = items.expiryDate
+                    val expiryDateLDT = LocalDateTime.parse(expiryDateISO)
+                    // Scadenza di scadenza del token in millisecondi
+                    val expiryDate = expiryDateLDT.toEpochSecond(UTC)
+                    print("expiryDate: ")
+                    println(expiryDate)
+
+                    val result = dataSource.login(username, password, id, expiryDate)
+                    if (result is Result.Success) {
+                        setLoggedInUser(result.data)
+                    }
+                    return result
+                } else {
+                    return Result.Error("Non dovresti essere qui")
+                }
+            } else {
+                println("Successful but error")
+                val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
+                return Result.Error(error.status.toString())
             }
-            return result
         } else {
-            Result.Error(IOException("Error logging in"))
+           println("Not successful")
+            val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
+            return Result.Error(error.status.toString())
         }
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
         this.user = loggedInUser
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
+        // Se le credenziali dell'utente verranno memorizzate nella cache nella memoria locale, si consiglia di crittografarle
     }
 }

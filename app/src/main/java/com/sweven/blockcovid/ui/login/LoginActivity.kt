@@ -5,7 +5,6 @@ import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,7 +18,6 @@ import java.io.File
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -98,13 +96,20 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+
     private fun saveToken(model: LoggedInUserView) {
         val context = applicationContext
         val token = model.token
+        val expiryDate = model.expiryDate
         File.createTempFile("token", null, context.cacheDir)
-        val cacheFile = File(context.cacheDir, "token")
+        File.createTempFile("expiryDate", null, context.cacheDir)
+        val cacheToken = File(context.cacheDir, "token")
+        val cacheExpiry = File(context.cacheDir, "expiryDate")
         if (token != null) {
-            cacheFile.writeText(token)
+            cacheToken.writeText(token)
+        }
+        if (expiryDate != null) {
+            cacheExpiry.writeText(expiryDate.toString())
         }
     }
 
@@ -129,8 +134,8 @@ class LoginActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    private fun showLoginFailed(errorString: String) {
+        Toast.makeText(applicationContext, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 }
 
