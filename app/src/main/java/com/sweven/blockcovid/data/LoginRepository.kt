@@ -1,7 +1,9 @@
 package com.sweven.blockcovid.data
 
+import com.google.gson.Gson
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.APIUser
+import com.sweven.blockcovid.services.ErrorBody
 import com.sweven.blockcovid.services.NetworkClient
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -69,17 +71,17 @@ class LoginRepository(val dataSource: LoginDataSource) {
                     }
                     return result
                 } else {
-                    return Result.Error(IOException("Non dovresti essere qui"))
+                    return Result.Error("Non dovresti essere qui")
                 }
             } else {
-                // 404
-                println(response.errorBody()?.string().toString())
-                return Result.Error(IOException("404"))
+                println("Successful but error")
+                val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
+                return Result.Error(error.status.toString())
             }
         } else {
-            // altri errori (400, 401, etc.)
-            println(response.errorBody()?.string().toString())
-            return Result.Error(IOException("Error logging in"))
+           println("Not successful")
+            val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
+            return Result.Error(error.status.toString())
         }
     }
 

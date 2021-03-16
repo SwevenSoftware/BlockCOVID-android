@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 import kotlinx.coroutines.withContext
+import java.net.SocketTimeoutException
 
 
 class MainActivity : AppCompatActivity() {
@@ -149,39 +150,62 @@ class MainActivity : AppCompatActivity() {
         val context = applicationContext
         val cacheFile = File(context.cacheDir, "token")
         var authorization = ""
-        if(cacheFile.exists()) {
+        if (cacheFile.exists()) {
             authorization = cacheFile.readText()
         }
-
         val retrofit = NetworkClient.retrofitClient
 
         val service = retrofit.create(APIReserve::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = service.deskReserve(nameRoom, idDesk, date, from, to, authorization)
-            if (response.isSuccessful) {
-                withContext(Dispatchers.Main) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val responseJson = gson.toJson(JsonParser.parseString(response.body()?.string()))
-                    print("Response: ")
-                    println(responseJson)
-                    Toast.makeText(
+            try {
+                val response =
+                    service.deskReserve(nameRoom, idDesk, date, from, to, authorization)
+                if (response.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        if(response.errorBody()==null) {
+                            val gson = GsonBuilder().setPrettyPrinting().create()
+                            val responseJson =
+                                gson.toJson(JsonParser.parseString(response.body()?.string()))
+                            print("Response: ")
+                            println(responseJson)
+                            Toast.makeText(
+                                applicationContext,
+                                getString(R.string.reservation_successful),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        else{
+                            runOnUiThread {
+                                Toast.makeText(
+                                        applicationContext,
+                                        response.errorBody().toString(),
+                                        Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(
                             applicationContext,
-                            getString(R.string.reservation_successful),
+                            response.errorBody().toString(),
                             Toast.LENGTH_LONG
-                    ).show()
+                        ).show()
+                    }
                 }
-            } else {
+            } catch (exception: SocketTimeoutException) {
                 runOnUiThread {
                     Toast.makeText(
                         applicationContext,
-                        getString(R.string.reservation_failed),
+                        getString(R.string.timeout),
                         Toast.LENGTH_LONG
                     ).show()
                 }
             }
         }
     }
+
 
     // Funzione per navigare al fragment Postazioni (globale)
     fun goReservation(view: View) {
