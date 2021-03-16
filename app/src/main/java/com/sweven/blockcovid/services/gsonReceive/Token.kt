@@ -1,18 +1,14 @@
 package com.sweven.blockcovid.services.gsonReceive
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Token {
-    @SerializedName("token")
-    @Expose
-    var token: String? = null
+data class Token(
+    @SerializedName("id")
+    var id: String,
 
     @SerializedName("expiryDate")
-    @Expose
-    var expiryDate: String? = null
+    var expiryDate: String,
 
-    @SerializedName("links")
-    @Expose
-    var links: List<TokenLink>? = null
-}
+    @SerializedName("username")
+    var username: String
+)

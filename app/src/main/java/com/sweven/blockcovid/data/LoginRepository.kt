@@ -48,39 +48,37 @@ class LoginRepository(val dataSource: LoginDataSource) {
         val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
         val response = service.loginUser(requestBody)
-        return if (response.isSuccessful) {
-            val items = response.body()
-            if (response.errorBody() != null) {
+        if (response.isSuccessful) {
+            if (response.errorBody() == null) {
+                val items = response.body()
                 if(items != null) {
-                    var token = ""
-                    var expiryDate: Long = 0
-                    for(i in 0 until items.count()) {
-                        token = items[i].token ?: "N/A"
-                        print("Token: ")
-                        println(token)
-                        val expiryDateISO = items[i].expiryDate ?: "N/A"
-                        val expiryDateLDT = LocalDateTime.parse(expiryDateISO)
-                        // Scadenza di scadenza del token in millisecondi
-                        expiryDate = expiryDateLDT.toEpochSecond(UTC)
+                    val id = items.id
+                    print("Token: ")
+                    println(id)
 
-                        print("expiryDate: ")
-                        println(expiryDate)
-                    }
-                    val result = dataSource.login(username, password, token, expiryDate)
+                    val expiryDateISO = items.expiryDate
+                    val expiryDateLDT = LocalDateTime.parse(expiryDateISO)
+                    // Scadenza di scadenza del token in millisecondi
+                    val expiryDate = expiryDateLDT.toEpochSecond(UTC)
+                    print("expiryDate: ")
+                    println(expiryDate)
+
+                    val result = dataSource.login(username, password, id, expiryDate)
                     if (result is Result.Success) {
                         setLoggedInUser(result.data)
                     }
                     return result
                 } else {
-                    return Result.Error(IOException("Qualcosa è andato molto storto se sei qui"))
+                    return Result.Error(IOException("Non dovresti essere qui"))
                 }
             } else {
                 // 404
-                println("404")
+                println(response.errorBody()?.string().toString())
                 return Result.Error(IOException("404"))
             }
         } else {
             // altri errori (400, 401, etc.)
+            println(response.errorBody()?.string().toString())
             return Result.Error(IOException("Error logging in"))
         }
     }

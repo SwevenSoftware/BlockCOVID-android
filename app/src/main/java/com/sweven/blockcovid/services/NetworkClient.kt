@@ -15,8 +15,6 @@ object NetworkClient {
 
     val retrofitClient: Retrofit
     get() {
-        gson = GsonBuilder()
-            .create()
         if (retrofit == null) {
             val okHttpClient: OkHttpClient = unsafeOkHttpClient
             retrofit = Retrofit.Builder()
