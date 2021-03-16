@@ -7,6 +7,8 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.ZoneOffset.UTC
 
 /**
  * Classe che richiede l'autenticazione e le informazioni sull'utente dall'origine dati remota e
@@ -46,18 +48,38 @@ class LoginRepository(val dataSource: LoginDataSource) {
         val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
         val response = service.loginUser(requestBody)
-        return if (response.isSuccessful) {
-            val token = response.body()?.string().toString()
-            print("Token: ")
-            println(token)
+        if (response.isSuccessful) {
+            if (response.errorBody() == null) {
+                val items = response.body()
+                if(items != null) {
+                    val id = items.id
+                    print("Token: ")
+                    println(id)
 
-            val result = dataSource.login(username, password, token)
-            if (result is Result.Success) {
-                setLoggedInUser(result.data)
+                    val expiryDateISO = items.expiryDate
+                    val expiryDateLDT = LocalDateTime.parse(expiryDateISO)
+                    // Scadenza di scadenza del token in millisecondi
+                    val expiryDate = expiryDateLDT.toEpochSecond(UTC)
+                    print("expiryDate: ")
+                    println(expiryDate)
+
+                    val result = dataSource.login(username, password, id, expiryDate)
+                    if (result is Result.Success) {
+                        setLoggedInUser(result.data)
+                    }
+                    return result
+                } else {
+                    return Result.Error(IOException("Non dovresti essere qui"))
+                }
+            } else {
+                // 404
+                println(response.errorBody()?.string().toString())
+                return Result.Error(IOException("404"))
             }
-            return result
         } else {
-            Result.Error(IOException("Error logging in"))
+            // altri errori (400, 401, etc.)
+            println(response.errorBody()?.string().toString())
+            return Result.Error(IOException("Error logging in"))
         }
     }
 

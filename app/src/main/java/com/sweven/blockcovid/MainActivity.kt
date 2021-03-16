@@ -106,9 +106,11 @@ class MainActivity : AppCompatActivity() {
     // Funzione per fare il logout, elimina il file token dalla cache
     fun logout(view: View) {
         val context = applicationContext
-        val cacheFile = File(context.cacheDir, "token")
-        if(cacheFile.exists()) {
-            cacheFile.delete()
+        val cacheToken = File(context.cacheDir, "token")
+        val cacheExpiry = File(context.cacheDir, "expiryDate")
+        if(cacheToken.exists()) {
+            cacheToken.delete()
+            cacheExpiry.delete()
             view.findNavController().navigate(R.id.action_global_navigation_login)
         }
     }

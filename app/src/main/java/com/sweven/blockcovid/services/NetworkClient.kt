@@ -6,9 +6,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
+
 object NetworkClient {
     private const val url = "https://192.168.210.30:8091"
     var retrofit: Retrofit? = null
+
     val retrofitClient: Retrofit
     get() {
         if (retrofit == null) {

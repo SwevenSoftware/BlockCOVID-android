@@ -5,5 +5,6 @@ package com.sweven.blockcovid.ui.login
  */
 data class LoggedInUserView(
     val displayName: String,
-    val token: String?
+    val token: String?,
+    val expiryDate: Long?
 )
