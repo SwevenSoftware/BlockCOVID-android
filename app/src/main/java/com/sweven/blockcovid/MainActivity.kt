@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                     service.deskReserve(nameRoom, idDesk, date, from, to, authorization)
                 if (response.isSuccessful) {
                     withContext(Dispatchers.Main) {
-                        if(response.errorBody()!=null) {
+                        if(response.errorBody()==null) {
                             val gson = GsonBuilder().setPrettyPrinting().create()
                             val responseJson =
                                 gson.toJson(JsonParser.parseString(response.body()?.string()))
