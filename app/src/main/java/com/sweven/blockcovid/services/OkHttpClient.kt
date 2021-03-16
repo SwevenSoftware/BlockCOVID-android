@@ -14,19 +14,19 @@ class OkHttpClient {
         get() = try {
             // Create a trust manager that does not validate certificate chains
             val trustAllCerts: Array<TrustManager> = arrayOf<TrustManager>(
-                    object : X509TrustManager {
-                        @Throws(CertificateException::class)
-                        override fun checkClientTrusted(chain: Array<X509Certificate?>?, authType: String?) {
-                        }
-
-                        @Throws(CertificateException::class)
-                        override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?) {
-                        }
-
-                        override fun getAcceptedIssuers(): Array<X509Certificate> {
-                            return arrayOf()
-                        }
+                object : X509TrustManager {
+                    @Throws(CertificateException::class)
+                    override fun checkClientTrusted(chain: Array<X509Certificate?>?, authType: String?) {
                     }
+
+                    @Throws(CertificateException::class)
+                    override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?) {
+                    }
+
+                    override fun getAcceptedIssuers(): Array<X509Certificate> {
+                        return arrayOf()
+                    }
+                }
             )
 
             // Install the all-trusting trust manager
@@ -46,5 +46,4 @@ class OkHttpClient {
             throw RuntimeException(e)
         }
     }
-
 }

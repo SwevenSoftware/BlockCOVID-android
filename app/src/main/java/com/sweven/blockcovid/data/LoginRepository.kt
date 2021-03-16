@@ -3,6 +3,9 @@ package com.sweven.blockcovid.data
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.APIUser
 import com.sweven.blockcovid.services.NetworkClient
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.IOException
 
 /**
@@ -35,11 +38,14 @@ class LoginRepository(val dataSource: LoginDataSource) {
 
         val service = retrofit.create(APIUser::class.java)
 
-        val fields: HashMap<String?, String?> = HashMap()
-        fields["username"] = (username)
-        fields["password"] = (password)
+        val jsonObject = JSONObject()
+        jsonObject.put("username", username)
+        jsonObject.put("password", password)
 
-        val response = service.loginUser(fields)
+        val jsonObjectString = jsonObject.toString()
+        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+
+        val response = service.loginUser(requestBody)
         return if (response.isSuccessful) {
             val token = response.body()?.string().toString()
             print("Token: ")
