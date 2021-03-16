@@ -41,7 +41,6 @@ class LoginRepository(val dataSource: LoginDataSource) {
         val jsonObject = JSONObject()
         jsonObject.put("username", username)
         jsonObject.put("password", password)
-        jsonObject.put("authorities", "USER")
 
         val jsonObjectString = jsonObject.toString()
         val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
