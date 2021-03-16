@@ -7,9 +7,9 @@ import com.sweven.blockcovid.data.model.LoggedInUser
  */
 class LoginDataSource {
 
-    fun login(username: String, password: String, token: String): Result<LoggedInUser> {
+    fun login(username: String, password: String, token: String, expiryDate: Long): Result<LoggedInUser> {
         try {
-            val user = LoggedInUser(java.util.UUID.randomUUID().toString(), username, token)
+            val user = LoggedInUser(java.util.UUID.randomUUID().toString(), username, token, expiryDate)
             return Result.Success(user)
         } catch (e: Throwable) {
             return Result.Error("Error logging in")
