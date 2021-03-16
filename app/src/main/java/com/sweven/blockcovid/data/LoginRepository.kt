@@ -71,7 +71,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
                     }
                     return result
                 } else {
-                    return Result.Error(IOException("Non dovresti essere qui"))
+                    return Result.Error("Non dovresti essere qui")
                 }
             } else {
                 println("Successful but error")
