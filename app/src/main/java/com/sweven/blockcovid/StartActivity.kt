@@ -20,9 +20,11 @@ class StartActivity : AppCompatActivity() {
             val cacheExpiry = File(context.cacheDir, "expiryDate")
             val expiryDate = cacheExpiry.readText().toLong()
             val currentTime = LocalDateTime.now(UTC).toEpochSecond(UTC)
-            if (expiryDate > currentTime) {
+            if (expiryDate < currentTime) {
+                val cacheUser = File(context.cacheDir, "username")
                 cacheToken.delete()
                 cacheExpiry.delete()
+                cacheUser.delete()
                 val i = Intent(this, LoginActivity::class.java)
                 startActivity(i)
                 finish()
@@ -32,7 +34,7 @@ class StartActivity : AppCompatActivity() {
                 finish()
             }
         } else {
-            val i = Intent(this, MainActivity::class.java)
+            val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
             finish()
         }

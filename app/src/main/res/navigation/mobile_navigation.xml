@@ -46,8 +46,18 @@
         android:id="@+id/navigation_account"
         android:name="com.sweven.blockcovid.ui.account.AccountFragment"
         android:label="@string/title_account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_navigation_account_to_navigation_change_password"
+            app:destination="@id/navigation_change_password" />
+    </fragment>
     <action android:id="@+id/action_global_navigation_account" app:destination="@id/navigation_account"/>
+
+    <fragment
+        android:id="@+id/navigation_change_password"
+        android:name="com.sweven.blockcovid.ui.changePassword.ChangePasswordFragment"
+        android:label="@string/change_password"
+        tools:layout="@layout/fragment_account" />
 
     <fragment
         android:id="@+id/navigation_scanner"
@@ -58,21 +68,21 @@
     <fragment
         android:id="@+id/navigation_room1"
         android:name="com.sweven.blockcovid.ui.room1.Room1Fragment"
-        android:label="@string/title_stanza1"
+        android:label="@string/title_room1"
         tools:layout="@layout/fragment_room1" />
     <action android:id="@+id/action_global_navigation_room1" app:destination="@id/navigation_room1"/>
 
     <fragment
         android:id="@+id/navigation_room2"
         android:name="com.sweven.blockcovid.ui.room2.Room2Fragment"
-        android:label="@string/title_stanza2"
+        android:label="@string/title_room2"
         tools:layout="@layout/fragment_room2" />
     <action android:id="@+id/action_global_navigation_room2" app:destination="@id/navigation_room2"/>
 
     <fragment
         android:id="@+id/navigation_reservation"
         android:name="com.sweven.blockcovid.ui.reservation.ReservationFragment"
-        android:label="@string/title_prenotazioni"
+        android:label="@string/title_reservations"
         tools:layout="@layout/fragment_reservation" >
         <argument
             android:name="deskId"

@@ -55,7 +55,6 @@ class LoginActivity : AppCompatActivity() {
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
                 saveToken(loginResult.success)
-                saveUsername(loginResult.success)
                 setResult(Activity.RESULT_OK)
                 val i = Intent(this, MainActivity::class.java)
                 startActivity(i)
@@ -101,23 +100,19 @@ class LoginActivity : AppCompatActivity() {
         val context = applicationContext
         val token = model.token
         val expiryDate = model.expiryDate
+        val username = model.displayName
         File.createTempFile("token", null, context.cacheDir)
         File.createTempFile("expiryDate", null, context.cacheDir)
+        File.createTempFile("username", null, context.cacheDir)
         val cacheToken = File(context.cacheDir, "token")
         val cacheExpiry = File(context.cacheDir, "expiryDate")
+        val cacheFile = File(context.cacheDir, "username")
         if (token != null) {
             cacheToken.writeText(token)
         }
         if (expiryDate != null) {
             cacheExpiry.writeText(expiryDate.toString())
         }
-    }
-
-    private fun saveUsername(model: LoggedInUserView) {
-        val context = applicationContext
-        val username = model.displayName
-        File.createTempFile("username", null, context.cacheDir)
-        val cacheFile = File(context.cacheDir, "username")
         if (username != null) {
             cacheFile.writeText(username)
         }
