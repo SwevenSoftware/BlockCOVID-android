@@ -167,6 +167,7 @@ class MainActivity : AppCompatActivity() {
                                 getString(R.string.password_changed),
                                 Toast.LENGTH_LONG
                             ).show()
+                            view.findNavController().navigate(R.id.action_navigation_change_password_to_navigation_account)
                         } else {
                             runOnUiThread {
                                 Toast.makeText(
