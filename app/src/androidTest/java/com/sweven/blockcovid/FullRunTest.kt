@@ -4,7 +4,9 @@ package com.sweven.blockcovid
 import android.view.View
 import android.view.ViewGroup
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
@@ -28,23 +30,6 @@ class FullRunTest {
 
     @Test
     fun fullRunTest() {
-        val appCompatEditText = onView(
-            allOf(
-                withId(R.id.username),
-                childAtPosition(
-                    allOf(
-                        withId(R.id.container),
-                        childAtPosition(
-                            withId(android.R.id.content),
-                            0
-                        )
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        appCompatEditText.perform(click())
 
         val appCompatEditText2 = onView(
             allOf(
@@ -62,9 +47,27 @@ class FullRunTest {
                 isDisplayed()
             )
         )
-        appCompatEditText2.perform(replaceText("admin"), closeSoftKeyboard())
+        appCompatEditText2.perform(click())
 
         val appCompatEditText3 = onView(
+            allOf(
+                withId(R.id.username),
+                childAtPosition(
+                    allOf(
+                        withId(R.id.container),
+                        childAtPosition(
+                            withId(android.R.id.content),
+                            0
+                        )
+                    ),
+                    0
+                ),
+                isDisplayed()
+            )
+        )
+        appCompatEditText3.perform(replaceText("user"), closeSoftKeyboard())
+
+        val appCompatEditText4 = onView(
             allOf(
                 withId(R.id.password),
                 childAtPosition(
@@ -80,11 +83,11 @@ class FullRunTest {
                 isDisplayed()
             )
         )
-        appCompatEditText3.perform(replaceText("password"), closeSoftKeyboard())
+        appCompatEditText4.perform(replaceText("password"), closeSoftKeyboard())
 
         val materialButton = onView(
             allOf(
-                withId(R.id.login_button), withText("Log In"),
+                withId(R.id.login_button), withText("Accedi"),
                 childAtPosition(
                     allOf(
                         withId(R.id.container),
@@ -100,6 +103,8 @@ class FullRunTest {
         )
         materialButton.perform(click())
 
+        Thread.sleep(1000)
+
         val materialButton2 = onView(
             allOf(
                 withId(R.id.scanner_button), withText("Scanner"),
@@ -114,7 +119,7 @@ class FullRunTest {
             )
         )
         materialButton2.perform(click())
-
+        Thread.sleep(1000)
         val materialButton3 = onView(
             allOf(
                 withId(R.id.log_button), withText("Log"),
@@ -129,7 +134,7 @@ class FullRunTest {
             )
         )
         materialButton3.perform(click())
-
+        Thread.sleep(1000)
         val appCompatImageButton = onView(
             allOf(
                 withContentDescription("Torna indietro"),
@@ -147,7 +152,7 @@ class FullRunTest {
             )
         )
         appCompatImageButton.perform(click())
-
+        Thread.sleep(1000)
         val bottomNavigationItemView = onView(
             allOf(
                 withId(R.id.navigation_help), withContentDescription("Aiuto"),
@@ -207,7 +212,7 @@ class FullRunTest {
             )
         )
         materialButton4.perform(click())
-
+        Thread.sleep(1000)
         val appCompatImageButton2 = onView(
             allOf(
                 withId(R.id.imageButton00), withContentDescription("0"),
@@ -222,8 +227,7 @@ class FullRunTest {
             )
         )
         appCompatImageButton2.perform(click())
-
-        val appCompatEditText4 = onView(
+        val appCompatEditText5 = onView(
             allOf(
                 withId(R.id.edit_arrival_time),
                 childAtPosition(
@@ -236,7 +240,7 @@ class FullRunTest {
                 isDisplayed()
             )
         )
-        appCompatEditText4.perform(click())
+        appCompatEditText5.perform(click())
 
         val materialButton5 = onView(
             allOf(
@@ -252,8 +256,8 @@ class FullRunTest {
             )
         )
         materialButton5.perform(click())
-
-        val appCompatEditText5 = onView(
+        Thread.sleep(1000)
+        val appCompatEditText6 = onView(
             allOf(
                 withId(R.id.edit_exit_time),
                 childAtPosition(
@@ -266,8 +270,8 @@ class FullRunTest {
                 isDisplayed()
             )
         )
-        appCompatEditText5.perform(click())
-
+        appCompatEditText6.perform(click())
+        Thread.sleep(1000)
         val materialButton6 = onView(
             allOf(
                 withId(android.R.id.button1), withText("OK"),
@@ -281,9 +285,19 @@ class FullRunTest {
                 isDisplayed()
             )
         )
-        materialButton6.perform(click())
+        Thread.sleep(1000)
+
+        val calendar = onView(
+            allOf(
+                withId(R.id.select_date),
+                isDisplayed()
+            )
+        )
+
+        calendar.perform(PickerActions.setDate(2030, 10, 20))
 
 
+        Thread.sleep(1000)
         val materialButton7 = onView(
             allOf(
                 withId(R.id.reserve_button), withText("Prenota"),
@@ -316,20 +330,96 @@ class FullRunTest {
 
         val materialButton8 = onView(
             allOf(
+                withId(R.id.change_password_button), withText("Cambia Password"),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.nav_host_fragment),
+                        0
+                    ),
+                    1
+                ),
+                isDisplayed()
+            )
+        )
+        materialButton8.perform(click())
+
+        val appCompatEditText7 = onView(
+            allOf(
+                withId(R.id.edit_old_password),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.nav_host_fragment),
+                        0
+                    ),
+                    1
+                ),
+                isDisplayed()
+            )
+        )
+        appCompatEditText7.perform(replaceText("password"), closeSoftKeyboard())
+
+        val appCompatEditText8 = onView(
+            allOf(
+                withId(R.id.edit_new_password),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.nav_host_fragment),
+                        0
+                    ),
+                    3
+                ),
+                isDisplayed()
+            )
+        )
+        appCompatEditText8.perform(replaceText("password"), closeSoftKeyboard())
+
+        val appCompatEditText9 = onView(
+            allOf(
+                withId(R.id.edit_repeat_password),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.nav_host_fragment),
+                        0
+                    ),
+                    5
+                ),
+                isDisplayed()
+            )
+        )
+        appCompatEditText9.perform(replaceText("password"), closeSoftKeyboard())
+        Thread.sleep(1000)
+        pressBack()
+        Thread.sleep(1000)
+        val materialButton9 = onView(
+            allOf(
+                withId(R.id.change_password_button), withText("Cambia Password"),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.nav_host_fragment),
+                        0
+                    ),
+                    6
+                ),
+                isDisplayed()
+            )
+        )
+        materialButton9.perform(click())
+        Thread.sleep(1000)
+        val materialButton10 = onView(
+            allOf(
                 withId(R.id.logout_button), withText("Logout"),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.nav_host_fragment),
                         0
                     ),
-                    0
+                    2
                 ),
                 isDisplayed()
             )
         )
-        materialButton8.perform(click())
+        materialButton10.perform(click())
     }
-
     private fun childAtPosition(
         parentMatcher: Matcher<View>, position: Int
     ): Matcher<View> {

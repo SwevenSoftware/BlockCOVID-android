@@ -30,7 +30,6 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
-
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
             login.isEnabled = loginState.isDataValid
