@@ -29,6 +29,7 @@
     <string name="password_change_failed">Cambio password fallito</string>
     <string name="invalid_username">Nome utente non valido</string>
     <string name="invalid_password">Password deve essere di almeno 5 caratteri</string>
+    <string name="different_password">Le password non corrispondono</string>
     <string name="login_failed">Accesso fallito</string>
     <string name="help_string">Avvicina il telefono ad un tag RFID,\npoi vai su Home > Scanner e premi\nil pulsante Log per leggerne il contenuto</string>
     <string name="selected_room">Stanza selezionata:</string>

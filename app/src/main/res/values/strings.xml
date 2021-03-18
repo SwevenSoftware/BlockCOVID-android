@@ -29,6 +29,7 @@
     <string name="password_change_failed">Password change failed</string>
     <string name="invalid_username">Username not valid</string>
     <string name="invalid_password">Password must be at least 5 characters long</string>
+    <string name="different_password">Passwords do not match</string>
     <string name="login_failed">Login failed</string>
     <string name="help_string">Place the phone close to an RFID tag,\nthen go to Home> Scanner and press the Log\nbutton to read its contents</string>
     <string name="selected_room">Selected room:</string>
