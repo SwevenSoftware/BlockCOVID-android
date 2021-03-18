@@ -23,14 +23,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.sweven.blockcovid.databinding.ActivityMainBinding
 import com.sweven.blockcovid.services.APIReserve
 import com.sweven.blockcovid.ui.reservation.ReservationViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.services.APIChangePassword
-import com.sweven.blockcovid.services.APIUser
 import com.sweven.blockcovid.services.NetworkClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,9 +55,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val navView: BottomNavigationView = binding.navView
+        setContentView(R.layout.activity_main)
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
@@ -133,9 +130,9 @@ class MainActivity : AppCompatActivity() {
         val service = retrofit.create(APIChangePassword::class.java)
 
         val context = applicationContext
-        val username = File(context.cacheDir, "username").readText()
 
-        val password = findViewById<TextView>(R.id.edit_new_password).text.toString()
+        val oldPassword = findViewById<TextView>(R.id.edit_old_password).text.toString()
+        val newPassword = findViewById<TextView>(R.id.edit_new_password).text.toString()
 
         val cacheToken = File(context.cacheDir, "token")
         var authorization = ""
@@ -144,8 +141,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         val jsonObject = JSONObject()
-        jsonObject.put("username", username)
-        jsonObject.put("password", password)
+        jsonObject.put("old_password", oldPassword)
+        jsonObject.put("new_password", newPassword)
 
         val jsonObjectString = jsonObject.toString()
         val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
@@ -172,7 +169,7 @@ class MainActivity : AppCompatActivity() {
                             runOnUiThread {
                                 Toast.makeText(
                                     applicationContext,
-                                    response.errorBody().toString(),
+                                    response.errorBody()?.string().toString(),
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
@@ -182,7 +179,7 @@ class MainActivity : AppCompatActivity() {
                     runOnUiThread {
                         Toast.makeText(
                             applicationContext,
-                            response.errorBody().toString(),
+                            response.errorBody()?.string().toString(),
                             Toast.LENGTH_LONG
                         ).show()
                     }
