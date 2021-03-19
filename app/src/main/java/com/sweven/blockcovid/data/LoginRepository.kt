@@ -3,12 +3,11 @@ package com.sweven.blockcovid.data
 import com.google.gson.Gson
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.APIUser
-import com.sweven.blockcovid.services.ErrorBody
+import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.NetworkClient
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import java.io.IOException
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
 

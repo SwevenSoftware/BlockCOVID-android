@@ -23,12 +23,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.sweven.blockcovid.databinding.ActivityMainBinding
 import com.sweven.blockcovid.services.APIReserve
 import com.sweven.blockcovid.ui.reservation.ReservationViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
+import com.sweven.blockcovid.services.APIChangePassword
 import com.sweven.blockcovid.services.NetworkClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +36,9 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.net.SocketTimeoutException
 
 
@@ -52,9 +55,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val navView: BottomNavigationView = binding.navView
+        setContentView(R.layout.activity_main)
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
@@ -109,10 +111,88 @@ class MainActivity : AppCompatActivity() {
         val context = applicationContext
         val cacheToken = File(context.cacheDir, "token")
         val cacheExpiry = File(context.cacheDir, "expiryDate")
+		val cacheUser = File(context.cacheDir, "username")
         if(cacheToken.exists()) {
             cacheToken.delete()
             cacheExpiry.delete()
+			cacheUser.delete()
             view.findNavController().navigate(R.id.action_global_navigation_login)
+        }
+    }
+
+    // Funzione per navigare da Account a ChangePassword (bottone Change Password)
+    fun goChangePassword(view: View) {
+        view.findNavController().navigate(R.id.action_navigation_account_to_navigation_change_password)
+    }
+
+    fun changePassword(view: View) {
+        val retrofit = NetworkClient.retrofitClient
+        val service = retrofit.create(APIChangePassword::class.java)
+
+        val context = applicationContext
+
+        val oldPassword = findViewById<TextView>(R.id.edit_old_password).text.toString()
+        val newPassword = findViewById<TextView>(R.id.edit_new_password).text.toString()
+
+        val cacheToken = File(context.cacheDir, "token")
+        var authorization = ""
+        if (cacheToken.exists()) {
+            authorization = cacheToken.readText()
+        }
+
+        val jsonObject = JSONObject()
+        jsonObject.put("old_password", oldPassword)
+        jsonObject.put("new_password", newPassword)
+
+        val jsonObjectString = jsonObject.toString()
+        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response =
+                    service.changePassword(authorization, requestBody)
+                if (response.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        if (response.errorBody() == null) {
+                            val gson = GsonBuilder().setPrettyPrinting().create()
+                            val responseJson =
+                                gson.toJson(JsonParser.parseString(response.body()?.string()))
+                            print("Response: ")
+                            println(responseJson)
+                            Toast.makeText(
+                                applicationContext,
+                                getString(R.string.password_changed),
+                                Toast.LENGTH_LONG
+                            ).show()
+                            view.findNavController().navigate(R.id.action_navigation_change_password_to_navigation_account)
+                        } else {
+                            runOnUiThread {
+                                Toast.makeText(
+                                    applicationContext,
+                                    response.errorBody()?.string().toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    }
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(
+                            applicationContext,
+                            response.errorBody()?.string().toString(),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            } catch (exception: SocketTimeoutException) {
+                runOnUiThread {
+                    Toast.makeText(
+                        applicationContext,
+                        getString(R.string.timeout),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
     }
 
@@ -148,10 +228,10 @@ class MainActivity : AppCompatActivity() {
         val from = findViewById<TextView>(R.id.edit_arrival_time).text.toString()
         val to = findViewById<TextView>(R.id.edit_exit_time).text.toString()
         val context = applicationContext
-        val cacheFile = File(context.cacheDir, "token")
+        val cacheToken = File(context.cacheDir, "token")
         var authorization = ""
-        if (cacheFile.exists()) {
-            authorization = cacheFile.readText()
+        if (cacheToken.exists()) {
+            authorization = cacheToken.readText()
         }
         val retrofit = NetworkClient.retrofitClient
 
@@ -174,12 +254,11 @@ class MainActivity : AppCompatActivity() {
                                 getString(R.string.reservation_successful),
                                 Toast.LENGTH_LONG
                             ).show()
-                        }
-                        else{
+                        } else {
                             runOnUiThread {
                                 Toast.makeText(
                                         applicationContext,
-                                        response.errorBody().toString(),
+                                        response.errorBody()?.string().toString(),
                                         Toast.LENGTH_LONG
                                 ).show()
                             }
@@ -189,7 +268,7 @@ class MainActivity : AppCompatActivity() {
                     runOnUiThread {
                         Toast.makeText(
                             applicationContext,
-                            response.errorBody().toString(),
+                            response.errorBody()?.string().toString(),
                             Toast.LENGTH_LONG
                         ).show()
                     }

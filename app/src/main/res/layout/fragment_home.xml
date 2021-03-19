@@ -36,7 +36,7 @@
         android:layout_marginRight="106dp"
         android:layout_marginBottom="180dp"
         android:onClick="goDesks"
-        android:text="@string/title_postazioni"
+        android:text="@string/title_desks"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

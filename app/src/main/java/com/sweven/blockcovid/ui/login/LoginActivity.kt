@@ -10,10 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import com.sweven.blockcovid.MainActivity
 import com.sweven.blockcovid.R
 import java.io.File
@@ -33,7 +30,6 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
-
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
             login.isEnabled = loginState.isDataValid
@@ -103,15 +99,21 @@ class LoginActivity : AppCompatActivity() {
         val context = applicationContext
         val token = model.token
         val expiryDate = model.expiryDate
+        val username = model.displayName
         File.createTempFile("token", null, context.cacheDir)
         File.createTempFile("expiryDate", null, context.cacheDir)
+        File.createTempFile("username", null, context.cacheDir)
         val cacheToken = File(context.cacheDir, "token")
         val cacheExpiry = File(context.cacheDir, "expiryDate")
+        val cacheFile = File(context.cacheDir, "username")
         if (token != null) {
             cacheToken.writeText(token)
         }
         if (expiryDate != null) {
             cacheExpiry.writeText(expiryDate.toString())
+        }
+        if (username != null) {
+            cacheFile.writeText(username)
         }
     }
 

@@ -48,7 +48,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/imageButton04"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/zero" />
 
             <ImageButton
@@ -61,7 +61,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/imageButton05"
                 app:layout_constraintStart_toEndOf="@+id/imageButton00"
                 app:layout_constraintTop_toTopOf="parent"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/one" />
 
             <ImageButton
@@ -76,7 +76,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/imageButton06"
                 app:layout_constraintStart_toEndOf="@+id/imageButton01"
                 app:layout_constraintTop_toTopOf="parent"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/two" />
 
             <ImageButton
@@ -89,7 +89,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/imageButton07"
                 app:layout_constraintStart_toEndOf="@+id/imageButton02"
                 app:layout_constraintTop_toTopOf="parent"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/three" />
 
             <ImageButton
@@ -100,7 +100,7 @@
                 android:onClick="goReservation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton00"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/four" />
 
             <ImageButton
@@ -111,7 +111,7 @@
                 android:onClick="goReservation"
                 app:layout_constraintStart_toEndOf="@+id/imageButton04"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton01"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/five" />
 
             <ImageButton
@@ -123,7 +123,7 @@
                 android:onClick="goReservation"
                 app:layout_constraintStart_toEndOf="@+id/imageButton05"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton02"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/six" />
 
             <ImageButton
@@ -134,7 +134,7 @@
                 android:onClick="goReservation"
                 app:layout_constraintStart_toEndOf="@+id/imageButton06"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton03"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/seven" />
 
             <ImageButton
@@ -146,7 +146,7 @@
                 android:onClick="goReservation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton09"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/eight" />
 
             <ImageButton
@@ -160,7 +160,7 @@
                 android:rotation="180"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageButton06"
-                android:tag="@string/title_stanza1"
+                android:tag="@string/title_room1"
                 android:contentDescription="@string/nine" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -175,7 +175,7 @@
         android:layout_marginEnd="124dp"
         android:layout_marginBottom="60dp"
         android:onClick="goRoom2"
-        android:text="@string/title_goStanza2"
+        android:text="@string/title_goRoom2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

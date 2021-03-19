@@ -1,6 +1,5 @@
 package com.sweven.blockcovid
 
-import com.sweven.blockcovid.ui.login.InputChecks
 import org.junit.Test
 import org.junit.Assert.*
 
@@ -16,5 +15,11 @@ class InputChecksTest {
     fun isPasswordValid() {
         assertTrue("La password è valida", InputChecks.isPasswordValid("password"))
         assertFalse("La password è invalida", InputChecks.isPasswordValid("pass"))
+    }
+
+    @Test
+    fun isPasswordSame() {
+        assertTrue("Le password corrispondono", InputChecks.isPasswordSame("password", "password"))
+        assertFalse("Le password non corrispondono", InputChecks.isPasswordSame("password", "passwords"))
     }
 }
