@@ -7,12 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -46,9 +47,12 @@ class ChangePasswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val oldPassword: EditText = view.findViewById(R.id.edit_old_password)
-        val newPassword: EditText = view.findViewById(R.id.edit_new_password)
-        val repeatPassword: EditText = view.findViewById(R.id.edit_repeat_password)
+        val editOldPassword: TextInputEditText = view.findViewById(R.id.edit_old_password)
+        val editNewPassword: TextInputEditText = view.findViewById(R.id.edit_new_password)
+        val editRepeatPassword: TextInputEditText = view.findViewById(R.id.edit_repeat_password)
+        val oldPassword: TextInputLayout = view.findViewById(R.id.old_password)
+        val newPassword: TextInputLayout = view.findViewById(R.id.new_password)
+        val repeatPassword: TextInputLayout = view.findViewById(R.id.repeat_password)
         val changePassword: Button = view.findViewById(R.id.change_password_button)
 
         val mainActivity = viewLifecycleOwner
@@ -59,34 +63,40 @@ class ChangePasswordFragment : Fragment() {
 
             if (changePasswordState.oldPasswordError != null) {
                 oldPassword.error = getString(changePasswordState.oldPasswordError)
+            } else {
+                oldPassword.error = null
             }
             if (changePasswordState.newPasswordError != null) {
                 newPassword.error = getString(changePasswordState.newPasswordError)
+            } else {
+                newPassword.error = null
             }
             if (changePasswordState.repeatPasswordError != null) {
                 repeatPassword.error = getString(changePasswordState.repeatPasswordError)
+            } else {
+                repeatPassword.error = null
             }
         })
 
-        oldPassword.afterTextChanged {
+        editOldPassword.afterTextChanged {
             changePasswordViewModel.inputDataChanged(
-                oldPassword.text.toString(),
-                newPassword.text.toString(),
-                repeatPassword.text.toString(),
+                editOldPassword.text.toString(),
+                editNewPassword.text.toString(),
+                editRepeatPassword.text.toString(),
             )
         }
-        newPassword.afterTextChanged {
+        editNewPassword.afterTextChanged {
             changePasswordViewModel.inputDataChanged(
-                oldPassword.text.toString(),
-                newPassword.text.toString(),
-                repeatPassword.text.toString(),
+                editOldPassword.text.toString(),
+                editNewPassword.text.toString(),
+                editRepeatPassword.text.toString(),
             )
         }
-        repeatPassword.afterTextChanged {
+        editRepeatPassword.afterTextChanged {
             changePasswordViewModel.inputDataChanged(
-                oldPassword.text.toString(),
-                newPassword.text.toString(),
-                repeatPassword.text.toString(),
+                editOldPassword.text.toString(),
+                editNewPassword.text.toString(),
+                editRepeatPassword.text.toString(),
             )
         }
 
@@ -95,8 +105,8 @@ class ChangePasswordFragment : Fragment() {
             val retrofit = NetworkClient.retrofitClient
             val service = retrofit.create(APIChangePassword::class.java)
 
-            val oldPasswordText = oldPassword.text.toString()
-            val newPasswordText = newPassword.text.toString()
+            val oldPasswordText = editOldPassword.text.toString()
+            val newPasswordText = editNewPassword.text.toString()
 
             val cacheToken = File(context?.cacheDir, "token")
             var authorization = ""
@@ -186,7 +196,7 @@ class ChangePasswordFragment : Fragment() {
     /**
      * Funzione di estensione per semplificare l'impostazione di un'azione afterTextChanged sui componenti EditText.
      */
-    private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+    private fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         this.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(editable: Editable?) {
                 afterTextChanged.invoke(editable.toString())
