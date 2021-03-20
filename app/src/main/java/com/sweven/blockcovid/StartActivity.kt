@@ -25,16 +25,16 @@ class StartActivity : AppCompatActivity() {
                 cacheToken.delete()
                 cacheExpiry.delete()
                 cacheUser.delete()
-                val i = Intent(this, CleanerActivity::class.java)
+                val i = Intent(this, StartActivity::class.java)
                 startActivity(i)
                 finish()
             } else {
-                val i = Intent(this, CleanerActivity::class.java)
+                val i = Intent(this, UserActivity::class.java)
                 startActivity(i)
                 finish()
             }
         } else {
-            val i = Intent(this, CleanerActivity::class.java)
+            val i = Intent(this, LoginActivity::class.java)
             startActivity(i)
             finish()
         }

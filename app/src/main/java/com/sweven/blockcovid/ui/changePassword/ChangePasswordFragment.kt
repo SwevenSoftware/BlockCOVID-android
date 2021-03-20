@@ -8,17 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.services.APIChangePassword
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -122,13 +123,45 @@ class ChangePasswordFragment : Fragment() {
                                     gson.toJson(JsonParser.parseString(response.body()?.string()))
                                 print("Response: ")
                                 println(responseJson)
-                                Toast.makeText(
-                                    context,
-                                    getString(R.string.password_changed),
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                activity?.runOnUiThread {
+                                    Toast.makeText(
+                                        context,
+                                        getString(R.string.password_changed),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
                                 view.findNavController().navigate(R.id.action_navigation_change_password_to_navigation_account)
                             } else {
+                                activity?.runOnUiThread {
+                                    Toast.makeText(
+                                        context,
+                                        response.errorBody()?.string().toString(),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }
+                    } else {
+                        val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
+                        when (error.status.toString()) {
+                            "400" ->
+                            activity?.runOnUiThread {
+                                Toast.makeText(
+                                    context,
+                                    getString(R.string.old_password_incorrect),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            "401" ->
+                            activity?.runOnUiThread {
+                                Toast.makeText(
+                                    context,
+                                    getString(R.string.old_password_incorrect),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                            else ->
+                            activity?.runOnUiThread {
                                 Toast.makeText(
                                     context,
                                     response.errorBody()?.string().toString(),
@@ -136,19 +169,15 @@ class ChangePasswordFragment : Fragment() {
                                 ).show()
                             }
                         }
-                    } else {
-                        Toast.makeText(
-                            context,
-                            response.errorBody()?.string().toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
                     }
                 } catch (exception: SocketTimeoutException) {
-                    Toast.makeText(
-                        context,
-                        getString(R.string.timeout),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    activity?.runOnUiThread {
+                        Toast.makeText(
+                                context,
+                                getString(R.string.timeout),
+                                Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         }
