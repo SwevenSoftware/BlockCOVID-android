@@ -11,7 +11,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import com.sweven.blockcovid.MainActivity
+import com.sweven.blockcovid.UserActivity
 import com.sweven.blockcovid.R
 import java.io.File
 
@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
                 updateUiWithUser(loginResult.success)
                 saveToken(loginResult.success)
                 setResult(Activity.RESULT_OK)
-                val i = Intent(this, MainActivity::class.java)
+                val i = Intent(this, UserActivity::class.java)
                 startActivity(i)
                 finish()
             }

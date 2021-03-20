@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.ui.rooms
+package com.sweven.blockcovid.ui.cleanerRooms
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.sweven.blockcovid.R
 
-class RoomsAdapter(ct: Context?, rl: Array<String>): RecyclerView.Adapter<RoomsAdapter.MyViewHolder>() {
+class CleanerRoomsAdapter(ct: Context?, rl: Array<String>): RecyclerView.Adapter<CleanerRoomsAdapter.MyViewHolder>() {
 
     val context = ct
     private val roomList = rl
@@ -20,7 +20,7 @@ class RoomsAdapter(ct: Context?, rl: Array<String>): RecyclerView.Adapter<RoomsA
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(context)
-        val view: View = inflater.inflate(R.layout.recycler_row_user, parent, false)
+        val view: View = inflater.inflate(R.layout.recycler_row_cleaner, parent, false)
         return MyViewHolder(view)
     }
 

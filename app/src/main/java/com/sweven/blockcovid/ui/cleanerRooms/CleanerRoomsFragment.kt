@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.ui.rooms
+package com.sweven.blockcovid.ui.cleanerRooms
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sweven.blockcovid.R
 
-class RoomsFragment : Fragment() {
+class CleanerRoomsFragment : Fragment() {
 
-    private lateinit var roomsViewModel: RoomsViewModel
+    private lateinit var cleanerRoomsViewModel: CleanerRoomsViewModel
 
     private lateinit var recyclerView: RecyclerView
     private var s1 = arrayOf("Stanza 1", "Stanza 2")
@@ -22,15 +22,15 @@ class RoomsFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        roomsViewModel =
-                ViewModelProvider(this).get(RoomsViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_user_rooms, container, false)
+        cleanerRoomsViewModel =
+                ViewModelProvider(this).get(CleanerRoomsViewModel::class.java)
+        return inflater.inflate(R.layout.fragment_cleaner_rooms, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = view.findViewById(R.id.room_recycler_user)
-        val roomsAdapter = RoomsAdapter(context, s1)
+        recyclerView = view.findViewById(R.id.room_recycler_cleaner)
+        val roomsAdapter = CleanerRoomsAdapter(context, s1)
         recyclerView.adapter = roomsAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
     }

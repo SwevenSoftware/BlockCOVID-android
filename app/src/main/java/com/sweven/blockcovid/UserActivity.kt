@@ -42,7 +42,7 @@ import org.json.JSONObject
 import java.net.SocketTimeoutException
 
 
-class MainActivity : AppCompatActivity() {
+class UserActivity : AppCompatActivity() {
 
     // Controllo dello stato dell'adattatore NFC
     private var nfcAdapter: NfcAdapter? = null
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
+                R.id.navigation_home, R.id.navigation_rooms, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -104,96 +104,6 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    // Funzione per fare il logout, elimina il file token dalla cache
-    fun logout(view: View) {
-        val context = applicationContext
-        val cacheToken = File(context.cacheDir, "token")
-        val cacheExpiry = File(context.cacheDir, "expiryDate")
-		val cacheUser = File(context.cacheDir, "username")
-        if(cacheToken.exists()) {
-            cacheToken.delete()
-            cacheExpiry.delete()
-			cacheUser.delete()
-            view.findNavController().navigate(R.id.action_global_navigation_login)
-        }
-    }
-
-    // Funzione per navigare da Account a ChangePassword (bottone Change Password)
-    fun goChangePassword(view: View) {
-        view.findNavController().navigate(R.id.action_navigation_account_to_navigation_change_password)
-    }
-
-    fun changePassword(view: View) {
-        val retrofit = NetworkClient.retrofitClient
-        val service = retrofit.create(APIChangePassword::class.java)
-
-        val context = applicationContext
-
-        val oldPassword = findViewById<TextView>(R.id.edit_old_password).text.toString()
-        val newPassword = findViewById<TextView>(R.id.edit_new_password).text.toString()
-
-        val cacheToken = File(context.cacheDir, "token")
-        var authorization = ""
-        if (cacheToken.exists()) {
-            authorization = cacheToken.readText()
-        }
-
-        val jsonObject = JSONObject()
-        jsonObject.put("old_password", oldPassword)
-        jsonObject.put("new_password", newPassword)
-
-        val jsonObjectString = jsonObject.toString()
-        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response =
-                    service.changePassword(authorization, requestBody)
-                if (response.isSuccessful) {
-                    withContext(Dispatchers.Main) {
-                        if (response.errorBody() == null) {
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val responseJson =
-                                gson.toJson(JsonParser.parseString(response.body()?.string()))
-                            print("Response: ")
-                            println(responseJson)
-                            Toast.makeText(
-                                applicationContext,
-                                getString(R.string.password_changed),
-                                Toast.LENGTH_LONG
-                            ).show()
-                            view.findNavController().navigate(R.id.action_navigation_change_password_to_navigation_account)
-                        } else {
-                            runOnUiThread {
-                                Toast.makeText(
-                                    applicationContext,
-                                    response.errorBody()?.string().toString(),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                } else {
-                    runOnUiThread {
-                        Toast.makeText(
-                            applicationContext,
-                            response.errorBody()?.string().toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            } catch (exception: SocketTimeoutException) {
-                runOnUiThread {
-                    Toast.makeText(
-                        applicationContext,
-                        getString(R.string.timeout),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
     }
 
     // Funzione per navigare da Home a Scanner (bottone Scanner)
@@ -290,7 +200,7 @@ class MainActivity : AppCompatActivity() {
     fun goReservation(view: View) {
         val deskId = view.contentDescription.toString()
         val roomId = view.tag.toString()
-        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(deskId, roomId)
+        val action = UserNavigationDirections.actionGlobalNavigationPrenotazioni(deskId, roomId)
         view.findNavController().navigate(action)
     }
 

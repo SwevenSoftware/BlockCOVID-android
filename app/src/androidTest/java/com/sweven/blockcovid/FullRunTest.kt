@@ -68,7 +68,7 @@ class FullRunTest {
         Thread.sleep(2500)
 
         val bottomNavigationItemView = onView(
-                allOf(withId(R.id.navigation_help), withContentDescription("Aiuto"),
+                allOf(withId(R.id.navigation_rooms), withContentDescription("Aiuto"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.nav_view),
