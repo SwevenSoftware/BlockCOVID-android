@@ -25,9 +25,9 @@
 
     <fragment
         android:id="@+id/navigation_help"
-        android:name="com.sweven.blockcovid.ui.help.HelpFragment"
-        android:label="@string/title_help"
-        tools:layout="@layout/fragment_help" />
+        android:name="com.sweven.blockcovid.ui.rooms.RoomsFragment"
+        android:label="@string/title_rooms"
+        tools:layout="@layout/fragment_rooms" />
 
     <fragment
         android:id="@+id/navigation_settings"

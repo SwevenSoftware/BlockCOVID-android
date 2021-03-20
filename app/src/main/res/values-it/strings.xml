@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BlockCOVID</string>
     <string name="title_home">Home</string>
-    <string name="title_help">Aiuto</string>
+    <string name="title_rooms">Stanze</string>
     <string name="title_settings">Impostazioni</string>
     <string name="title_login">Login</string>
     <string name="title_account">Profilo</string>
