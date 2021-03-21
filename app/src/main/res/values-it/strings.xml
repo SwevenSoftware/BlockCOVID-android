@@ -28,7 +28,7 @@
     <string name="password_changed">Password cambiata</string>
     <string name="password_change_failed">Cambio password fallito</string>
     <string name="invalid_username">Nome utente non valido</string>
-    <string name="invalid_password">Password deve essere di almeno 5 caratteri</string>
+    <string name="invalid_password">Password deve essere di almeno 6 caratteri</string>
     <string name="different_password">Le password non corrispondono</string>
     <string name="old_password_incorrect">La vecchia password è sbagliata</string>
     <string name="invalid_token">Token incorretto</string>
