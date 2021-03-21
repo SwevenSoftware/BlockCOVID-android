@@ -7,136 +7,125 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/selected_room"
-        android:layout_width="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="128dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:ems="10"
-        android:text="@string/selected_room"
-        android:textSize="16sp"
+        android:hint="@string/selected_room"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/id_reserved_room"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        android:textColor="@color/purple_200"
-        app:layout_constraintStart_toEndOf="@+id/selected_room"
-        app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/id_reserved_room"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:gravity="center"/>
 
-    <TextView
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/selected_desk"
-        android:layout_width="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="128dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:text="@string/selected_desk"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/selected_room" />
-
-    <TextView
-        android:id="@+id/id_reserved_desk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/purple_200"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/selected_desk"
-        app:layout_constraintTop_toBottomOf="@id/id_reserved_room" />
-
-    <TextView
-        android:id="@+id/arrival_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:text="@string/select_time_to"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selected_desk" />
-
-    <EditText
-        android:id="@+id/edit_arrival_time"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
-        android:focusable="false"
-        android:inputType="time"
-        android:onClick="openTimePicker"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/arrival_time"
-        app:layout_constraintTop_toBottomOf="@+id/id_reserved_desk" />
-
-    <TextView
-        android:id="@+id/exit_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:text="@string/select_time_from"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/arrival_time" />
-
-    <EditText
-        android:id="@+id/edit_exit_time"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:focusable="false"
-        android:inputType="time"
-        android:onClick="openTimePicker"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/exit_time"
-        app:layout_constraintTop_toBottomOf="@+id/edit_arrival_time" />
-
-    <TextView
-        android:id="@+id/reservation_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:ems="14"
-        android:text="@string/select_day"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exit_time" />
+        android:layout_marginEnd="32dp"
+        android:hint="@string/selected_desk"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <CalendarView
-        android:id="@+id/select_date"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/id_reserved_desk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:gravity="center" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/arrival_time"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/select_time_to"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/selected_room"
+        app:startIconDrawable="@drawable/ic_schedule">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_arrival_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:gravity="center" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/exit_time"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/select_time_from"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/arrival_time"
+        app:startIconDrawable="@drawable/ic_schedule">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_exit_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:gravity="center" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/reservation_date"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/select_day"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exit_time"
+        app:startIconDrawable="@drawable/ic_doc_event">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_reservation_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:gravity="center" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/reserve_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:maxDate="01/01/2023"
-        android:minDate="01/01/2021"
-        app:layout_constraintBottom_toTopOf="@+id/reserve_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reservation_date" />
-
-    <Button
-        android:id="@+id/reserve_button"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="60dp"
-        android:onClick="reserve"
+        android:layout_marginBottom="64dp"
+        android:gravity="center"
         android:text="@string/title_reserve"
-        android:textSize="20sp"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

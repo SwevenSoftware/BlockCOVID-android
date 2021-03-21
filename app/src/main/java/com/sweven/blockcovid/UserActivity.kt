@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -27,6 +28,8 @@ import com.sweven.blockcovid.services.APIReserve
 import com.sweven.blockcovid.ui.reservation.ReservationViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.services.APIChangePassword
@@ -41,6 +44,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.net.SocketTimeoutException
+import java.time.LocalTime
 
 
 class UserActivity : AppCompatActivity() {
@@ -61,7 +65,7 @@ class UserActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.navigation_home, R.id.navigation_rooms, R.id.navigation_settings))
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         // Controlla se NFC è supportato e abilitato
@@ -127,83 +131,6 @@ class UserActivity : AppCompatActivity() {
         view.findNavController().navigate(R.id.action_global_navigation_room2)
     }
 
-    // Funzione per inviare la richiesta POST al server per prenotare una postazione
-    fun reserve(view: View) {
-        val loading = findViewById<CircularProgressIndicator>(R.id.loading)
-        loading.show()
-
-        val nameRoom = findViewById<TextView>(R.id.id_reserved_room).text.toString()
-        val idDesk = findViewById<TextView>(R.id.id_reserved_desk).text.toString().toInt()
-        var date = ""
-        val viewModel: ReservationViewModel by viewModels()
-        viewModel.selectedItem.observe(this, Observer { item ->
-            date = item
-        })
-        val from = findViewById<TextView>(R.id.edit_arrival_time).text.toString()
-        val to = findViewById<TextView>(R.id.edit_exit_time).text.toString()
-        val context = applicationContext
-        val cacheToken = File(context.cacheDir, "token")
-        var authorization = ""
-        if (cacheToken.exists()) {
-            authorization = cacheToken.readText()
-        }
-        val retrofit = NetworkClient.retrofitClient
-
-        val service = retrofit.create(APIReserve::class.java)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response =
-                    service.deskReserve(nameRoom, idDesk, date, from, to, authorization)
-                if (response.isSuccessful) {
-                    withContext(Dispatchers.Main) {
-                        if(response.errorBody()==null) {
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val responseJson =
-                                gson.toJson(JsonParser.parseString(response.body()?.string()))
-                            print("Response: ")
-                            println(responseJson)
-                            loading.hide()
-                            Toast.makeText(
-                                applicationContext,
-                                getString(R.string.reservation_successful),
-                                Toast.LENGTH_LONG
-                            ).show()
-                        } else {
-                            runOnUiThread {
-                                loading.hide()
-                                Toast.makeText(
-                                        applicationContext,
-                                        response.errorBody()?.string().toString(),
-                                        Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                } else {
-                    runOnUiThread {
-                        loading.hide()
-                        Toast.makeText(
-                            applicationContext,
-                            response.errorBody()?.string().toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            } catch (exception: SocketTimeoutException) {
-                runOnUiThread {
-                    loading.hide()
-                    Toast.makeText(
-                        applicationContext,
-                        getString(R.string.timeout),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-    }
-
-
     // Funzione per navigare al fragment Postazioni (globale)
     fun goReservation(view: View) {
         val deskId = view.contentDescription.toString()
@@ -221,26 +148,6 @@ class UserActivity : AppCompatActivity() {
         svMessages.post {
             svMessages.smoothScrollTo(0, svMessages.bottom)
         }
-    }
-
-    // Funzione per aprire il TimePicker all'interno di Prenotazioni
-    fun openTimePicker(view: View) {
-        val cal = Calendar.getInstance()
-        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            cal.set(Calendar.HOUR_OF_DAY, hour)
-            cal.set(Calendar.MINUTE, minute)
-            when (view.id) {
-                R.id.edit_arrival_time -> {
-                    val arrivalTime = findViewById<TextView>(R.id.edit_arrival_time)
-                    arrivalTime.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
-                }
-                R.id.edit_exit_time -> {
-                    val exitTime = findViewById<TextView>(R.id.edit_exit_time)
-                    exitTime.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
-                }
-            }
-        }
-        TimePickerDialog(this, 2, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
     }
 
     override fun onResume() {
