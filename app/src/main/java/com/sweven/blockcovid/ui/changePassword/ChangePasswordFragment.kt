@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
@@ -54,6 +55,7 @@ class ChangePasswordFragment : Fragment() {
         val newPassword: TextInputLayout = view.findViewById(R.id.new_password)
         val repeatPassword: TextInputLayout = view.findViewById(R.id.repeat_password)
         val changePassword: Button = view.findViewById(R.id.change_password_button)
+        val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
 
         val mainActivity = viewLifecycleOwner
         changePasswordViewModel.changePasswordFormState.observe(mainActivity, Observer {
@@ -102,6 +104,9 @@ class ChangePasswordFragment : Fragment() {
 
         // Funzione per fare la richiesta di cambio password al server
         changePassword.setOnClickListener {
+
+            loading.show()
+
             val retrofit = NetworkClient.retrofitClient
             val service = retrofit.create(APIChangePassword::class.java)
 
@@ -134,6 +139,7 @@ class ChangePasswordFragment : Fragment() {
                                 print("Response: ")
                                 println(responseJson)
                                 activity?.runOnUiThread {
+                                    loading.hide()
                                     Toast.makeText(
                                         context,
                                         getString(R.string.password_changed),
@@ -143,6 +149,7 @@ class ChangePasswordFragment : Fragment() {
                                 view.findNavController().navigate(R.id.action_navigation_change_password_to_navigation_account)
                             } else {
                                 activity?.runOnUiThread {
+                                    loading.hide()
                                     Toast.makeText(
                                         context,
                                         response.errorBody()?.string().toString(),
@@ -156,6 +163,7 @@ class ChangePasswordFragment : Fragment() {
                         when (error.status.toString()) {
                             "400" ->
                             activity?.runOnUiThread {
+                                loading.hide()
                                 Toast.makeText(
                                     context,
                                     getString(R.string.old_password_incorrect),
@@ -164,6 +172,7 @@ class ChangePasswordFragment : Fragment() {
                             }
                             "401" ->
                             activity?.runOnUiThread {
+                                loading.hide()
                                 Toast.makeText(
                                     context,
                                     getString(R.string.old_password_incorrect),
@@ -172,6 +181,7 @@ class ChangePasswordFragment : Fragment() {
                             }
                             else ->
                             activity?.runOnUiThread {
+                                loading.hide()
                                 Toast.makeText(
                                     context,
                                     response.errorBody()?.string().toString(),
@@ -182,6 +192,7 @@ class ChangePasswordFragment : Fragment() {
                     }
                 } catch (exception: SocketTimeoutException) {
                     activity?.runOnUiThread {
+                        loading.hide()
                         Toast.makeText(
                                 context,
                                 getString(R.string.timeout),

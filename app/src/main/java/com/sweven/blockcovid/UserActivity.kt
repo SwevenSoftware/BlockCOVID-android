@@ -26,6 +26,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.sweven.blockcovid.services.APIReserve
 import com.sweven.blockcovid.ui.reservation.ReservationViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.services.APIChangePassword
@@ -128,6 +129,9 @@ class UserActivity : AppCompatActivity() {
 
     // Funzione per inviare la richiesta POST al server per prenotare una postazione
     fun reserve(view: View) {
+        val loading = findViewById<CircularProgressIndicator>(R.id.loading)
+        loading.show()
+
         val nameRoom = findViewById<TextView>(R.id.id_reserved_room).text.toString()
         val idDesk = findViewById<TextView>(R.id.id_reserved_desk).text.toString().toInt()
         var date = ""
@@ -159,6 +163,7 @@ class UserActivity : AppCompatActivity() {
                                 gson.toJson(JsonParser.parseString(response.body()?.string()))
                             print("Response: ")
                             println(responseJson)
+                            loading.hide()
                             Toast.makeText(
                                 applicationContext,
                                 getString(R.string.reservation_successful),
@@ -166,6 +171,7 @@ class UserActivity : AppCompatActivity() {
                             ).show()
                         } else {
                             runOnUiThread {
+                                loading.hide()
                                 Toast.makeText(
                                         applicationContext,
                                         response.errorBody()?.string().toString(),
@@ -176,6 +182,7 @@ class UserActivity : AppCompatActivity() {
                     }
                 } else {
                     runOnUiThread {
+                        loading.hide()
                         Toast.makeText(
                             applicationContext,
                             response.errorBody()?.string().toString(),
@@ -185,6 +192,7 @@ class UserActivity : AppCompatActivity() {
                 }
             } catch (exception: SocketTimeoutException) {
                 runOnUiThread {
+                    loading.hide()
                     Toast.makeText(
                         applicationContext,
                         getString(R.string.timeout),
