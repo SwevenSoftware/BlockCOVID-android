@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ class CleanerRoomsFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private var s1 = arrayOf("Stanza 1", "Stanza 2", "Stanza 3", "Stanza 4", "Stanza 5", "Stanza 6", "Stanza 7", "Stanza 8", "Stanza 9")
+    private var s2 = arrayOf(true, false, false, true, true, false, false, false, false)
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -30,7 +33,7 @@ class CleanerRoomsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.room_recycler_cleaner)
-        val roomsAdapter = CleanerRoomsAdapter(context, s1)
+        val roomsAdapter = CleanerRoomsAdapter(context, s1, s2)
         recyclerView.adapter = roomsAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
     }

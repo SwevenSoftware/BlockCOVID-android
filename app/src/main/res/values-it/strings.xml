@@ -56,4 +56,8 @@
     <string name="timeout" >Timeout</string>
     <string name="connection_error">Errore di connessione</string>
     <string name="error" >Errore:</string>
+    <string name="room_status">Status:</string>
+    <string name="desks_taken">Posti occupati:</string>
+    <string name="room_cleaned">pulita</string>
+    <string name="room_to_clean">da pulire</string>
 </resources>

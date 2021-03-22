@@ -59,7 +59,7 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/selected_room"
-        app:startIconDrawable="@drawable/ic_schedule">
+        app:startIconDrawable="@drawable/ic_query_builder">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_arrival_time"
@@ -82,7 +82,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/arrival_time"
-        app:startIconDrawable="@drawable/ic_schedule">
+        app:startIconDrawable="@drawable/ic_query_builder">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_exit_time"
@@ -105,7 +105,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exit_time"
-        app:startIconDrawable="@drawable/ic_doc_event">
+        app:startIconDrawable="@drawable/ic_event">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_reservation_date"
@@ -128,7 +128,8 @@
         android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:icon="@drawable/ic_check" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/loading"
