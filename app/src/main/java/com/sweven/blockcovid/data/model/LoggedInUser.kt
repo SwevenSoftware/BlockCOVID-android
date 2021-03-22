@@ -8,5 +8,6 @@ data class LoggedInUser(
         val userId: String,
         val displayName: String,
         val token: String?,
-        val expiryDate: Long?
+        val expiryDate: Long?,
+        val authority: String?
 )

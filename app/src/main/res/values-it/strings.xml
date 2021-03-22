@@ -28,16 +28,19 @@
     <string name="password_changed">Password cambiata</string>
     <string name="password_change_failed">Cambio password fallito</string>
     <string name="invalid_username">Nome utente non valido</string>
-    <string name="invalid_password">Password deve essere di almeno 5 caratteri</string>
+    <string name="invalid_password">Password deve essere di almeno 6 caratteri</string>
     <string name="different_password">Le password non corrispondono</string>
+    <string name="old_password_incorrect">La vecchia password è sbagliata</string>
+    <string name="invalid_token">Token incorretto</string>
+    <string name="incorrect_credentials">Credenziali errate</string>
+    <string name="empty_field">Questo campo non può essere vuoto</string>
     <string name="login_failed">Accesso fallito</string>
-    <string name="help_string">Avvicina il telefono ad un tag RFID,\npoi vai su Home > Scanner e premi\nil pulsante Log per leggerne il contenuto</string>
-    <string name="selected_room">Stanza selezionata:</string>
-    <string name="selected_desk">Postazione selezionata:</string>
+    <string name="selected_room">Stanza:</string>
+    <string name="selected_desk">Postazione:</string>
     <string name="select_time_to">Seleziona orario di arrivo:</string>
     <string name="select_time_from">Seleziona orario di uscita:</string>
-    <string name="select_day">Seleziona giorno della prenotazione:</string>
-    <string name="setting_1">Vuoi attivare questo switch?\t\t\t\t\t\t</string>
+    <string name="select_day">Seleziona data:</string>
+    <string name="dark_theme">Attiva tema scuro</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="three">3</string>
@@ -53,4 +56,8 @@
     <string name="timeout" >Timeout</string>
     <string name="connection_error">Errore di connessione</string>
     <string name="error" >Errore:</string>
+    <string name="room_status">Status:</string>
+    <string name="desks_taken">Posti occupati:</string>
+    <string name="room_cleaned">pulita</string>
+    <string name="room_to_clean">da pulire</string>
 </resources>

@@ -3,8 +3,8 @@ package com.sweven.blockcovid
 object InputChecks {
 
     // Un controllo di convalida del nome utente
-    fun isUsernameValid(username: String): Boolean {
-        return username.isNotEmpty()
+    fun isFieldEmpty(text: String): Boolean {
+        return text.isNotEmpty()
     }
 
     // Un controllo di convalida della password
