@@ -13,6 +13,7 @@ import android.widget.*
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.sweven.blockcovid.CleanerActivity
 import com.sweven.blockcovid.UserActivity
 import com.sweven.blockcovid.R
 import java.io.File
@@ -63,9 +64,19 @@ class LoginActivity : AppCompatActivity() {
                 updateUiWithUser(loginResult.success)
                 saveToken(loginResult.success)
                 setResult(Activity.RESULT_OK)
-                val i = Intent(this, UserActivity::class.java)
-                startActivity(i)
-                finish()
+                val cacheAuth = File(cacheDir, "authority")
+                when (cacheAuth.readText()) {
+                    "USER", "ADMIN" -> {
+                        val i = Intent(this, UserActivity::class.java)
+                        startActivity(i)
+                        finish()
+                    }
+                    "CLEANER" -> {
+                        val i = Intent(this, CleanerActivity::class.java)
+                        startActivity(i)
+                        finish()
+                    }
+                }
             }
         })
 
@@ -107,12 +118,15 @@ class LoginActivity : AppCompatActivity() {
         val token = model.token
         val expiryDate = model.expiryDate
         val username = model.displayName
+        val authority = model.authority
         File.createTempFile("token", null, context.cacheDir)
         File.createTempFile("expiryDate", null, context.cacheDir)
         File.createTempFile("username", null, context.cacheDir)
+        File.createTempFile("authority", null, context.cacheDir)
         val cacheToken = File(context.cacheDir, "token")
         val cacheExpiry = File(context.cacheDir, "expiryDate")
-        val cacheFile = File(context.cacheDir, "username")
+        val cacheUser = File(context.cacheDir, "username")
+        val cacheAuth = File(context.cacheDir, "authority")
         if (token != null) {
             cacheToken.writeText(token)
         }
@@ -120,7 +134,10 @@ class LoginActivity : AppCompatActivity() {
             cacheExpiry.writeText(expiryDate.toString())
         }
         if (username != null) {
-            cacheFile.writeText(username)
+            cacheUser.writeText(username)
+        }
+        if (authority != null) {
+            cacheAuth.writeText(authority)
         }
     }
 

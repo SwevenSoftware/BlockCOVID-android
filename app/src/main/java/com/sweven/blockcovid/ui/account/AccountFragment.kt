@@ -29,6 +29,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         val cacheToken = File(context?.cacheDir, "token")
         val cacheExpiry = File(context?.cacheDir, "expiryDate")
         val cacheUser = File(context?.cacheDir, "username")
+        val cacheAuth = File(context?.cacheDir, "authority")
+
 
         // Mostra il nome dell'utente in cima alla pagina
         val showUser: TextView = view.findViewById(R.id.showUsername)
@@ -49,6 +51,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 cacheToken.delete()
                 cacheExpiry.delete()
                 cacheUser.delete()
+                cacheAuth.delete()
                 view.findNavController().navigate(R.id.action_global_navigation_login)
             }
         }

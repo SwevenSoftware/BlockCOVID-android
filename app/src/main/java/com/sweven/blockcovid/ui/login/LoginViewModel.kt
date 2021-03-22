@@ -27,7 +27,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
                  if (result is Result.Success) {
                 _loginResult.postValue(LoginResult(success =
-                    LoggedInUserView(displayName = result.data.displayName, token = result.data.token, expiryDate = result.data.expiryDate)))
+                    LoggedInUserView(displayName = result.data.displayName, token = result.data.token, expiryDate = result.data.expiryDate, authority = result.data.authority)))
 					
                 } else if (result is Result.Error) {
                     _loginResult.postValue(LoginResult(error = result.exception))

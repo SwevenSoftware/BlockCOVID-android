@@ -53,18 +53,16 @@ class LoginRepository(val dataSource: LoginDataSource) {
             if (response.errorBody() == null) {
                 val items = response.body()
                 if(items != null) {
-                    val id = items.id
-                    print("Token: ")
-                    println(id)
+                    val id = items.token.id
 
-                    val expiryDateISO = items.expiryDate
+                    val expiryDateISO = items.token.expiryDate
                     val expiryDateLDT = LocalDateTime.parse(expiryDateISO)
                     // Scadenza di scadenza del token in millisecondi
                     val expiryDate = expiryDateLDT.toEpochSecond(UTC)
-                    print("expiryDate: ")
-                    println(expiryDate)
 
-                    val result = dataSource.login(username, password, id, expiryDate)
+                    val authority = items.authoritiesList[0]
+
+                    val result = dataSource.login(username, password, id, expiryDate, authority)
                     if (result is Result.Success) {
                         setLoggedInUser(result.data)
                     }
