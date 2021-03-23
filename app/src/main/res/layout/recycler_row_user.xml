@@ -40,6 +40,16 @@
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?android:attr/textColorSecondary" />
 
+        <TextView
+            android:id="@+id/room_open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="24dp"
+            android:text="@string/room_open"
+            android:textColor="@color/green_500"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
+
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

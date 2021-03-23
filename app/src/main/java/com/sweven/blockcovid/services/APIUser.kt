@@ -1,9 +1,7 @@
 package com.sweven.blockcovid.services
 
-import com.sweven.blockcovid.services.gsonReceive.Token
 import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
