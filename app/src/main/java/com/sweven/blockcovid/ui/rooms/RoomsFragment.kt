@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.Gson
 import com.sweven.blockcovid.R
@@ -21,7 +22,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.SocketTimeoutException
+import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 
 class RoomsFragment : Fragment() {
 
@@ -42,6 +45,7 @@ class RoomsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val refreshButton: ExtendedFloatingActionButton = view.findViewById(R.id.refresh_button)
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         loading.show()
 
@@ -54,7 +58,7 @@ class RoomsFragment : Fragment() {
             authorization = cacheToken.readText()
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        val getRooms = CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getRooms(authorization)
                 if (response.isSuccessful) {
@@ -62,24 +66,28 @@ class RoomsFragment : Fragment() {
                         if (response.errorBody() == null) {
                             loading.hide()
                             val roomList = response.body()?.embedded?.roomList
-                            println(roomList)
-                            println(roomList?.indices)
                             roomList?.let {
                                 val listSize = roomList.size-1
-                                val s1 = Array(listSize) { _ -> ""}
-                                val s2 = Array(listSize) { _ -> ""}
-                                val s3 = Array(listSize) { _ -> ""}
-                                val s4 = Array(listSize) {_ -> false}
+                                val nameArray = Array(listSize) { _ -> ""}
+                                val openArray = Array(listSize) { _ -> ""}
+                                val closeArray = Array(listSize) { _ -> ""}
+                                val daysArray = Array(listSize) { _ -> Array(7) { _ -> ""} }
+                                val isOpenArray = Array(listSize) {_ -> false}
                                 for (i in 0 until listSize) {
-                                    s1[i] = roomList[i].name
-                                    s2[i] = roomList[i].openingTime.dropLast(3)
-                                    s3[i] = roomList[i].closingTime.dropLast(3)
-                                    if (isOpen(s2[i], s3[i])) {
-                                        s4[i] = true
+                                    nameArray[i] = roomList[i].name
+                                    openArray[i] = roomList[i].openingTime.dropLast(3)
+                                    closeArray[i] = roomList[i].closingTime.dropLast(3)
+
+                                    for (l in roomList[i].openingDays.indices) {
+                                        daysArray[i][l] = roomList[i].openingDays[l]
+                                    }
+
+                                    if (isOpen(openArray[i], closeArray[i], daysArray[i])) {
+                                        isOpenArray[i] = true
                                     }
                                 }
                                 recyclerView = view.findViewById(R.id.room_recycler_user)
-                                val roomsAdapter = RoomsAdapter(context, s1, s2, s3, s4)
+                                val roomsAdapter = RoomsAdapter(context, nameArray, openArray, closeArray, isOpenArray)
                                 recyclerView.adapter = roomsAdapter
                                 recyclerView.layoutManager = LinearLayoutManager(context)
                             }
@@ -137,12 +145,30 @@ class RoomsFragment : Fragment() {
                 }
             }
         }
+
+        refreshButton.setOnClickListener {
+            if (!getRooms.isActive) {
+                parentFragmentManager
+                    .beginTransaction()
+                    .detach(this)
+                    .attach(this)
+                    .commit()
+            }
+        }
     }
 
-    private fun isOpen (ot: String, ct: String): Boolean {
+    private fun isOpen (ot: String, ct: String, day: Array<String>): Boolean {
         val openingTime = LocalTime.parse(ot)
         val closingTime = LocalTime.parse(ct)
         val nowTime = LocalTime.now()
-        return openingTime < nowTime && closingTime > nowTime
+
+        var todayOpen = false
+        val thisDay = LocalDate.now().dayOfWeek.toString().toUpperCase(Locale.ITALIAN)
+        for (i in day.indices) {
+            if (thisDay == day[i]) {
+                todayOpen = true
+            }
+        }
+        return openingTime < nowTime && closingTime > nowTime && todayOpen
     }
 }
