@@ -10,15 +10,18 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.sweven.blockcovid.R
 
-class RoomsAdapter(ct: Context?, rl: Array<String>, rs: Array<String>): RecyclerView.Adapter<RoomsAdapter.MyViewHolder>() {
+class RoomsAdapter(ct: Context?, rl: Array<String>, ro: Array<String>, rc: Array<String>, op: Array<Boolean>): RecyclerView.Adapter<RoomsAdapter.MyViewHolder>() {
 
     val context = ct
     private val roomList = rl
-    private val roomStatus = rs
+    private val roomOpening = ro
+    private val roomClosing = rc
+    private val roomOpened = op
 
     inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var roomText: TextView = itemView.findViewById(R.id.room_text)
         var desksTaken: TextView = itemView.findViewById(R.id.desks_taken)
+        var roomOpen: TextView = itemView.findViewById(R.id.room_open)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -30,7 +33,18 @@ class RoomsAdapter(ct: Context?, rl: Array<String>, rs: Array<String>): Recycler
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.roomText.text = roomList[position]
         holder.desksTaken.text =
-            context?.getString(R.string.desks_taken).plus(" ").plus(roomStatus[position])
+            roomOpening[position].plus(" - ").plus(roomClosing[position])
+        if (roomOpened[position]) {
+            holder.roomOpen.text = context?.getString(R.string.room_open)
+            if (context != null) {
+                holder.roomOpen.setTextColor(context.getColor(R.color.green_500))
+            }
+        } else {
+            holder.roomOpen.text = context?.getString(R.string.room_closed)
+            if (context != null) {
+                holder.roomOpen.setTextColor(context.getColor(R.color.red_600))
+            }
+        }
     }
 
     override fun getItemCount(): Int {
