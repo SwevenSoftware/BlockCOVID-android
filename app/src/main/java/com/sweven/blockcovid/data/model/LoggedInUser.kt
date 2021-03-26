@@ -5,7 +5,6 @@ package com.sweven.blockcovid.data.model
  * che hanno effettuato l'accesso recuperate da LoginRepository
  */
 data class LoggedInUser(
-        val userId: String,
         val displayName: String,
         val token: String?,
         val expiryDate: Long?,

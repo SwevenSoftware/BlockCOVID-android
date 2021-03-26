@@ -12,7 +12,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -22,17 +21,19 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.services.APIReserve
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.net.SocketTimeoutException
+import java.lang.Exception
 import java.time.LocalTime
 import java.util.*
 
@@ -40,9 +41,11 @@ import java.util.*
 class ReservationFragment : Fragment(){
     private lateinit var reservationViewModel: ReservationViewModel
 
-    private val viewModel: ReservationViewModel by activityViewModels()
+    private var netClient = NetworkClient()
 
-    var selectedDate = ""
+    fun setNetwork(nc: NetworkClient) {
+        netClient = nc
+    }
 
     private val args: ReservationFragmentArgs by navArgs()
 
@@ -193,7 +196,7 @@ class ReservationFragment : Fragment(){
             if (cacheToken.exists()) {
                 authorization = cacheToken.readText()
             }
-            val retrofit = NetworkClient.retrofitClient
+            val retrofit = netClient.getClient()
 
             val service = retrofit.create(APIReserve::class.java)
 
@@ -227,21 +230,22 @@ class ReservationFragment : Fragment(){
                             }
                         }
                     } else {
+                        val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
                         activity?.runOnUiThread {
                             loading.hide()
                             Toast.makeText(
                                     context,
-                                    response.errorBody()?.string().toString(),
+                                    getString(R.string.error).plus(" ").plus(error.error),
                                     Toast.LENGTH_LONG
                             ).show()
                         }
                     }
-                } catch (exception: SocketTimeoutException) {
+                } catch (e: Exception) {
                     activity?.runOnUiThread {
                         loading.hide()
                         Toast.makeText(
                                 context,
-                                getString(R.string.timeout),
+                                e.message,
                                 Toast.LENGTH_LONG
                         ).show()
                     }

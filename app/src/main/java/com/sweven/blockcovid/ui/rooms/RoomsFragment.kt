@@ -21,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.net.SocketTimeoutException
+import java.lang.Exception
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
@@ -31,6 +31,12 @@ class RoomsFragment : Fragment() {
     private lateinit var roomsViewModel: RoomsViewModel
 
     private lateinit var recyclerView: RecyclerView
+
+    private var netClient = NetworkClient()
+
+    fun setNetwork(nc: NetworkClient) {
+        netClient = nc
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -49,7 +55,7 @@ class RoomsFragment : Fragment() {
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         loading.show()
 
-        val retrofit = NetworkClient.retrofitClient
+        val retrofit = netClient.getClient()
         val service = retrofit.create(APIRooms::class.java)
 
         val cacheToken = File(context?.cacheDir, "token")
@@ -65,21 +71,21 @@ class RoomsFragment : Fragment() {
                     withContext(Dispatchers.Main) {
                         if (response.errorBody() == null) {
                             loading.hide()
-                            val roomList = response.body()?.embedded?.roomList
+                            val roomList = response.body()?.embedded?.roomWithDesksList
                             roomList?.let {
-                                val listSize = roomList.size-1
+                                val listSize = roomList.size
                                 val nameArray = Array(listSize) { _ -> ""}
                                 val openArray = Array(listSize) { _ -> ""}
                                 val closeArray = Array(listSize) { _ -> ""}
                                 val daysArray = Array(listSize) { _ -> Array(7) { _ -> ""} }
                                 val isOpenArray = Array(listSize) {_ -> false}
                                 for (i in 0 until listSize) {
-                                    nameArray[i] = roomList[i].name
-                                    openArray[i] = roomList[i].openingTime.dropLast(3)
-                                    closeArray[i] = roomList[i].closingTime.dropLast(3)
+                                    nameArray[i] = roomList[i].room.name
+                                    openArray[i] = roomList[i].room.openingTime.dropLast(3)
+                                    closeArray[i] = roomList[i].room.closingTime.dropLast(3)
 
-                                    for (l in roomList[i].openingDays.indices) {
-                                        daysArray[i][l] = roomList[i].openingDays[l]
+                                    for (l in roomList[i].room.openingDays.indices) {
+                                        daysArray[i][l] = roomList[i].room.openingDays[l]
                                     }
 
                                     if (isOpen(openArray[i], closeArray[i], daysArray[i])) {
@@ -104,42 +110,21 @@ class RoomsFragment : Fragment() {
                     }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                    when (error.status.toString()) {
-                        "400" ->
-                            activity?.runOnUiThread {
-                                loading.hide()
-                                Toast.makeText(
-                                        context,
-                                        getString(R.string.old_password_incorrect),
-                                        Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        "401" ->
-                            activity?.runOnUiThread {
-                                loading.hide()
-                                Toast.makeText(
-                                        context,
-                                        getString(R.string.old_password_incorrect),
-                                        Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        else ->
-                            activity?.runOnUiThread {
-                                loading.hide()
-                                Toast.makeText(
-                                        context,
-                                        response.errorBody()?.string().toString(),
-                                        Toast.LENGTH_LONG
-                                ).show()
-                            }
+                    activity?.runOnUiThread {
+                        loading.hide()
+                        Toast.makeText(
+                                context,
+                                getString(R.string.error).plus(" ").plus(error.error),
+                                Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
-            } catch (exception: SocketTimeoutException) {
+            } catch (e: Exception) {
                 activity?.runOnUiThread {
                     loading.hide()
                     Toast.makeText(
                             context,
-                            getString(R.string.timeout),
+                            e.message,
                             Toast.LENGTH_LONG
                     ).show()
                 }

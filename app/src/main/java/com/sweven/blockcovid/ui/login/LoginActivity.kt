@@ -153,10 +153,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showLoginFailed(errorString: String) {
-        when (errorString) {
-            "400" -> Toast.makeText(applicationContext, getString(R.string.error).plus(" ").plus(getString(R.string.incorrect_credentials)), Toast.LENGTH_SHORT).show()
-            else ->  Toast.makeText(applicationContext, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
-        }
+        Toast.makeText(applicationContext, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 }
 

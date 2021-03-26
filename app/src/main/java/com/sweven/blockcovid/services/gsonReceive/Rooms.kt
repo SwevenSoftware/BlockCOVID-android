@@ -2,33 +2,27 @@ package com.sweven.blockcovid.services.gsonReceive
 
 import com.google.gson.annotations.SerializedName
 
-
 data class Rooms (
         @SerializedName("_embedded")
         val embedded: Embedded,
 
         @SerializedName("_links")
-        val links: Welcome5Links
+        val links: RoomsLinks
 )
 
 data class Embedded (
-        val roomList: List<RoomList>
+        val roomWithDesksList: List<RoomWithDesksList>
 )
 
-data class RoomList (
-        val name: String,
-        val closed: Boolean,
-        val openingTime: String,
-        val closingTime: String,
-        val openingDays: List<String>,
-        val width: Long,
-        val height: Long,
+data class RoomWithDesksList (
+        val room: Room,
+        val desks: List<Any?>,
 
         @SerializedName("_links")
-        val links: RoomListLinks
+        val links: RoomWithDesksListLinks
 )
 
-data class RoomListLinks (
+data class RoomWithDesksListLinks (
         val self: Self,
 
         @SerializedName("new_room")
@@ -42,6 +36,16 @@ data class Self (
         val href: String
 )
 
-data class Welcome5Links (
+data class Room (
+        val name: String,
+        val closed: Boolean,
+        val openingTime: String,
+        val closingTime: String,
+        val openingDays: List<String>,
+        val width: Long,
+        val height: Long
+)
+
+data class RoomsLinks (
         val self: Self
 )

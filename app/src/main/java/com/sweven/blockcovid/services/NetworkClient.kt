@@ -7,21 +7,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
-object NetworkClient {
-    private const val url = "https://192.168.210.30:8091"
-    var retrofit: Retrofit? = null
+class NetworkClient {
 
-    val retrofitClient: Retrofit
-    get() {
-        if (retrofit == null) {
-            val okHttpClient: OkHttpClient = unsafeOkHttpClient
-            retrofit = Retrofit.Builder()
-                    .baseUrl(url)
-                    .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(okHttpClient)
-                    .build()
-        }
-        return retrofit!!
+    private val okHttpClient: OkHttpClient = unsafeOkHttpClient
+    private val url = "http://192.168.210.30:8091"
+
+    fun getClient(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
     }
+
 }
+

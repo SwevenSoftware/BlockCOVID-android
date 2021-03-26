@@ -50,7 +50,6 @@ class CleanerRoomsAdapter(ct: Context?, rl: Array<String>, rc: Array<Boolean>): 
                         context?.getString(R.string.room_status).plus(" ").plus(context?.getString(R.string.room_cleaned))
             }
         }
-
     }
 
     override fun getItemCount(): Int {

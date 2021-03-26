@@ -30,11 +30,17 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.File
-import java.net.SocketTimeoutException
+import java.lang.Exception
 
 class ChangePasswordFragment : Fragment() {
 
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
+
+    private var netClient = NetworkClient()
+
+    fun setNetwork(nc: NetworkClient) {
+        netClient = nc
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -107,7 +113,7 @@ class ChangePasswordFragment : Fragment() {
 
             loading.show()
 
-            val retrofit = NetworkClient.retrofitClient
+            val retrofit = netClient.getClient()
             val service = retrofit.create(APIChangePassword::class.java)
 
             val oldPasswordText = editOldPassword.text.toString()
@@ -160,42 +166,21 @@ class ChangePasswordFragment : Fragment() {
                         }
                     } else {
                         val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                        when (error.status.toString()) {
-                            "400" ->
-                            activity?.runOnUiThread {
-                                loading.hide()
-                                Toast.makeText(
+                        activity?.runOnUiThread {
+                            loading.hide()
+                            Toast.makeText(
                                     context,
-                                    getString(R.string.old_password_incorrect),
+                                    getString(R.string.error).plus(" ").plus(error.error),
                                     Toast.LENGTH_LONG
-                                ).show()
-                            }
-                            "401" ->
-                            activity?.runOnUiThread {
-                                loading.hide()
-                                Toast.makeText(
-                                    context,
-                                    getString(R.string.old_password_incorrect),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                            else ->
-                            activity?.runOnUiThread {
-                                loading.hide()
-                                Toast.makeText(
-                                    context,
-                                    response.errorBody()?.string().toString(),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
+                            ).show()
                         }
                     }
-                } catch (exception: SocketTimeoutException) {
+                } catch (e: Exception) {
                     activity?.runOnUiThread {
                         loading.hide()
                         Toast.makeText(
                                 context,
-                                getString(R.string.timeout),
+                                e.message,
                                 Toast.LENGTH_LONG
                         ).show()
                     }
