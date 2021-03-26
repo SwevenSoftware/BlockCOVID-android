@@ -51,6 +51,12 @@
     <string name="eight">8</string>
     <string name="nine">9</string>
     <string name="zero">0</string>
+    <string name="monday">MON</string>
+    <string name="tuesday">TUE</string>
+    <string name="wednesday">WED</string>
+    <string name="thursday">THU</string>
+    <string name="friday">FRI</string>
+    <string name="saturday">SAT</string>
     <string name="reservation_successful">Successful reservation</string>
     <string name="reservation_failed">Reservation failed</string>
     <string name="timeout">Timeout</string>

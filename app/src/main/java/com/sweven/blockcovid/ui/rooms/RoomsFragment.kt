@@ -88,12 +88,12 @@ class RoomsFragment : Fragment() {
                                         daysArray[i][l] = roomList[i].room.openingDays[l]
                                     }
 
-                                    if (isOpen(openArray[i], closeArray[i], daysArray[i])) {
+                                    if (isOpen(openArray[i], closeArray[i], daysArray[i]) && !roomList[i].room.closed) {
                                         isOpenArray[i] = true
                                     }
                                 }
                                 recyclerView = view.findViewById(R.id.room_recycler_user)
-                                val roomsAdapter = RoomsAdapter(context, nameArray, openArray, closeArray, isOpenArray)
+                                val roomsAdapter = RoomsAdapter(context, nameArray, openArray, closeArray, daysArray, isOpenArray)
                                 recyclerView.adapter = roomsAdapter
                                 recyclerView.layoutManager = LinearLayoutManager(context)
                             }
