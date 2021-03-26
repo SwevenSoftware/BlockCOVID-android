@@ -8,10 +8,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import com.sweven.blockcovid.MainActivity
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.sweven.blockcovid.CleanerActivity
+import com.sweven.blockcovid.UserActivity
 import com.sweven.blockcovid.R
 import java.io.File
 
@@ -23,10 +26,12 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        val username = findViewById<EditText>(R.id.username)
-        val password = findViewById<EditText>(R.id.password)
+        val editUsername = findViewById<TextInputEditText>(R.id.username)
+        val editPassword = findViewById<TextInputEditText>(R.id.password)
+        val username = findViewById<TextInputLayout>(R.id.username_layout)
+        val password = findViewById<TextInputLayout>(R.id.password_layout)
         val login = findViewById<Button>(R.id.login_button)
-        val loading = findViewById<ProgressBar>(R.id.loading)
+        val loading = findViewById<CircularProgressIndicator>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
@@ -36,43 +41,57 @@ class LoginActivity : AppCompatActivity() {
 
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
+            } else {
+                username.error = null
             }
             if (loginState.passwordError != null) {
                 password.error = getString(loginState.passwordError)
+            } else {
+                password.error = null
             }
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
+            loading.hide()
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
-                username.text.clear()
-                password.text.clear()
+                editUsername.text?.clear()
+                editPassword.text?.clear()
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
                 saveToken(loginResult.success)
                 setResult(Activity.RESULT_OK)
-                val i = Intent(this, MainActivity::class.java)
-                startActivity(i)
-                finish()
+                val cacheAuth = File(cacheDir, "authority")
+                when (cacheAuth.readText()) {
+                    "USER", "ADMIN" -> {
+                        val i = Intent(this, UserActivity::class.java)
+                        startActivity(i)
+                        finish()
+                    }
+                    "CLEANER" -> {
+                        val i = Intent(this, CleanerActivity::class.java)
+                        startActivity(i)
+                        finish()
+                    }
+                }
             }
         })
 
-        username.afterTextChanged {
+        editUsername.afterTextChanged {
             loginViewModel.loginDataChanged(
-                username.text.toString(),
-                password.text.toString()
+                editUsername.text.toString(),
+                editPassword.text.toString()
             )
         }
 
-        password.apply {
+        editPassword.apply {
             afterTextChanged {
                 loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
+                    editUsername.text.toString(),
+                    editPassword.text.toString()
                 )
             }
 
@@ -80,32 +99,34 @@ class LoginActivity : AppCompatActivity() {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
+                            editUsername.text.toString(),
+                            editPassword.text.toString()
                         )
                 }
                 false
             }
 
             login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                loading.show()
+                loginViewModel.login(editUsername.text.toString(), editPassword.text.toString())
             }
         }
     }
-
 
     private fun saveToken(model: LoggedInUserView) {
         val context = applicationContext
         val token = model.token
         val expiryDate = model.expiryDate
         val username = model.displayName
+        val authority = model.authority
         File.createTempFile("token", null, context.cacheDir)
         File.createTempFile("expiryDate", null, context.cacheDir)
         File.createTempFile("username", null, context.cacheDir)
+        File.createTempFile("authority", null, context.cacheDir)
         val cacheToken = File(context.cacheDir, "token")
         val cacheExpiry = File(context.cacheDir, "expiryDate")
-        val cacheFile = File(context.cacheDir, "username")
+        val cacheUser = File(context.cacheDir, "username")
+        val cacheAuth = File(context.cacheDir, "authority")
         if (token != null) {
             cacheToken.writeText(token)
         }
@@ -113,7 +134,10 @@ class LoginActivity : AppCompatActivity() {
             cacheExpiry.writeText(expiryDate.toString())
         }
         if (username != null) {
-            cacheFile.writeText(username)
+            cacheUser.writeText(username)
+        }
+        if (authority != null) {
+            cacheAuth.writeText(authority)
         }
     }
 
@@ -136,7 +160,7 @@ class LoginActivity : AppCompatActivity() {
 /**
  * Funzione di estensione per semplificare l'impostazione di un'azione afterTextChanged sui componenti EditText.
  */
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(editable: Editable?) {
             afterTextChanged.invoke(editable.toString())

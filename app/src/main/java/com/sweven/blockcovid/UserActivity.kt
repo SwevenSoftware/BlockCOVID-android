@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -26,6 +27,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.sweven.blockcovid.services.APIReserve
 import com.sweven.blockcovid.ui.reservation.ReservationViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.services.APIChangePassword
@@ -40,9 +44,10 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.net.SocketTimeoutException
+import java.time.LocalTime
 
 
-class MainActivity : AppCompatActivity() {
+class UserActivity : AppCompatActivity() {
 
     // Controllo dello stato dell'adattatore NFC
     private var nfcAdapter: NfcAdapter? = null
@@ -59,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_help, R.id.navigation_settings))
+                R.id.navigation_home, R.id.navigation_rooms, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -106,96 +111,6 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    // Funzione per fare il logout, elimina il file token dalla cache
-    fun logout(view: View) {
-        val context = applicationContext
-        val cacheToken = File(context.cacheDir, "token")
-        val cacheExpiry = File(context.cacheDir, "expiryDate")
-		val cacheUser = File(context.cacheDir, "username")
-        if(cacheToken.exists()) {
-            cacheToken.delete()
-            cacheExpiry.delete()
-			cacheUser.delete()
-            view.findNavController().navigate(R.id.action_global_navigation_login)
-        }
-    }
-
-    // Funzione per navigare da Account a ChangePassword (bottone Change Password)
-    fun goChangePassword(view: View) {
-        view.findNavController().navigate(R.id.action_navigation_account_to_navigation_change_password)
-    }
-
-    fun changePassword(view: View) {
-        val retrofit = NetworkClient.retrofitClient
-        val service = retrofit.create(APIChangePassword::class.java)
-
-        val context = applicationContext
-
-        val oldPassword = findViewById<TextView>(R.id.edit_old_password).text.toString()
-        val newPassword = findViewById<TextView>(R.id.edit_new_password).text.toString()
-
-        val cacheToken = File(context.cacheDir, "token")
-        var authorization = ""
-        if (cacheToken.exists()) {
-            authorization = cacheToken.readText()
-        }
-
-        val jsonObject = JSONObject()
-        jsonObject.put("old_password", oldPassword)
-        jsonObject.put("new_password", newPassword)
-
-        val jsonObjectString = jsonObject.toString()
-        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response =
-                    service.changePassword(authorization, requestBody)
-                if (response.isSuccessful) {
-                    withContext(Dispatchers.Main) {
-                        if (response.errorBody() == null) {
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val responseJson =
-                                gson.toJson(JsonParser.parseString(response.body()?.string()))
-                            print("Response: ")
-                            println(responseJson)
-                            Toast.makeText(
-                                applicationContext,
-                                getString(R.string.password_changed),
-                                Toast.LENGTH_LONG
-                            ).show()
-                            view.findNavController().navigate(R.id.action_navigation_change_password_to_navigation_account)
-                        } else {
-                            runOnUiThread {
-                                Toast.makeText(
-                                    applicationContext,
-                                    response.errorBody()?.string().toString(),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                } else {
-                    runOnUiThread {
-                        Toast.makeText(
-                            applicationContext,
-                            response.errorBody()?.string().toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            } catch (exception: SocketTimeoutException) {
-                runOnUiThread {
-                    Toast.makeText(
-                        applicationContext,
-                        getString(R.string.timeout),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-    }
-
     // Funzione per navigare da Home a Scanner (bottone Scanner)
     fun goScanner(view: View) {
         view.findNavController().navigate(R.id.action_navigation_home_to_navigation_scanner)
@@ -216,81 +131,11 @@ class MainActivity : AppCompatActivity() {
         view.findNavController().navigate(R.id.action_global_navigation_room2)
     }
 
-    // Funzione per inviare la richiesta POST al server per prenotare una postazione
-    fun reserve(view: View) {
-        val nameRoom = findViewById<TextView>(R.id.id_reserved_room).text.toString()
-        val idDesk = findViewById<TextView>(R.id.id_reserved_desk).text.toString().toInt()
-        var date = ""
-        val viewModel: ReservationViewModel by viewModels()
-        viewModel.selectedItem.observe(this, Observer { item ->
-            date = item
-        })
-        val from = findViewById<TextView>(R.id.edit_arrival_time).text.toString()
-        val to = findViewById<TextView>(R.id.edit_exit_time).text.toString()
-        val context = applicationContext
-        val cacheToken = File(context.cacheDir, "token")
-        var authorization = ""
-        if (cacheToken.exists()) {
-            authorization = cacheToken.readText()
-        }
-        val retrofit = NetworkClient.retrofitClient
-
-        val service = retrofit.create(APIReserve::class.java)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response =
-                    service.deskReserve(nameRoom, idDesk, date, from, to, authorization)
-                if (response.isSuccessful) {
-                    withContext(Dispatchers.Main) {
-                        if(response.errorBody()==null) {
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val responseJson =
-                                gson.toJson(JsonParser.parseString(response.body()?.string()))
-                            print("Response: ")
-                            println(responseJson)
-                            Toast.makeText(
-                                applicationContext,
-                                getString(R.string.reservation_successful),
-                                Toast.LENGTH_LONG
-                            ).show()
-                        } else {
-                            runOnUiThread {
-                                Toast.makeText(
-                                        applicationContext,
-                                        response.errorBody()?.string().toString(),
-                                        Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                } else {
-                    runOnUiThread {
-                        Toast.makeText(
-                            applicationContext,
-                            response.errorBody()?.string().toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            } catch (exception: SocketTimeoutException) {
-                runOnUiThread {
-                    Toast.makeText(
-                        applicationContext,
-                        getString(R.string.timeout),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-    }
-
-
     // Funzione per navigare al fragment Postazioni (globale)
     fun goReservation(view: View) {
         val deskId = view.contentDescription.toString()
         val roomId = view.tag.toString()
-        val action = MobileNavigationDirections.actionGlobalNavigationPrenotazioni(deskId, roomId)
+        val action = UserNavigationDirections.actionGlobalNavigationPrenotazioni(deskId, roomId)
         view.findNavController().navigate(action)
     }
 
@@ -303,26 +148,6 @@ class MainActivity : AppCompatActivity() {
         svMessages.post {
             svMessages.smoothScrollTo(0, svMessages.bottom)
         }
-    }
-
-    // Funzione per aprire il TimePicker all'interno di Prenotazioni
-    fun openTimePicker(view: View) {
-        val cal = Calendar.getInstance()
-        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            cal.set(Calendar.HOUR_OF_DAY, hour)
-            cal.set(Calendar.MINUTE, minute)
-            when (view.id) {
-                R.id.edit_arrival_time -> {
-                    val arrivalTime = findViewById<TextView>(R.id.edit_arrival_time)
-                    arrivalTime.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
-                }
-                R.id.edit_exit_time -> {
-                    val exitTime = findViewById<TextView>(R.id.edit_exit_time)
-                    exitTime.text = SimpleDateFormat("HH:mm", Locale.ITALIAN).format(cal.time)
-                }
-            }
-        }
-        TimePickerDialog(this, 2, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
     }
 
     override fun onResume() {

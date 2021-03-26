@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cleaner_navigation"
+    app:startDestination="@+id/navigation_cleaner_rooms">
+
+    <activity
+        android:id="@+id/navigation_login"
+        android:name="com.sweven.blockcovid.ui.login.LoginActivity"
+        android:label="@string/title_login"
+        tools:layout="@layout/activity_login" />
+    <action android:id="@+id/action_global_navigation_login" app:destination="@id/navigation_login"/>
+
+    <activity
+        android:id="@+id/navigation_cleaner"
+        android:name="com.sweven.blockcovid.CleanerActivity"
+        android:label="@string/app_name"
+        tools:layout="@layout/activity_cleaner" />
+
+    <fragment
+        android:id="@+id/navigation_cleaner_rooms"
+        android:name="com.sweven.blockcovid.ui.cleanerRooms.CleanerRoomsFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_cleaner_rooms" />
+
+
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.sweven.blockcovid.ui.account.AccountFragment"
+        android:label="@string/title_account"
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_navigation_account_to_navigation_change_password"
+            app:destination="@id/navigation_change_password" />
+    </fragment>
+    <action android:id="@+id/action_global_navigation_account" app:destination="@id/navigation_account"/>
+
+    <fragment
+        android:id="@+id/navigation_change_password"
+        android:name="com.sweven.blockcovid.ui.changePassword.ChangePasswordFragment"
+        android:label="@string/change_password"
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_navigation_change_password_to_navigation_account"
+            app:destination="@id/navigation_account"
+            app:popUpTo="@id/navigation_account"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <activity
+        android:id="@+id/navigation_start"
+        android:name="com.sweven.blockcovid.StartActivity"
+        android:label="@string/app_name"
+        tools:layout="@layout/activity_start" />
+
+</navigation>

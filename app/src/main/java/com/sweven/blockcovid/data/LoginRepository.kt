@@ -16,28 +16,26 @@ import java.time.ZoneOffset.UTC
   * mantiene una cache in memoria dello stato di accesso e delle informazioni sulle credenziali dell'utente.
  */
 
-class LoginRepository(val dataSource: LoginDataSource) {
+class LoginRepository {
 
     // cache in memoria dell'oggetto loggedInUser
     var user: LoggedInUser? = null
         private set
-
-    val isLoggedIn: Boolean
-        get() = user != null
 
     init {
         // Se le credenziali dell'utente verranno memorizzate nella cache nella memoria locale, si consiglia di crittografarle
         user = null
     }
 
-    fun logout() {
-        user = null
-        dataSource.logout()
+    private var netClient = NetworkClient()
+
+    fun setNetwork(nc: NetworkClient) {
+        netClient = nc
     }
 
     suspend fun login(username: String, password: String): Result<LoggedInUser> {
 
-        val retrofit = NetworkClient.retrofitClient
+        val retrofit = netClient.getClient()
 
         val service = retrofit.create(APIUser::class.java)
 
@@ -53,34 +51,30 @@ class LoginRepository(val dataSource: LoginDataSource) {
             if (response.errorBody() == null) {
                 val items = response.body()
                 if(items != null) {
-                    val id = items.id
-                    print("Token: ")
+                    val id = items.token.id
                     println(id)
 
-                    val expiryDateISO = items.expiryDate
+                    val expiryDateISO = items.token.expiryDate
                     val expiryDateLDT = LocalDateTime.parse(expiryDateISO)
                     // Scadenza di scadenza del token in millisecondi
                     val expiryDate = expiryDateLDT.toEpochSecond(UTC)
-                    print("expiryDate: ")
-                    println(expiryDate)
 
-                    val result = dataSource.login(username, password, id, expiryDate)
-                    if (result is Result.Success) {
-                        setLoggedInUser(result.data)
-                    }
+                    val authority = items.authoritiesList[0]
+
+                    val user = LoggedInUser(username, id, expiryDate, authority)
+                    val result = Result.Success(user)
+                    setLoggedInUser(result.data)
                     return result
                 } else {
                     return Result.Error("Non dovresti essere qui")
                 }
             } else {
-                println("Successful but error")
                 val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                return Result.Error(error.status.toString())
+                return Result.Error(error.error)
             }
         } else {
-           println("Not successful")
             val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-            return Result.Error(error.status.toString())
+            return Result.Error(error.error)
         }
     }
 
