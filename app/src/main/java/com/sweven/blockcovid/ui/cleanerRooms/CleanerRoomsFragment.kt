@@ -72,12 +72,13 @@ class CleanerRoomsFragment : Fragment() {
                             roomList?.let {
                                 val listSize = roomList.size
                                 val nameArray = Array(listSize) { _ -> ""}
-                                val isCleanArray = Array(listSize) { _ -> true}
+                                val isCleanArray = Array(listSize) { _ -> false}
                                 for (i in 0 until listSize) {
                                     nameArray[i] = roomList[i].room.name
+                                    isCleanArray[i] = roomList[i].room.roomStatus == "CLEAN"
                                 }
                                 recyclerView = view.findViewById(R.id.room_recycler_cleaner)
-                                val cleanerRoomsAdapter = CleanerRoomsAdapter(context, nameArray, isCleanArray)
+                                val cleanerRoomsAdapter = CleanerRoomsAdapter(context, activity, nameArray, isCleanArray, loading)
                                 recyclerView.adapter = cleanerRoomsAdapter
                                 recyclerView.layoutManager = LinearLayoutManager(context)
                             }

@@ -43,7 +43,8 @@ data class Room (
         val closingTime: String,
         val openingDays: List<String>,
         val width: Long,
-        val height: Long
+        val height: Long,
+        val roomStatus: String
 )
 
 data class RoomsLinks (

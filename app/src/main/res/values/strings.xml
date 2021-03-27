@@ -64,8 +64,9 @@
     <string name="error">Error:</string>
     <string name="room_status">Status:</string>
     <string name="desks_taken">Desks taken:</string>
-    <string name="room_cleaned">clean</string>
+    <string name="room_clean">clean</string>
     <string name="room_to_clean">to clean</string>
     <string name="room_open">Open</string>
     <string name="room_closed">Closed</string>
+    <string name="room_cleaned">Room cleaned</string>
 </resources>

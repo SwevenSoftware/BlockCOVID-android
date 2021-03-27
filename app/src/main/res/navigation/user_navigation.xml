@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_scanner"
             app:destination="@id/navigation_scanner" />
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_room1"
-            app:destination="@id/navigation_room1" />
     </fragment>
     <action
         android:id="@+id/action_global_navigation_home"
@@ -27,7 +24,11 @@
         android:id="@+id/navigation_rooms"
         android:name="com.sweven.blockcovid.ui.rooms.RoomsFragment"
         android:label="@string/title_rooms"
-        tools:layout="@layout/fragment_user_rooms" />
+        tools:layout="@layout/fragment_user_rooms" >
+        <action
+            android:id="@+id/action_navigation_rooms_to_navigation_room_view"
+            app:destination="@id/navigation_room_view" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_settings"
@@ -72,18 +73,17 @@
         tools:layout="@layout/fragment_scanner" />
 
     <fragment
-        android:id="@+id/navigation_room1"
-        android:name="com.sweven.blockcovid.ui.room1.Room1Fragment"
-        android:label="@string/title_room1"
-        tools:layout="@layout/fragment_room1" />
-    <action android:id="@+id/action_global_navigation_room1" app:destination="@id/navigation_room1"/>
-
-    <fragment
-        android:id="@+id/navigation_room2"
-        android:name="com.sweven.blockcovid.ui.room2.Room2Fragment"
-        android:label="@string/title_room2"
-        tools:layout="@layout/fragment_room2" />
-    <action android:id="@+id/action_global_navigation_room2" app:destination="@id/navigation_room2"/>
+        android:id="@+id/navigation_room_view"
+        android:name="com.sweven.blockcovid.ui.roomView.RoomViewFragment"
+        tools:layout="@layout/fragment_room_view" >
+        <argument
+            android:name="roomName"
+            app:argType="string"
+            android:defaultValue="default" />
+        <action
+            android:id="@+id/action_navigation_room_view_to_navigation_reservation"
+            app:destination="@id/navigation_reservation" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_reservation"
@@ -99,7 +99,6 @@
             app:argType="string"
             android:defaultValue="default" />
     </fragment>
-    <action android:id="@+id/action_global_navigation_prenotazioni" app:destination="@id/navigation_reservation"/>
 
     <activity
         android:id="@+id/navigation_main"

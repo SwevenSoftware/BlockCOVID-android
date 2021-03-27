@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.*
@@ -27,7 +26,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class `0UserFullTest` {
+class UserFullTest {
 
     @Rule
     @JvmField
@@ -240,7 +239,7 @@ class `0UserFullTest` {
                         withId(R.id.room2_button), withText("Vai a Stanza 2"),
                         childAtPosition(
                                 allOf(
-                                        withId(R.id.room1),
+                                        withId(R.id.room_view),
                                         childAtPosition(
                                                 withId(R.id.nav_host_fragment),
                                                 0

@@ -64,8 +64,10 @@
     <string name="error" >Errore:</string>
     <string name="room_status">Status:</string>
     <string name="desks_taken">Posti occupati:</string>
-    <string name="room_cleaned">pulita</string>
+    <string name="room_clean">pulita</string>
     <string name="room_to_clean">da pulire</string>
     <string name="room_open">Aperta</string>
     <string name="room_closed">Chiusa</string>
+    <string name="room_cleaned">Stanza pulita</string>
+
 </resources>
