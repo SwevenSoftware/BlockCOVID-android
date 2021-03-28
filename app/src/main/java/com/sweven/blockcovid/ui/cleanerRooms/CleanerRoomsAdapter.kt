@@ -1,6 +1,7 @@
 package com.sweven.blockcovid.ui.cleanerRooms
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,11 +53,13 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.roomText.text = roomList[position]
+        val typedValue = TypedValue()
         if (roomCleaned[position]) {
             holder.roomStatus.text =
                 context?.getString(R.string.room_status).plus(" ").plus(context?.getString(R.string.room_clean))
             if (context != null) {
-                holder.roomStatus.setTextColor(context.getColor(R.color.green_500))
+                context.theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+                holder.roomStatus.setTextColor(typedValue.data)
             }
             holder.roomCheckBox.isChecked = true
             holder.roomCard.isClickable = false
@@ -64,7 +67,8 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
             holder.roomStatus.text =
                 context?.getString(R.string.room_status).plus(" ").plus(context?.getString(R.string.room_to_clean))
             if (context != null) {
-                holder.roomStatus.setTextColor(context.getColor(R.color.red_600))
+                context.theme.resolveAttribute(R.attr.colorError, typedValue, true)
+                holder.roomStatus.setTextColor(typedValue.data)
             }
             holder.roomCheckBox.isChecked = false
             holder.roomCard.isClickable = true
@@ -94,7 +98,8 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
                                             context?.getString(R.string.room_status).plus(" ")
                                                     .plus(context?.getString(R.string.room_to_clean))
                                     if (context != null) {
-                                        holder.roomStatus.setTextColor(context.getColor(R.color.green_500))
+                                        context.theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+                                        holder.roomStatus.setTextColor(typedValue.data)
                                     }
                                     holder.roomCheckBox.isChecked = true
                                     holder.roomCard.isClickable = false

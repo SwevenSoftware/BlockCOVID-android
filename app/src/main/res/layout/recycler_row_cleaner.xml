@@ -37,7 +37,7 @@
             android:layout_marginTop="40dp"
             android:text="@string/room_status"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="@color/red_600" />
+            android:textColor="?colorPrimary" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/room_checkbox"

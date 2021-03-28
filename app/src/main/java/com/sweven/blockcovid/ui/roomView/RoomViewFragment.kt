@@ -63,6 +63,8 @@ class RoomViewFragment : Fragment(){
         val service = retrofit.create(APIDesks::class.java)
 
         val cacheToken = File(context?.cacheDir, "token")
+        val cacheTheme = File(context?.cacheDir, "theme")
+        val darkTheme = cacheTheme.readText() == "1"
         var authorization = ""
         if (cacheToken.exists()) {
             authorization = cacheToken.readText()
@@ -91,7 +93,11 @@ class RoomViewFragment : Fragment(){
                                     imgButton.id = idArray[i]
                                     imgButton.width = 50
                                     imgButton.height = 50
-                                    imgButton.background = ResourcesCompat.getDrawable(resources, R.drawable.green_desk, null)
+                                    if (darkTheme) {
+                                        imgButton.background = ResourcesCompat.getDrawable(resources, R.drawable.green_desk_night, null)
+                                    } else {
+                                        imgButton.background = ResourcesCompat.getDrawable(resources, R.drawable.green_desk, null)
+                                    }
                                     imgButton.setOnClickListener {
                                         val action = RoomViewFragmentDirections.actionNavigationRoomViewToNavigationReservation(imgButton.id.toString(), args.roomName)
                                         navController.navigate(action)
