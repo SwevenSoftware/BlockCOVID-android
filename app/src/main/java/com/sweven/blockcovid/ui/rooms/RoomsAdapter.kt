@@ -75,7 +75,7 @@ class RoomsAdapter(ct: Context?, nc: NavController, rl: Array<String>, ro: Array
             }
         }
         holder.roomCard.setOnClickListener {
-            if(holder.roomOpen.text != context?.getString(R.string.room_open)) {
+            if(true) {      //holder.roomOpen.text == context?.getString(R.string.room_open
                 val roomName = holder.roomText.text.toString()
                 val action = RoomsFragmentDirections.actionNavigationRoomsToNavigationRoomView(roomName)
                 navController.navigate(action)

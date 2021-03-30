@@ -91,7 +91,11 @@
         android:label="@string/title_reservations"
         tools:layout="@layout/fragment_reservation" >
         <argument
-            android:name="deskId"
+            android:name="deskX"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="deskY"
             app:argType="string"
             android:defaultValue="0" />
         <argument

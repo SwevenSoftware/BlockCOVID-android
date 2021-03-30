@@ -78,6 +78,7 @@ class RoomViewFragment : Fragment(){
                         if (response.errorBody() == null) {
                             loading.hide()
                             val desksList = response.body()?.desks
+                            println(desksList.toString())
                             desksList?.let {
                                 val listSize = desksList.size
                                 val idArray = Array(listSize) { _ -> 0}
@@ -86,9 +87,10 @@ class RoomViewFragment : Fragment(){
 
                                 val layout: ConstraintLayout = view.findViewById(R.id.desk_layout)
                                 for (i in idArray.indices) {
-                                    idArray[i] = desksList[i].id.toInt()
-                                    xArray[i] = desksList[i].x.toInt()-1
-                                    yArray[i] = desksList[i].y.toInt()-1
+                                    idArray[i] = i+1
+                                    xArray[i] = desksList[i].x-1
+                                    yArray[i] = desksList[i].y-1
+
                                     val imgButton = Button(context)
                                     imgButton.id = idArray[i]
                                     imgButton.width = 50
@@ -99,7 +101,7 @@ class RoomViewFragment : Fragment(){
                                         imgButton.background = ResourcesCompat.getDrawable(resources, R.drawable.green_desk, null)
                                     }
                                     imgButton.setOnClickListener {
-                                        val action = RoomViewFragmentDirections.actionNavigationRoomViewToNavigationReservation(imgButton.id.toString(), args.roomName)
+                                        val action = RoomViewFragmentDirections.actionNavigationRoomViewToNavigationReservation(desksList[i].x.toString(), desksList[i].y.toString(), args.roomName)
                                         navController.navigate(action)
                                     }
                                     layout.addView(imgButton)

@@ -37,6 +37,8 @@
     <string name="login_failed">Login failed</string>
     <string name="selected_room">Room:</string>
     <string name="selected_desk">Desk:</string>
+    <string name="selected_desk_x">X:</string>
+    <string name="selected_desk_y">Y:</string>
     <string name="select_time_to">Select arrival time: </string>
     <string name="select_time_from">Select exit time: </string>
     <string name="select_day">Select day: </string>

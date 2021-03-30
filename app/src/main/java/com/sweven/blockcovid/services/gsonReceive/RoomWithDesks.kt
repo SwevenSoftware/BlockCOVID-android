@@ -7,9 +7,8 @@ data class RoomWithDesks (
 )
 
 data class Desk (
-        val id: Long,
-        val x: Long,
-        val y: Long
+        val x: Int,
+        val y: Int
 )
 
 data class Link (

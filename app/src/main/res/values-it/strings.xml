@@ -37,6 +37,8 @@
     <string name="login_failed">Accesso fallito</string>
     <string name="selected_room">Stanza:</string>
     <string name="selected_desk">Postazione:</string>
+    <string name="selected_desk_x">X:</string>
+    <string name="selected_desk_y">Y:</string>
     <string name="select_time_to">Seleziona orario di arrivo:</string>
     <string name="select_time_from">Seleziona orario di uscita:</string>
     <string name="select_day">Seleziona data:</string>
