@@ -1,10 +1,7 @@
 package com.sweven.blockcovid
 
 import android.app.PendingIntent
-import android.app.TimePickerDialog
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.os.Bundle
@@ -15,36 +12,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ScrollView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.sweven.blockcovid.services.APIReserve
-import com.sweven.blockcovid.ui.reservation.ReservationViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.progressindicator.CircularProgressIndicator
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.sweven.blockcovid.services.APIChangePassword
-import com.sweven.blockcovid.services.NetworkClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.File
-import java.util.*
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
-import java.net.SocketTimeoutException
-import java.time.LocalTime
+import com.sweven.blockcovid.ui.roomView.RoomViewFragmentDirections
 
 
 class UserActivity : AppCompatActivity() {
@@ -114,29 +88,6 @@ class UserActivity : AppCompatActivity() {
     // Funzione per navigare da Home a Scanner (bottone Scanner)
     fun goScanner(view: View) {
         view.findNavController().navigate(R.id.action_navigation_home_to_navigation_scanner)
-    }
-
-    // Funzione per navigare da Home a Stanza1 (bottone Postazioni)
-    fun goDesks(view: View) {
-        view.findNavController().navigate(R.id.action_navigation_home_to_navigation_room1)
-    }
-
-    // Funzione per navigare al fragment Stanza1 (globale)
-    fun goRoom1(view: View) {
-        view.findNavController().navigate(R.id.action_global_navigation_room1)
-    }
-
-    // Funzione per navigare al fragment Stanza2 (globale)
-    fun goRoom2(view: View) {
-        view.findNavController().navigate(R.id.action_global_navigation_room2)
-    }
-
-    // Funzione per navigare al fragment Postazioni (globale)
-    fun goReservation(view: View) {
-        val deskId = view.contentDescription.toString()
-        val roomId = view.tag.toString()
-        val action = UserNavigationDirections.actionGlobalNavigationPrenotazioni(deskId, roomId)
-        view.findNavController().navigate(action)
     }
 
     // Funzione per aggiornare il log dei messaggi NFC letti

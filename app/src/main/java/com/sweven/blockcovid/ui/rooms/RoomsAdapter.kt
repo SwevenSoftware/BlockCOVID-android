@@ -1,26 +1,32 @@
 package com.sweven.blockcovid.ui.rooms
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.sweven.blockcovid.R
 
-class RoomsAdapter(ct: Context?, rl: Array<String>, ro: Array<String>, rc: Array<String>, da: Array<Array<String>>, op: Array<Boolean>): RecyclerView.Adapter<RoomsAdapter.MyViewHolder>() {
+class RoomsAdapter(ct: Context?, nc: NavController, rl: Array<String>, ro: Array<String>, rc: Array<String>, da: Array<Array<String>>, op: Array<Boolean>): RecyclerView.Adapter<RoomsAdapter.MyViewHolder>() {
 
     val context = ct
+    private val navController = nc
     private val roomList = rl
     private val roomOpening = ro
     private val roomClosing = rc
     private val daysArray = da
     private val roomOpened = op
 
+
     inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var roomText: TextView = itemView.findViewById(R.id.room_text)
         var desksTaken: TextView = itemView.findViewById(R.id.desks_taken)
         var roomOpen: TextView = itemView.findViewById(R.id.room_open)
+        var roomCard: CardView = itemView.findViewById(R.id.room_card)
 
         // TextViews dei giorni
         var monday: TextView = itemView.findViewById(R.id.monday)
@@ -41,27 +47,38 @@ class RoomsAdapter(ct: Context?, rl: Array<String>, ro: Array<String>, rc: Array
         holder.roomText.text = roomList[position]
         holder.desksTaken.text =
             roomOpening[position].plus(" - ").plus(roomClosing[position])
+        val typedValue = TypedValue()
         if (roomOpened[position]) {
             holder.roomOpen.text = context?.getString(R.string.room_open)
             if (context != null) {
-                holder.roomOpen.setTextColor(context.getColor(R.color.green_500))
+                context.theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+                holder.roomOpen.setTextColor(typedValue.data)
             }
         } else {
             holder.roomOpen.text = context?.getString(R.string.room_closed)
             if (context != null) {
-                holder.roomOpen.setTextColor(context.getColor(R.color.red_600))
+                context.theme.resolveAttribute(R.attr.colorError, typedValue, true)
+                holder.roomOpen.setTextColor(typedValue.data)
             }
         }
         if (context != null) {
             for (i in daysArray[position].indices) {
+                context.theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
                 when (daysArray[position][i]) {
-                    "MONDAY" -> holder.monday.setTextColor(context.getColor(R.color.green_500))
-                    "TUESDAY" -> holder.tuesday.setTextColor(context.getColor(R.color.green_500))
-                    "WEDNESDAY" -> holder.wednesday.setTextColor(context.getColor(R.color.green_500))
-                    "THURSDAY" -> holder.thursday.setTextColor(context.getColor(R.color.green_500))
-                    "FRIDAY" -> holder.friday.setTextColor(context.getColor(R.color.green_500))
-                    "SATURDAY" -> holder.saturday.setTextColor(context.getColor(R.color.green_500))
+                    "MONDAY" -> holder.monday.setTextColor(typedValue.data)
+                    "TUESDAY" -> holder.tuesday.setTextColor(typedValue.data)
+                    "WEDNESDAY" -> holder.wednesday.setTextColor(typedValue.data)
+                    "THURSDAY" -> holder.thursday.setTextColor(typedValue.data)
+                    "FRIDAY" -> holder.friday.setTextColor(typedValue.data)
+                    "SATURDAY" -> holder.saturday.setTextColor(typedValue.data)
                 }
+            }
+        }
+        holder.roomCard.setOnClickListener {
+            if(true) {      //holder.roomOpen.text == context?.getString(R.string.room_open
+                val roomName = holder.roomText.text.toString()
+                val action = RoomsFragmentDirections.actionNavigationRoomsToNavigationRoomView(roomName)
+                navController.navigate(action)
             }
         }
     }
