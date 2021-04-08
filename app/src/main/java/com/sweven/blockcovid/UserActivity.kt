@@ -20,7 +20,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
-
 class UserActivity : AppCompatActivity() {
 
     // Controllo dello stato dell'adattatore NFC
