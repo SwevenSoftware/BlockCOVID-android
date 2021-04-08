@@ -15,9 +15,9 @@ import java.lang.Exception
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
-    val loginFormState: LiveData<LoginFormState> = _loginForm
+    private val loginFormState: LiveData<LoginFormState> = _loginForm
     private val _loginResult = MutableLiveData<LoginResult>()
-    val loginResult: LiveData<LoginResult> = _loginResult
+    private val  loginResult: LiveData<LoginResult> = _loginResult
 
     fun login(username: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -39,6 +39,14 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
                 _loginResult.postValue(LoginResult(error = e.message))
             }
         }
+    }
+
+    fun getLoginFormState(): LiveData<LoginFormState> {
+        return loginFormState
+    }
+
+    fun getLoginResult(): LiveData<LoginResult>{
+        return loginResult
     }
 
     fun loginDataChanged(username: String, password: String) {

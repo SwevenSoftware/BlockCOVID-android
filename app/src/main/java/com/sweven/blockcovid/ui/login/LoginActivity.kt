@@ -18,66 +18,27 @@ import com.sweven.blockcovid.UserActivity
 import com.sweven.blockcovid.R
 import java.io.File
 
-class LoginActivity : AppCompatActivity() {
+  open class LoginActivity : AppCompatActivity() {
 
-    private lateinit var loginViewModel: LoginViewModel
-    override fun onCreate(savedInstanceState: Bundle?) {
+   private lateinit var loginViewModel: LoginViewModel
+
+   override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_login)
 
-        val editUsername = findViewById<TextInputEditText>(R.id.username)
-        val editPassword = findViewById<TextInputEditText>(R.id.password)
-        val username = findViewById<TextInputLayout>(R.id.username_layout)
-        val password = findViewById<TextInputLayout>(R.id.password_layout)
-        val login = findViewById<Button>(R.id.login_button)
-        val loading = findViewById<CircularProgressIndicator>(R.id.loading)
+       val login = findViewById<Button>(R.id.login_button)
+       val editUsername = findViewById<TextInputEditText>(R.id.username)
+       val editPassword = findViewById<TextInputEditText>(R.id.password)
+       val loading = findViewById<CircularProgressIndicator>(R.id.loading)
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
-            val loginState = it ?: return@Observer
-            login.isEnabled = loginState.isDataValid
+        loginViewModel= createNewLoginModel()
 
-            if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
-            } else {
-                username.error = null
-            }
-            if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError)
-            } else {
-                password.error = null
-            }
+        loginViewModel.getLoginFormState().observe(this@LoginActivity, Observer {
+           checkLoginState(it,login)
         })
 
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
-            val loginResult = it ?: return@Observer
-
-            loading.hide()
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-                editUsername.text?.clear()
-                editPassword.text?.clear()
-            }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
-                saveToken(loginResult.success)
-                setResult(Activity.RESULT_OK)
-                val cacheAuth = File(cacheDir, "authority")
-                when (cacheAuth.readText()) {
-                    "USER", "ADMIN" -> {
-                        val i = Intent(this, UserActivity::class.java)
-                        startActivity(i)
-                        finish()
-                    }
-                    "CLEANER" -> {
-                        val i = Intent(this, CleanerActivity::class.java)
-                        startActivity(i)
-                        finish()
-                    }
-                }
-            }
+        loginViewModel.getLoginResult().observe(this@LoginActivity, Observer {
+           checkLoginResult(it,loading,editUsername,editPassword)
         })
 
         editUsername.afterTextChanged {
@@ -112,6 +73,61 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
+     internal fun createNewLoginModel(): LoginViewModel {
+         return ViewModelProvider(this, LoginViewModelFactory())
+             .get(LoginViewModel::class.java)
+     }
+
+    fun checkLoginState(formState: LoginFormState,login: Button) {
+        login.isEnabled = formState.isDataValid
+        val username = findViewById<TextInputLayout>(R.id.username_layout)
+        val password = findViewById<TextInputLayout>(R.id.password_layout)
+
+        if (formState.usernameError != null) {
+            username.error = getString(formState.usernameError)
+        } else {
+            username.error = null
+        }
+        if (formState.passwordError != null) {
+            password.error = getString(formState.passwordError)
+        } else {
+            password.error = null
+        }
+    }
+
+      fun checkLoginResult(formResult: LoginResult, loading:CircularProgressIndicator, editUsername:TextInputEditText
+      ,editPassword:TextInputEditText) {
+          loading.hide()
+          if (formResult.error != null) {
+              showLoginFailed(formResult.error)
+              editUsername.text?.clear()
+              editPassword.text?.clear()
+          }
+          if (formResult.success != null) {
+              updateUiWithUser(formResult.success)
+              saveToken(formResult.success)
+              setResult(Activity.RESULT_OK)
+
+              val cacheAuth = getCacheAuth()
+              when (cacheAuth.readText()) {
+                  "USER", "ADMIN" -> {
+                      val i = Intent(this, UserActivity::class.java)
+                      startActivity(i)
+                      finish()
+                  }
+                  "CLEANER" -> {
+                      val i = Intent(this, CleanerActivity::class.java)
+                      startActivity(i)
+                      finish()
+                  }
+              }
+          }
+      }
+
+     private fun getCacheAuth(): File {
+         return File(cacheDir, "authority")
+     }
 
     private fun saveToken(model: LoggedInUserView) {
         val context = applicationContext
