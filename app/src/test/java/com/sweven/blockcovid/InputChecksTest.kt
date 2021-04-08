@@ -22,4 +22,6 @@ class InputChecksTest {
         assertTrue("Le password corrispondono", InputChecks.isPasswordSame("password", "password"))
         assertFalse("Le password non corrispondono", InputChecks.isPasswordSame("password", "passwords"))
     }
+
+    
 }

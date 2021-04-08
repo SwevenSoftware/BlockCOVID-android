@@ -32,6 +32,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.File
 import java.lang.Exception
 import java.time.LocalTime
@@ -63,11 +66,12 @@ class ReservationFragment : Fragment(){
 
         // Prende i valori del numero della postazione ed il nome della stanza dal fragment della stanza
         // per poi mostrarli nella TextView
-        val textDesk: TextView = view.findViewById(R.id.id_reserved_desk)
+        val deskX: TextView = view.findViewById(R.id.reserved_desk_x)
+        val deskY: TextView = view.findViewById(R.id.reserved_desk_y)
         val textRoom: TextView = view.findViewById(R.id.id_reserved_room)
-        val deskId = args.deskId
         val roomId = args.roomId
-        textDesk.text = deskId
+        deskX.text = args.deskX
+        deskY.text = args.deskY
         textRoom.text = roomId
 
         // Convertitori di formato delle ore e date
@@ -187,7 +191,6 @@ class ReservationFragment : Fragment(){
             loading.show()
 
             val nameRoom = textRoom.text.toString()
-            val idDesk = textDesk.text.toString().toInt()
             val date = selectDate.text.toString()
             val from = arrivalTime.text.toString()
             val to = exitTime.text.toString()
@@ -198,12 +201,22 @@ class ReservationFragment : Fragment(){
             }
             val retrofit = netClient.getClient()
 
+            val jsonObject = JSONObject()
+            jsonObject.put("x", deskX.text.toString().toInt())
+            jsonObject.put("y", deskY.text.toString().toInt())
+            jsonObject.put("date", date)
+            jsonObject.put("from", from)
+            jsonObject.put("to", to)
+
+            val jsonObjectString = jsonObject.toString()
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+
             val service = retrofit.create(APIReserve::class.java)
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val response =
-                            service.deskReserve(nameRoom, idDesk, date, from, to, authorization)
+                            service.deskReserve(nameRoom, requestBody, authorization)
                     if (response.isSuccessful) {
                         withContext(Dispatchers.Main) {
                             if(response.errorBody()==null) {

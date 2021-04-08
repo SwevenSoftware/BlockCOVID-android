@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -51,6 +53,7 @@ class RoomsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val navController: NavController = findNavController()
         val refreshButton: ExtendedFloatingActionButton = view.findViewById(R.id.refresh_button)
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         loading.show()
@@ -93,7 +96,7 @@ class RoomsFragment : Fragment() {
                                     }
                                 }
                                 recyclerView = view.findViewById(R.id.room_recycler_user)
-                                val roomsAdapter = RoomsAdapter(context, nameArray, openArray, closeArray, daysArray, isOpenArray)
+                                val roomsAdapter = RoomsAdapter(context, navController, nameArray, openArray, closeArray, daysArray, isOpenArray)
                                 recyclerView.adapter = roomsAdapter
                                 recyclerView.layoutManager = LinearLayoutManager(context)
                             }
