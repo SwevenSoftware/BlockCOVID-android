@@ -25,6 +25,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.services.APIChangePassword
 import com.sweven.blockcovid.services.APIReserve
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
@@ -43,12 +44,6 @@ import java.util.*
 
 class ReservationFragment : Fragment(){
     private lateinit var reservationViewModel: ReservationViewModel
-
-    private var netClient = NetworkClient()
-
-    fun setNetwork(nc: NetworkClient) {
-        netClient = nc
-    }
 
     private val args: ReservationFragmentArgs by navArgs()
 
@@ -199,7 +194,8 @@ class ReservationFragment : Fragment(){
             if (cacheToken.exists()) {
                 authorization = cacheToken.readText()
             }
-            val retrofit = netClient.getClient()
+
+            val retrofit = NetworkClient.buildService(APIReserve::class.java)
 
             val jsonObject = JSONObject()
             jsonObject.put("x", deskX.text.toString().toInt())
@@ -211,12 +207,10 @@ class ReservationFragment : Fragment(){
             val jsonObjectString = jsonObject.toString()
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
-            val service = retrofit.create(APIReserve::class.java)
-
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val response =
-                            service.deskReserve(nameRoom, requestBody, authorization)
+                            retrofit.deskReserve(nameRoom, requestBody, authorization)
                     if (response.isSuccessful) {
                         withContext(Dispatchers.Main) {
                             if(response.errorBody()==null) {

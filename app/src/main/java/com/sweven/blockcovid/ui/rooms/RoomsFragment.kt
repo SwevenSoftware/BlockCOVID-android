@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.Gson
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.services.APIChangePassword
 import com.sweven.blockcovid.services.APIRooms
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
@@ -34,12 +35,6 @@ class RoomsFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
 
-    private var netClient = NetworkClient()
-
-    fun setNetwork(nc: NetworkClient) {
-        netClient = nc
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -58,8 +53,7 @@ class RoomsFragment : Fragment() {
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         loading.show()
 
-        val retrofit = netClient.getClient()
-        val service = retrofit.create(APIRooms::class.java)
+        val retrofit = NetworkClient.buildService(APIRooms::class.java)
 
         val cacheToken = File(context?.cacheDir, "token")
         var authorization = ""
@@ -69,7 +63,7 @@ class RoomsFragment : Fragment() {
 
         val getRooms = CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = service.getRooms(authorization)
+                val response = retrofit.getRooms(authorization)
                 if (response.isSuccessful) {
                     withContext(Dispatchers.Main) {
                         if (response.errorBody() == null) {

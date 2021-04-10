@@ -3,54 +3,41 @@ package com.sweven.blockcovid.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.sweven.blockcovid.InputChecks
+import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.LoginRepository
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Exception
+
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
-    private val loginFormState: LiveData<LoginFormState> = _loginForm
+    val loginFormState: LiveData<LoginFormState>
+        get() = _loginForm
     private val _loginResult = MutableLiveData<LoginResult>()
-    private val  loginResult: LiveData<LoginResult> = _loginResult
+    val  loginResult: LiveData<LoginResult>
+        get() = _loginResult
 
     fun login(username: String, password: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val result = loginRepository.login(username, password)
-
-                if (result is Result.Success) {
-                _loginResult.postValue(LoginResult(success =
+        loginRepository.login(username, password)
+        loginRepository.serverResponse.observeForever { it ->
+            it.getContentIfNotHandled()?.let {
+                if (it is Result.Success) {
+                    _loginResult.postValue(LoginResult(success =
                     LoggedInUserView(
-                        displayName = result.data.displayName, token = result.data.token,
-                        expiryDate = result.data.expiryDate, authority = result.data.authority
+                            displayName = it.data.displayName, token = it.data.token,
+                            expiryDate = it.data.expiryDate, authority = it.data.authority
                     )
-                ))
-					
-                } else if (result is Result.Error) {
-                    _loginResult.postValue(LoginResult(error = result.exception))
+                    ))
+                } else if (it is Result.Error) {
+                    _loginResult.postValue(LoginResult(error = it.exception))
                 }
-            } catch (e: Exception) {
-                _loginResult.postValue(LoginResult(error = e.message))
             }
         }
     }
 
-    fun getLoginFormState(): LiveData<LoginFormState> {
-        return loginFormState
-    }
-
-    fun getLoginResult(): LiveData<LoginResult>{
-        return loginResult
-    }
-
     fun loginDataChanged(username: String, password: String) {
-        if (!InputChecks.isFieldEmpty(username)) {
+        if (!InputChecks.isFieldNotEmpty(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
         } else if (!InputChecks.isPasswordValid(password)) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)

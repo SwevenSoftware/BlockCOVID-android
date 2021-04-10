@@ -17,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.Gson
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.services.APIChangePassword
 import com.sweven.blockcovid.services.APIDesks
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
@@ -31,12 +32,6 @@ class RoomViewFragment : Fragment(){
 
     private lateinit var roomViewViewModel: RoomViewViewModel
     private val args: RoomViewFragmentArgs by navArgs()
-
-    private var netClient = NetworkClient()
-
-    fun setNetwork(nc: NetworkClient) {
-        netClient = nc
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -59,8 +54,8 @@ class RoomViewFragment : Fragment(){
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         loading.show()
 
-        val retrofit = netClient.getClient()
-        val service = retrofit.create(APIDesks::class.java)
+        val retrofit = NetworkClient.buildService(APIDesks::class.java)
+
 
         val cacheToken = File(context?.cacheDir, "token")
         val cacheTheme = File(context?.cacheDir, "theme")
@@ -72,7 +67,7 @@ class RoomViewFragment : Fragment(){
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = service.getDesks(authorization, args.roomName)
+                val response = retrofit.getDesks(authorization, args.roomName)
                 if (response.isSuccessful) {
                     withContext(Dispatchers.Main) {
                         if (response.errorBody() == null) {

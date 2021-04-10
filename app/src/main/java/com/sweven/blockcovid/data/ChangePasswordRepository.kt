@@ -1,70 +1,61 @@
 package com.sweven.blockcovid.data
 
-import android.widget.Button
-import android.widget.Toast
-import com.google.android.material.progressindicator.CircularProgressIndicator
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
-import com.sweven.blockcovid.R
+import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.services.APIChangePassword
-import com.sweven.blockcovid.services.APIUser
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
 import org.json.JSONObject
-import java.io.File
-import java.lang.Exception
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ChangePasswordRepository {
-    private var netClient = NetworkClient()
 
-    fun setNetwork(nc: NetworkClient) {
-        netClient = nc
+    private val _serverResponse = MutableLiveData<Event<Result<String>>>()
+    val serverResponse: LiveData<Event<Result<String>>>
+        get() = _serverResponse
+
+    fun triggerEvent(value: Result<String>) {
+        _serverResponse.value = Event(value)
     }
 
-    suspend fun changePasswordRepo(oldPasswordText:String,newPasswordText:String,authorization:String) {
+    fun changePassword(oldPasswordText: String, newPasswordText: String, authorization: String) {
 
-        val retrofit = netClient.getClient()
+        val retrofit = NetworkClient.buildService(APIChangePassword::class.java)
 
         val jsonObject = JSONObject()
         jsonObject.put("old_password", oldPasswordText)
         jsonObject.put("new_password", newPasswordText)
+
         val jsonObjectString = jsonObject.toString()
         val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val service = retrofit.create(APIChangePassword::class.java)
-            try {
-                val response =
-                    service.changePassword(authorization, requestBody)
-                if (response.isSuccessful) {
-                    withContext(Dispatchers.Main) {
-                        if (response.errorBody() == null) {
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val responseJson =
-                                gson.toJson(JsonParser.parseString(response.body()?.string()))
-                            print("Response: ")
-                            println(responseJson)
-                        } else {
-                            val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                            Result.Error(error.error)
-                        }
-                    }
+        retrofit.changePassword(authorization, requestBody).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                triggerEvent(Result.Error(t.message!!))
+            }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.errorBody() == null) {
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val responseJson =
+                            gson.toJson(JsonParser.parseString(response.body()?.string()))
+                    print("Response: ")
+                    println(responseJson)
+                    val result = Result.Success(responseJson)
+                    triggerEvent(result)
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                    Result.Error(error.error)
+                    triggerEvent(Result.Error(error.error))
                 }
-            } catch (e: Exception) {
-                e.message?.let { Result.Error(it) }
             }
-        }
+        })
     }
 }

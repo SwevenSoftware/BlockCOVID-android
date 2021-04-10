@@ -29,12 +29,6 @@ class CleanerRoomsFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
 
-    private var netClient = NetworkClient()
-
-    fun setNetwork(nc: NetworkClient) {
-        netClient = nc
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -52,8 +46,8 @@ class CleanerRoomsFragment : Fragment() {
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         loading.show()
 
-        val retrofit = netClient.getClient()
-        val service = retrofit.create(APIRooms::class.java)
+        val retrofit = NetworkClient.buildService(APIRooms::class.java)
+
 
         val cacheToken = File(context?.cacheDir, "token")
         var authorization = ""
@@ -63,7 +57,7 @@ class CleanerRoomsFragment : Fragment() {
 
         val getRooms = CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = service.getRooms(authorization)
+                val response = retrofit.getRooms(authorization)
                 if (response.isSuccessful) {
                     withContext(Dispatchers.Main) {
                         if (response.errorBody() == null) {

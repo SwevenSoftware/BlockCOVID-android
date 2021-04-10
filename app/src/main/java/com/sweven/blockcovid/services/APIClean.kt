@@ -9,7 +9,7 @@ import retrofit2.http.*
  */
 interface APIClean {
     @Headers("Accept:*/*")
-    @PUT("/api/cleaner/{nameRoom}/clean")
+    @PUT("/api/rooms/{nameRoom}/clean")
     suspend fun cleanRoom (@Header("Authorization") authorization: String,
                            @Path("nameRoom") nameRoom : String
     ): Response<Rooms>

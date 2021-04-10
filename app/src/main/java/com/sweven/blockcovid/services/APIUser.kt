@@ -2,7 +2,7 @@ package com.sweven.blockcovid.services
 
 import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities
 import okhttp3.RequestBody
-import retrofit2.Response
+import retrofit2.Call
 import retrofit2.http.*
 
 /**
@@ -10,6 +10,6 @@ import retrofit2.http.*
  */
 interface APIUser {
     @Headers("Accept:*/*")
-    @POST("/api/login")
-    suspend fun loginUser(@Body requestBody: RequestBody): Response<TokenAuthorities>
+    @POST("/api/account/login")
+    fun loginUser(@Body requestBody: RequestBody): Call<TokenAuthorities>
 }

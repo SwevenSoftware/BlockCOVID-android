@@ -1,24 +1,35 @@
 package com.sweven.blockcovid.ui.changePassword
 
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.sweven.blockcovid.InputChecks
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.ChangePasswordRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
+import com.sweven.blockcovid.data.Result
 
 class ChangePasswordViewModel(private val changePasswordRepository: ChangePasswordRepository) : ViewModel() {
 
     private val _changePasswordForm = MutableLiveData<ChangePasswordFormState>()
-    val changePasswordFormState: LiveData<ChangePasswordFormState> = _changePasswordForm
+    val changePasswordFormState: LiveData<ChangePasswordFormState>
+        get() = _changePasswordForm
 
     private val _changePasswordResult = MutableLiveData<ChangePasswordResult>()
-    val changePasswordResult: LiveData<ChangePasswordResult> = _changePasswordResult
+    val changePasswordResult: LiveData<ChangePasswordResult>
+        get() = _changePasswordResult
+
+    fun changePassword(oldPassword: String, newPassword: String, authorization: String) {
+        changePasswordRepository.changePassword(oldPassword, newPassword, authorization)
+        changePasswordRepository.serverResponse.observeForever { it ->
+            it.getContentIfNotHandled()?.let {
+                if (it is Result.Success) {
+                    _changePasswordResult.postValue(ChangePasswordResult(success = it.data))
+                } else if (it is Result.Error) {
+                    _changePasswordResult.postValue(ChangePasswordResult(error = it.exception))
+                }
+            }
+        }
+    }
 
     fun inputDataChanged(oldPassword: String, newPassword: String, repeatPassword: String) {
         if (!InputChecks.isPasswordValid(oldPassword)) {
@@ -36,15 +47,6 @@ class ChangePasswordViewModel(private val changePasswordRepository: ChangePasswo
         } else {
             _changePasswordForm.value = ChangePasswordFormState(isDataValid = true)
         }
-    }
-
-   fun changePasswordRepo(
-        oldPassword: String,
-        newPassword: String,
-        authorization: String
-    ) {
-       viewModelScope.launch(Dispatchers.IO){
-        changePasswordRepository.changePasswordRepo(oldPassword, newPassword, authorization)}
     }
 }
 

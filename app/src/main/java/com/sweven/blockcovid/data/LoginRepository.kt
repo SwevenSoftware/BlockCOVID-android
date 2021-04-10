@@ -1,43 +1,40 @@
 package com.sweven.blockcovid.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
+import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.APIUser
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
 
 /**
- * Classe che richiede l'autenticazione e le informazioni sull'utente dall'origine dati remota e
-  * mantiene una cache in memoria dello stato di accesso e delle informazioni sulle credenziali dell'utente.
+ * Classe che richiede l'autenticazione e le informazioni sull'utente dall'origine dati remota.
  */
 
 class LoginRepository {
 
-    // cache in memoria dell'oggetto loggedInUser
-    var user: LoggedInUser? = null
-        private set
+    private val _serverResponse = MutableLiveData<Event<Result<LoggedInUser>>>()
+    val serverResponse: LiveData<Event<Result<LoggedInUser>>>
+        get() = _serverResponse
 
-    init {
-        // Se le credenziali dell'utente verranno memorizzate nella cache nella memoria locale, si consiglia di crittografarle
-        user = null
+    fun triggerEvent(value: Result<LoggedInUser>) {
+        _serverResponse.value = Event(value)
     }
 
-    private var netClient = NetworkClient()
+    fun login(username: String, password: String) {
 
-    fun setNetwork(nc: NetworkClient) {
-        netClient = nc
-    }
-
-    suspend fun login(username: String, password: String): Result<LoggedInUser> {
-
-        val retrofit = netClient.getClient()
-
-        val service = retrofit.create(APIUser::class.java)
+        val retrofit = NetworkClient.buildService(APIUser::class.java)
 
         val jsonObject = JSONObject()
         jsonObject.put("username", username)
@@ -46,12 +43,15 @@ class LoginRepository {
         val jsonObjectString = jsonObject.toString()
         val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
-        val response = service.loginUser(requestBody)
-        if (response.isSuccessful) {
-            if (response.errorBody() == null) {
-                val items = response.body()
-                if(items != null) {
-                    val id = items.token.id
+        retrofit.loginUser(requestBody).enqueue(object: Callback<TokenAuthorities> {
+            override fun onFailure(call: Call<TokenAuthorities>, t: Throwable) {
+                triggerEvent(Result.Error(t.message!!))
+            }
+            override fun onResponse(call: Call<TokenAuthorities>, response: Response<TokenAuthorities>) {
+                if (response.errorBody() == null) {
+                    val items = response.body()
+
+                    val id = items!!.token.id
                     println(id)
 
                     val expiryDateISO = items.token.expiryDate
@@ -63,23 +63,12 @@ class LoginRepository {
 
                     val user = LoggedInUser(username, id, expiryDate, authority)
                     val result = Result.Success(user)
-                    setLoggedInUser(result.data)
-                    return result
+                    triggerEvent(result)
                 } else {
-                    return Result.Error("Non dovresti essere qui")
+                    val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
+                    triggerEvent(Result.Error(error.error))
                 }
-            } else {
-                val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                return Result.Error(error.error)
             }
-        } else {
-            val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-            return Result.Error(error.error)
-        }
-    }
-
-    private fun setLoggedInUser(loggedInUser: LoggedInUser) {
-        this.user = loggedInUser
-        // Se le credenziali dell'utente verranno memorizzate nella cache nella memoria locale, si consiglia di crittografarle
+        })
     }
 }

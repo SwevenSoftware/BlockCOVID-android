@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.Gson
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.services.APIChangePassword
 import com.sweven.blockcovid.services.APIClean
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
@@ -31,8 +32,6 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
     private val roomList = rl
     private val roomCleaned = rc
     private val loading = ld
-
-    private var netClient = NetworkClient()
 
     inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var roomText: TextView = itemView.findViewById(R.id.room_text)
@@ -74,8 +73,8 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
 
                 loading.show()
 
-                val retrofit = netClient.getClient()
-                val service = retrofit.create(APIClean::class.java)
+                val retrofit = NetworkClient.buildService(APIClean::class.java)
+
 
                 val cacheToken = File(context?.cacheDir, "token")
                 var authorization = ""
@@ -86,7 +85,7 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val response =
-                                service.cleanRoom(authorization, holder.roomText.text.toString())
+                                retrofit.cleanRoom(authorization, holder.roomText.text.toString())
                         if (response.isSuccessful) {
                             withContext(Dispatchers.Main) {
                                 if (response.errorBody() == null) {
