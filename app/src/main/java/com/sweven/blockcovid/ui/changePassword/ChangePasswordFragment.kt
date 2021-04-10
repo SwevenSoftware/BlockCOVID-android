@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RemoteViewsService
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -22,6 +23,8 @@ import com.sweven.blockcovid.R
 import com.sweven.blockcovid.services.APIChangePassword
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
+import com.sweven.blockcovid.ui.login.LoginViewModel
+import com.sweven.blockcovid.ui.login.LoginViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,36 +57,24 @@ class ChangePasswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val editOldPassword: TextInputEditText = view.findViewById(R.id.edit_old_password)
         val editNewPassword: TextInputEditText = view.findViewById(R.id.edit_new_password)
         val editRepeatPassword: TextInputEditText = view.findViewById(R.id.edit_repeat_password)
-        val oldPassword: TextInputLayout = view.findViewById(R.id.old_password)
-        val newPassword: TextInputLayout = view.findViewById(R.id.new_password)
-        val repeatPassword: TextInputLayout = view.findViewById(R.id.repeat_password)
+        val oldPassword = view.findViewById<TextInputLayout>(R.id.old_password)
+        val newPassword = view.findViewById<TextInputLayout>(R.id.new_password)
+        val repeatPassword = view.findViewById<TextInputLayout>(R.id.repeat_password)
         val changePassword: Button = view.findViewById(R.id.change_password_button)
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
 
         val mainActivity = viewLifecycleOwner
+
         changePasswordViewModel.changePasswordFormState.observe(mainActivity, Observer {
-            val changePasswordState = it ?: return@Observer
+            checkPasswordState(changePassword, it, oldPassword, newPassword, repeatPassword)
+        })
 
-            changePassword.isEnabled = changePasswordState.isDataValid
-
-            if (changePasswordState.oldPasswordError != null) {
-                oldPassword.error = getString(changePasswordState.oldPasswordError)
-            } else {
-                oldPassword.error = null
-            }
-            if (changePasswordState.newPasswordError != null) {
-                newPassword.error = getString(changePasswordState.newPasswordError)
-            } else {
-                newPassword.error = null
-            }
-            if (changePasswordState.repeatPasswordError != null) {
-                repeatPassword.error = getString(changePasswordState.repeatPasswordError)
-            } else {
-                repeatPassword.error = null
-            }
+        changePasswordViewModel.changePasswordResult.observe(mainActivity, Observer {
+            checkPasswordResult(it, loading,editOldPassword,editNewPassword,editRepeatPassword)
         })
 
         editOldPassword.afterTextChanged {
@@ -110,88 +101,57 @@ class ChangePasswordFragment : Fragment() {
 
         // Funzione per fare la richiesta di cambio password al server
         changePassword.setOnClickListener {
-
             loading.show()
-
-            val retrofit = netClient.getClient()
-            val service = retrofit.create(APIChangePassword::class.java)
-
             val oldPasswordText = editOldPassword.text.toString()
             val newPasswordText = editNewPassword.text.toString()
-
             val cacheToken = File(context?.cacheDir, "token")
             var authorization = ""
             if (cacheToken.exists()) {
                 authorization = cacheToken.readText()
             }
+            changePasswordViewModel.changePasswordRepo(oldPasswordText,newPasswordText,authorization)
+        }
+    }
+    fun checkPasswordState(changePassword:Button,changePasswordState:ChangePasswordFormState,oldPassword:TextInputLayout,newPassword:TextInputLayout
+    ,repeatPassword:TextInputLayout) {
 
-            val jsonObject = JSONObject()
-            jsonObject.put("old_password", oldPasswordText)
-            jsonObject.put("new_password", newPasswordText)
+        changePassword.isEnabled = changePasswordState.isDataValid
 
-            val jsonObjectString = jsonObject.toString()
-            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val response =
-                        service.changePassword(authorization, requestBody)
-                    if (response.isSuccessful) {
-                        withContext(Dispatchers.Main) {
-                            if (response.errorBody() == null) {
-                                val gson = GsonBuilder().setPrettyPrinting().create()
-                                val responseJson =
-                                    gson.toJson(JsonParser.parseString(response.body()?.string()))
-                                print("Response: ")
-                                println(responseJson)
-                                activity?.runOnUiThread {
-                                    loading.hide()
-                                    Toast.makeText(
-                                        context,
-                                        getString(R.string.password_changed),
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                view.findNavController().navigate(R.id.action_navigation_change_password_to_navigation_account)
-                            } else {
-                                activity?.runOnUiThread {
-                                    loading.hide()
-                                    Toast.makeText(
-                                        context,
-                                        response.errorBody()?.string().toString(),
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                        }
-                    } else {
-                        val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                        activity?.runOnUiThread {
-                            loading.hide()
-                            Toast.makeText(
-                                    context,
-                                    getString(R.string.error).plus(" ").plus(error.error),
-                                    Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                } catch (e: Exception) {
-                    activity?.runOnUiThread {
-                        loading.hide()
-                        Toast.makeText(
-                                context,
-                                e.message,
-                                Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            }
+        if (changePasswordState.oldPasswordError != null) {
+            oldPassword.error = getString(changePasswordState.oldPasswordError)
+        } else {
+            oldPassword.error = null
+        }
+        if (changePasswordState.newPasswordError != null) {
+            newPassword.error = getString(changePasswordState.newPasswordError)
+        } else {
+            newPassword.error = null
+        }
+        if (changePasswordState.repeatPasswordError != null) {
+            repeatPassword.error = getString(changePasswordState.repeatPasswordError)
+        } else {
+            repeatPassword.error = null
         }
     }
 
-    /**
-     * Funzione di estensione per semplificare l'impostazione di un'azione afterTextChanged sui componenti EditText.
-     */
+    fun checkPasswordResult(formResult: ChangePasswordResult,loading:CircularProgressIndicator,
+                            oldPassword: TextInputEditText,newPassword: TextInputEditText,repeatPassword: TextInputEditText){
+        loading.hide()
+        if(formResult.error!=null){
+            oldPassword.text?.clear()
+            newPassword.text?.clear()
+            repeatPassword.text?.clear()
+            showChangePasswordFailed(formResult.error)
+        }
+        else{
+            view?.findNavController()?.navigate(R.id.action_navigation_change_password_to_navigation_account)
+        }
+    }
+
+    private fun showChangePasswordFailed(errorString: String){
+        Toast.makeText(context,"Error".plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
+    }
+
     private fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         this.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(editable: Editable?) {

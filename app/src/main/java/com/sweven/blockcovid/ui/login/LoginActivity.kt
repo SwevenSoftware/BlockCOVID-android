@@ -80,6 +80,7 @@ import java.io.File
      }
 
     fun checkLoginState(formState: LoginFormState,login: Button) {
+
         login.isEnabled = formState.isDataValid
         val username = findViewById<TextInputLayout>(R.id.username_layout)
         val password = findViewById<TextInputLayout>(R.id.password_layout)
@@ -98,6 +99,7 @@ import java.io.File
 
       fun checkLoginResult(formResult: LoginResult, loading:CircularProgressIndicator, editUsername:TextInputEditText
       ,editPassword:TextInputEditText) {
+
           loading.hide()
           if (formResult.error != null) {
               showLoginFailed(formResult.error)

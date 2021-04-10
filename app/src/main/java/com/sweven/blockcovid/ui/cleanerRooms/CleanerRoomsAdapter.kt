@@ -34,10 +34,6 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
 
     private var netClient = NetworkClient()
 
-    fun setNetwork(nc: NetworkClient) {
-        netClient = nc
-    }
-
     inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var roomText: TextView = itemView.findViewById(R.id.room_text)
         var roomStatus: TextView = itemView.findViewById(R.id.room_status)
