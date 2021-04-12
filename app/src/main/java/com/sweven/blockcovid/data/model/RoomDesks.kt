@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.ui.roomView
+package com.sweven.blockcovid.data.model
 
 data class RoomDesks(
         val idArray: Array<Int>?,

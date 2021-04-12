@@ -2,7 +2,6 @@ package com.sweven.blockcovid.ui.login
 
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +15,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.sweven.blockcovid.CleanerActivity
 import com.sweven.blockcovid.UserActivity
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.data.model.LoggedInUser
 import java.io.File
 
 open class LoginActivity : AppCompatActivity() {
@@ -34,11 +34,11 @@ open class LoginActivity : AppCompatActivity() {
         loginViewModel =
                 ViewModelProvider(this, LoginViewModelFactory()).get(LoginViewModel::class.java)
 
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
+        loginViewModel.loginFormState.observe(this@LoginActivity, {
            checkLoginFormState(it, login)
         })
 
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
+        loginViewModel.loginResult.observe(this@LoginActivity, {
            checkLoginResult(it, loading, editUsername, editPassword)
         })
 
@@ -124,7 +124,7 @@ open class LoginActivity : AppCompatActivity() {
         return File(cacheDir, "authority").readText()
     }
 
-    fun saveToken(model: LoggedInUserView) {
+    fun saveToken(model: LoggedInUser) {
         val context = applicationContext
         val token = model.token
         val expiryDate = model.expiryDate
@@ -138,21 +138,13 @@ open class LoginActivity : AppCompatActivity() {
         val cacheExpiry = File(context.cacheDir, "expiryDate")
         val cacheUser = File(context.cacheDir, "username")
         val cacheAuth = File(context.cacheDir, "authority")
-        if (token != null) {
-            cacheToken.writeText(token)
-        }
-        if (expiryDate != null) {
-            cacheExpiry.writeText(expiryDate.toString())
-        }
-        if (username != null) {
-            cacheUser.writeText(username)
-        }
-        if (authority != null) {
-            cacheAuth.writeText(authority)
-        }
+        cacheToken.writeText(token)
+        cacheExpiry.writeText(expiryDate.toString())
+        cacheUser.writeText(username)
+        cacheAuth.writeText(authority)
     }
 
-    fun updateUiWithUser(model: LoggedInUserView) {
+    fun updateUiWithUser(model: LoggedInUser) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
         // TODO : initiate successful logged in experience

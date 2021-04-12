@@ -72,4 +72,6 @@
     <string name="room_closed">Closed</string>
     <string name="room_cleaned">Room cleaned</string>
     <string name="room_empty">Room empty</string>
+    <string name="no_rooms">No rooms</string>
+
 </resources>

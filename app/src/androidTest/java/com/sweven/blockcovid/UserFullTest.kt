@@ -83,7 +83,7 @@ class UserFullTest {
 
         val bottomNavigationItemView = onView(
                 allOf(
-                        withId(R.id.navigation_rooms), withContentDescription("Stanze"),
+                        withId(R.id.navigation_user_rooms), withContentDescription("Stanze"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.nav_view),
@@ -271,7 +271,7 @@ class UserFullTest {
 
         val bottomNavigationItemView4 = onView(
                 allOf(
-                        withId(R.id.navigation_rooms), withContentDescription("Stanze"),
+                        withId(R.id.navigation_user_rooms), withContentDescription("Stanze"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.nav_view),

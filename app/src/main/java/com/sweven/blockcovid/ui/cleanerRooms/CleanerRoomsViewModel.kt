@@ -3,12 +3,11 @@ package com.sweven.blockcovid.ui.cleanerRooms
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sweven.blockcovid.data.CleanRoomRepository
 import com.sweven.blockcovid.data.CleanerRoomsRepository
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.ui.changePassword.ChangePasswordResult
+import com.sweven.blockcovid.data.model.CleanerRoomsList
 
-class CleanerRoomsViewModel (private val cleanerRoomsRepository: CleanerRoomsRepository,private val cleanRoomRepository: CleanRoomRepository) :
+class CleanerRoomsViewModel (private val cleanerRoomsRepository: CleanerRoomsRepository) :
     ViewModel() {
 
     private val _cleanerRoomsResult = MutableLiveData<CleanerRoomsResult>()
@@ -22,7 +21,7 @@ class CleanerRoomsViewModel (private val cleanerRoomsRepository: CleanerRoomsRep
                 if (it is Result.Success) {
                     _cleanerRoomsResult.postValue(
                         CleanerRoomsResult(success =
-                    RoomsList(
+                    CleanerRoomsList(
                         roomName = it.data.roomName, roomIsCleaned = it.data.roomIsCleaned)
                         )
                     )

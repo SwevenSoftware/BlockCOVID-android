@@ -9,6 +9,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.LoginRepository
+import com.sweven.blockcovid.data.model.LoggedInUser
 import org.jetbrains.annotations.NotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -127,7 +128,7 @@ class LoginActivityTest {
     @Test
     fun checkLoginResult_cleaner() {
         val formResult = LoginResult(
-            success = LoggedInUserView(
+            success = LoggedInUser(
                 displayName = "username",
                 token = "token",
                 expiryDate = 12,
@@ -151,7 +152,7 @@ class LoginActivityTest {
     @Test
     fun checkLoginResult_user() {
         val formResult = LoginResult(
-            success = LoggedInUserView(
+            success = LoggedInUser(
                 displayName = "cleaner",
                 token = "token",
                 expiryDate = 12,
@@ -175,7 +176,7 @@ class LoginActivityTest {
     @Test
     fun checkLoginResult_error() {
         val formResult = LoginResult(
-            success = LoggedInUserView(
+            success = LoggedInUser(
                 displayName = "username",
                 token = "token",
                 expiryDate = 12,
@@ -222,7 +223,7 @@ class LoginActivityTest {
 
         val formResult = LoginResult(
             success =
-            LoggedInUserView(
+            LoggedInUser(
                 displayName = "username",
                 token = "token",
                 expiryDate = 12,

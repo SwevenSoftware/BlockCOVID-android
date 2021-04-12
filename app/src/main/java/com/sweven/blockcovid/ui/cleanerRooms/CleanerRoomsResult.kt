@@ -1,9 +1,9 @@
 package com.sweven.blockcovid.ui.cleanerRooms
 
-import com.sweven.blockcovid.services.gsonReceive.Rooms
+import com.sweven.blockcovid.data.model.CleanerRoomsList
 
 data class CleanerRoomsResult(
-    val success: RoomsList? = null,
-    val error: String? = null
+        val success: CleanerRoomsList? = null,
+        val error: String? = null
 
 )

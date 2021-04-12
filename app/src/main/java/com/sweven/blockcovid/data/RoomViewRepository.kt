@@ -8,7 +8,7 @@ import com.sweven.blockcovid.services.APIDesks
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.gsonReceive.RoomWithDesks
-import com.sweven.blockcovid.ui.roomView.RoomDesks
+import com.sweven.blockcovid.data.model.RoomDesks
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -7,6 +7,7 @@ import com.sweven.blockcovid.InputChecks
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.LoginRepository
 import com.sweven.blockcovid.data.Result
+import com.sweven.blockcovid.data.model.LoggedInUser
 
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
@@ -24,7 +25,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _loginResult.postValue(LoginResult(success =
-                    LoggedInUserView(
+                    LoggedInUser(
                             displayName = it.data.displayName, token = it.data.token,
                             expiryDate = it.data.expiryDate, authority = it.data.authority
                     )

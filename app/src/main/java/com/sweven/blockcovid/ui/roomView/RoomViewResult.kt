@@ -1,5 +1,7 @@
 package com.sweven.blockcovid.ui.roomView
 
+import com.sweven.blockcovid.data.model.RoomDesks
+
 /**
  * Risultato della ricerca postazioni: successo (dettagli postazioni) o messaggio di errore.
  */

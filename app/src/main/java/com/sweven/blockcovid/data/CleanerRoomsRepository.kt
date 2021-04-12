@@ -8,7 +8,7 @@ import com.sweven.blockcovid.services.APIRooms
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.gsonReceive.Rooms
-import com.sweven.blockcovid.ui.cleanerRooms.RoomsList
+import com.sweven.blockcovid.data.model.CleanerRoomsList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,11 +16,11 @@ import retrofit2.Response
 
 class CleanerRoomsRepository {
 
-    private val _serverResponse = MutableLiveData<Event<Result<RoomsList>>>()
-    val serverResponse: LiveData<Event<Result<RoomsList>>>
+    private val _serverResponse = MutableLiveData<Event<Result<CleanerRoomsList>>>()
+    val serverResponse: LiveData<Event<Result<CleanerRoomsList>>>
         get() = _serverResponse
 
-    fun triggerEvent(value: Result<RoomsList>) {
+    fun triggerEvent(value: Result<CleanerRoomsList>) {
         _serverResponse.value = Event(value)
     }
 
@@ -43,7 +43,7 @@ class CleanerRoomsRepository {
                             nameArray[i] = roomList[i].room.name
                             isCleanArray[i] = roomList[i].room.roomStatus == "CLEAN"
                         }
-                        val roomsList = Result.Success(RoomsList(nameArray,isCleanArray))
+                        val roomsList = Result.Success(CleanerRoomsList(nameArray,isCleanArray))
                         triggerEvent(roomsList)
                     }
                 } else {

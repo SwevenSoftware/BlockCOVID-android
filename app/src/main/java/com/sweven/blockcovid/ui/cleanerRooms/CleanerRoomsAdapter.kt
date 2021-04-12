@@ -18,14 +18,14 @@ import com.sweven.blockcovid.data.CleanRoomRepository
 import java.io.File
 import com.sweven.blockcovid.data.Result
 
-class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>, rc: Array<Boolean>, ld: CircularProgressIndicator,lc:LifecycleOwner): RecyclerView.Adapter<CleanerRoomsAdapter.MyViewHolder>() {
+class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, lc: LifecycleOwner, rl: Array<String>, rc: Array<Boolean>, ld: CircularProgressIndicator): RecyclerView.Adapter<CleanerRoomsAdapter.MyViewHolder>() {
 
     val context = ct
-    val activity = ac
+    private val activity = ac
     private val roomList = rl
     private val roomCleaned = rc
     private val loading = ld
-    private val lifecycle = lc
+    private val lifecycleOwner = lc
     private val cleanerRoomRepository = CleanRoomRepository()
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -69,9 +69,9 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
 
         holder.roomCard.setOnClickListener {
             if (!holder.roomCheckBox.isChecked) {
-                cleanerRoomRepository.serverResponse.observe(lifecycle, { ott ->
+                cleanerRoomRepository.serverResponse.observe(lifecycleOwner, { ot ->
 
-                    ott.getContentIfNotHandled()?.let {
+                    ot.getContentIfNotHandled()?.let {
                         cleanRoom(
                             it,
                             loading,

@@ -1,8 +1,6 @@
 package com.sweven.blockcovid.ui.login
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.*
-import com.sweven.blockcovid.InputChecks
 import com.sweven.blockcovid.data.LoginRepository
 import org.junit.Test
 import org.junit.Before

@@ -1,6 +1,6 @@
-package com.sweven.blockcovid.ui.cleanerRooms
+package com.sweven.blockcovid.data.model
 
-data class RoomsList (
+data class CleanerRoomsList (
     val roomName: Array<String>?,
     val roomIsCleaned: Array<Boolean>?
 
@@ -9,7 +9,7 @@ data class RoomsList (
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as RoomsList
+        other as CleanerRoomsList
 
         if (roomName != null) {
             if (other.roomName == null) return false

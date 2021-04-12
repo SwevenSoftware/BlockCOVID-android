@@ -1,19 +1,14 @@
 package com.sweven.blockcovid.data
 
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.Event
-import com.sweven.blockcovid.R
 import com.sweven.blockcovid.services.APIClean
-import com.sweven.blockcovid.services.APIRooms
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
-import com.sweven.blockcovid.services.gsonReceive.Rooms
-import com.sweven.blockcovid.ui.cleanerRooms.RoomsList
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
