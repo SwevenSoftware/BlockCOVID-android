@@ -10,6 +10,7 @@ import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -34,23 +35,17 @@ class LoginRepository {
 
     fun login(username: String, password: String) {
 
-        val retrofit = NetworkClient.buildService(APIUser::class.java)
+        val requestBody = makeJsonObject(username, password)
 
-        val jsonObject = JSONObject()
-        jsonObject.put("username", username)
-        jsonObject.put("password", password)
+        val call = NetworkClient.buildService(APIUser::class.java).loginUser(requestBody)
 
-        val jsonObjectString = jsonObject.toString()
-        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-
-        retrofit.loginUser(requestBody).enqueue(object: Callback<TokenAuthorities> {
+        call.enqueue(object: Callback<TokenAuthorities> {
             override fun onFailure(call: Call<TokenAuthorities>, t: Throwable) {
                 triggerEvent(Result.Error(t.message!!))
             }
             override fun onResponse(call: Call<TokenAuthorities>, response: Response<TokenAuthorities>) {
                 if (response.errorBody() == null) {
                     val items = response.body()
-
                     val id = items!!.token.id
                     println(id)
 
@@ -70,5 +65,14 @@ class LoginRepository {
                 }
             }
         })
+    }
+
+    fun makeJsonObject(username: String, password: String): RequestBody {
+        val jsonObject = JSONObject()
+        jsonObject.put("username", username)
+        jsonObject.put("password", password)
+
+        val jsonObjectString = jsonObject.toString()
+        return jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
     }
 }

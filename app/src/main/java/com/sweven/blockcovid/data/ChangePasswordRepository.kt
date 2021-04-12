@@ -10,6 +10,7 @@ import com.sweven.blockcovid.services.APIChangePassword
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -29,16 +30,11 @@ class ChangePasswordRepository {
 
     fun changePassword(oldPasswordText: String, newPasswordText: String, authorization: String) {
 
-        val retrofit = NetworkClient.buildService(APIChangePassword::class.java)
+        val requestBody = makeJsonObject(oldPasswordText, newPasswordText)
 
-        val jsonObject = JSONObject()
-        jsonObject.put("old_password", oldPasswordText)
-        jsonObject.put("new_password", newPasswordText)
+        val call = NetworkClient.buildService(APIChangePassword::class.java).changePassword(authorization, requestBody)
 
-        val jsonObjectString = jsonObject.toString()
-        val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-
-        retrofit.changePassword(authorization, requestBody).enqueue(object : Callback<ResponseBody> {
+        call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 triggerEvent(Result.Error(t.message!!))
             }
@@ -57,5 +53,14 @@ class ChangePasswordRepository {
                 }
             }
         })
+    }
+
+    fun makeJsonObject(oldPasswordText: String, newPasswordText: String): RequestBody {
+        val jsonObject = JSONObject()
+        jsonObject.put("old_password", oldPasswordText)
+        jsonObject.put("new_password", newPasswordText)
+
+        val jsonObjectString = jsonObject.toString()
+        return jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
     }
 }

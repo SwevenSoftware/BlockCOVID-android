@@ -6,11 +6,17 @@ import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.APIUser
 import com.sweven.blockcovid.services.NetworkClient
-import org.json.JSONObject
-import org.junit.Test
+import com.sweven.blockcovid.services.gsonReceive.Token
+import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities
+import okhttp3.RequestBody
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.mockito.Mockito.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 
 class LoginRepositoryTest {
 
@@ -23,6 +29,8 @@ class LoginRepositoryTest {
     private lateinit var mockServerResponse: LiveData<Event<Result<LoggedInUser>>>
     private lateinit var mockNetworkClient: NetworkClient
     private lateinit var mockRetrofit: APIUser
+    private lateinit var mockRequestBody: RequestBody
+    private lateinit var mockCall: Call<TokenAuthorities>
 
     @Before
     fun setUp() {
@@ -30,13 +38,34 @@ class LoginRepositoryTest {
         mockServerResponse = mock()
         mockNetworkClient = mock()
         mockRetrofit = mock()
+        mockRequestBody = mock()
+        mockCall = mock()
     }
 
     @Test
     fun login_correct() {
-        val mockJsonObject: JSONObject = mock()
+        doReturn(mockRequestBody).`when`(mockLoginRepository).makeJsonObject(
+            anyString(),
+            anyString()
+        )
         doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIUser::class.java)
-        doReturn("{\"username\":\"admin\",\"password\":\"password\"}").`when`(mockJsonObject).toString()
-        //mockLoginRepository.login("admin", "password")
+        doReturn(mockCall).`when`(mockRetrofit).loginUser(mockRequestBody)
+
+        //val jsonRequest = mockLoginRepository.makeJsonObject("admin", "password")
+
+        val response =
+                TokenAuthorities(
+                    authoritiesList = listOf("USER"),
+                    token = Token("token", "expiryDate", "admin")
+                )
+
+        doAnswer { invocation ->
+            val callback: Callback<TokenAuthorities> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(any())
+
+        mockLoginRepository.login("admin", "password")
+        //println(mockLoginRepository.serverResponse.value?.peekContent())
     }
 }
