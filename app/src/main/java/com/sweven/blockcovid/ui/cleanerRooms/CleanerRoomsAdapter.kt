@@ -10,30 +10,25 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.progressindicator.CircularProgressIndicator
-import com.google.gson.Gson
 import com.sweven.blockcovid.R
-import com.sweven.blockcovid.services.APIChangePassword
-import com.sweven.blockcovid.services.APIClean
-import com.sweven.blockcovid.services.NetworkClient
-import com.sweven.blockcovid.services.gsonReceive.ErrorBody
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.sweven.blockcovid.data.CleanRoomRepository
 import java.io.File
-import java.lang.Exception
+import com.sweven.blockcovid.data.Result
 
-class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>, rc: Array<Boolean>, ld: CircularProgressIndicator): RecyclerView.Adapter<CleanerRoomsAdapter.MyViewHolder>() {
+class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>, rc: Array<Boolean>, ld: CircularProgressIndicator,lc:LifecycleOwner): RecyclerView.Adapter<CleanerRoomsAdapter.MyViewHolder>() {
 
     val context = ct
     val activity = ac
     private val roomList = rl
     private val roomCleaned = rc
     private val loading = ld
+    private val lifecycle = lc
+    private val cleanerRoomRepository = CleanRoomRepository()
 
-    inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var roomText: TextView = itemView.findViewById(R.id.room_text)
         var roomStatus: TextView = itemView.findViewById(R.id.room_status)
         var roomCheckBox: CheckBox = itemView.findViewById(R.id.room_checkbox)
@@ -51,7 +46,8 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
         val typedValue = TypedValue()
         if (roomCleaned[position]) {
             holder.roomStatus.text =
-                context?.getString(R.string.room_status).plus(" ").plus(context?.getString(R.string.room_clean))
+                context?.getString(R.string.room_status).plus(" ")
+                    .plus(context?.getString(R.string.room_clean))
             if (context != null) {
                 context.theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
                 holder.roomStatus.setTextColor(typedValue.data)
@@ -60,7 +56,8 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
             holder.roomCard.isClickable = false
         } else {
             holder.roomStatus.text =
-                context?.getString(R.string.room_status).plus(" ").plus(context?.getString(R.string.room_to_clean))
+                context?.getString(R.string.room_status).plus(" ")
+                    .plus(context?.getString(R.string.room_to_clean))
             if (context != null) {
                 context.theme.resolveAttribute(R.attr.colorError, typedValue, true)
                 holder.roomStatus.setTextColor(typedValue.data)
@@ -68,79 +65,66 @@ class CleanerRoomsAdapter(ct: Context?, ac: FragmentActivity?, rl: Array<String>
             holder.roomCheckBox.isChecked = false
             holder.roomCard.isClickable = true
         }
+        //spostare
+
         holder.roomCard.setOnClickListener {
             if (!holder.roomCheckBox.isChecked) {
+                cleanerRoomRepository.serverResponse.observe(lifecycle, { ott ->
+
+                    ott.getContentIfNotHandled()?.let {
+                        cleanRoom(
+                            it,
+                            loading,
+                            holder.roomStatus,
+                            holder.roomCard,
+                            holder.roomCheckBox
+                        )
+                    }
+                })
 
                 loading.show()
-
-                val retrofit = NetworkClient.buildService(APIClean::class.java)
-
 
                 val cacheToken = File(context?.cacheDir, "token")
                 var authorization = ""
                 if (cacheToken.exists()) {
                     authorization = cacheToken.readText()
                 }
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        val response =
-                                retrofit.cleanRoom(authorization, holder.roomText.text.toString())
-                        if (response.isSuccessful) {
-                            withContext(Dispatchers.Main) {
-                                if (response.errorBody() == null) {
-                                    holder.roomStatus.text =
-                                            context?.getString(R.string.room_status).plus(" ")
-                                                    .plus(context?.getString(R.string.room_to_clean))
-                                    if (context != null) {
-                                        context.theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
-                                        holder.roomStatus.setTextColor(typedValue.data)
-                                    }
-                                    holder.roomCheckBox.isChecked = true
-                                    holder.roomCard.isClickable = false
-                                    activity?.runOnUiThread {
-                                        loading.hide()
-                                        Toast.makeText(
-                                                context,
-                                                context?.getString(R.string.room_cleaned),
-                                                Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                } else {
-                                    activity?.runOnUiThread {
-                                        loading.hide()
-                                        Toast.makeText(
-                                                context,
-                                                response.errorBody()?.string().toString(),
-                                                Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                }
-                            }
-                        } else {
-                            val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                            activity?.runOnUiThread {
-                                loading.hide()
-                                Toast.makeText(
-                                        context,
-                                        context?.getString(R.string.error).plus(" ").plus(error.error),
-                                        Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    } catch (e: Exception) {
-                        activity?.runOnUiThread {
-                            loading.hide()
-                            Toast.makeText(
-                                    context,
-                                    e.message,
-                                    Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                }
+                cleanerRoomRepository.cleanRoom(authorization, holder.roomText.text.toString())
             }
         }
+    }
+
+    fun cleanRoom(
+        formResult: Result<String>, loading: CircularProgressIndicator,
+        roomStatus: TextView, roomCard: CardView, roomCheckBox: CheckBox
+    ) {
+        loading.hide()
+        if (formResult is Result.Success) {
+            val typedValue = TypedValue()
+            roomStatus.text =
+                context?.getString(R.string.room_status).plus(" ")
+                    .plus(context?.getString(R.string.room_to_clean))
+            if (context != null) {
+                context.theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+                roomStatus.setTextColor(typedValue.data)
+            }
+            roomCheckBox.isChecked = true
+            roomCard.isClickable = false
+            activity?.runOnUiThread {
+                loading.hide()
+                Toast.makeText(
+                    context,
+                    context?.getString(R.string.room_cleaned),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        } else if (formResult is Result.Error) {
+            showDesksFailed(formResult.exception)
+        }
+    }
+
+    fun showDesksFailed(errorString: String){
+        Toast.makeText(context,context?.getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
     }
 
     override fun getItemCount(): Int {
