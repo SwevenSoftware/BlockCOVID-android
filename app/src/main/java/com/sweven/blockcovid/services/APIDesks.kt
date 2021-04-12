@@ -1,7 +1,7 @@
 package com.sweven.blockcovid.services
 
 import com.sweven.blockcovid.services.gsonReceive.RoomWithDesks
-import retrofit2.Response
+import retrofit2.Call
 import retrofit2.http.*
 
 /**
@@ -10,7 +10,7 @@ import retrofit2.http.*
 interface APIDesks {
     @Headers("Accept:*/*")
     @GET("/api/rooms/{nameRoom}")
-    suspend fun getDesks (@Header("Authorization") authorization: String,
+    fun getDesks (@Header("Authorization") authorization: String,
                           @Path("nameRoom") nameRoom : String
-    ): Response<RoomWithDesks>
+    ): Call<RoomWithDesks>
 }

@@ -125,7 +125,7 @@ class ChangePasswordFragment : Fragment() {
     }
 
     fun showChangePasswordFailed(errorString: String){
-        Toast.makeText(context,"Error".plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
+        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
     }
 
     private fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
