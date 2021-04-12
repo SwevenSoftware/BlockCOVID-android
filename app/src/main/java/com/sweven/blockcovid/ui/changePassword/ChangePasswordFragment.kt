@@ -46,11 +46,11 @@ class ChangePasswordFragment : Fragment() {
 
         val mainActivity = viewLifecycleOwner
 
-        changePasswordViewModel.changePasswordFormState.observe(mainActivity, Observer {
+        changePasswordViewModel.changePasswordFormState.observe(mainActivity, {
             checkPasswordFormState(changePassword, it, oldPassword, newPassword, repeatPassword)
         })
 
-        changePasswordViewModel.changePasswordResult.observe(mainActivity, Observer {
+        changePasswordViewModel.changePasswordResult.observe(mainActivity, {
             checkPasswordResult(it, loading, editOldPassword, editNewPassword, editRepeatPassword)
         })
 

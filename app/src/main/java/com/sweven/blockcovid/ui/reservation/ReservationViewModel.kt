@@ -5,11 +5,31 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.InputChecks
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.data.ReservationRepository
+import com.sweven.blockcovid.data.Result
 
-class ReservationViewModel : ViewModel() {
+class ReservationViewModel(private val reservationRepository: ReservationRepository) : ViewModel() {
 
     private val _reservationForm = MutableLiveData<ReservationFormState>()
     val reservationFormState: LiveData<ReservationFormState> = _reservationForm
+
+    private val _reservationResult = MutableLiveData<ReservationResult>()
+    val reservationResult: LiveData<ReservationResult>
+        get() = _reservationResult
+
+    fun reserve(nameRoom: String, x: Int, y: Int, date: String,
+                       from: String, to: String, authorization: String) {
+        reservationRepository.reserve(nameRoom, x, y, date, from, to, authorization)
+        reservationRepository.serverResponse.observeForever { it ->
+            it.getContentIfNotHandled()?.let {
+                if (it is Result.Success) {
+                    _reservationResult.postValue(ReservationResult(success = it.data))
+                } else if (it is Result.Error) {
+                    _reservationResult.postValue(ReservationResult(error = it.exception))
+                }
+            }
+        }
+    }
 
     fun inputDataChanged(arrivalTime: String, exitTime: String, selectedDate: String) {
         if (!InputChecks.isFieldNotEmpty(arrivalTime)) {

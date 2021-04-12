@@ -21,23 +21,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
 import com.sweven.blockcovid.R
-import com.sweven.blockcovid.services.APIChangePassword
-import com.sweven.blockcovid.services.APIReserve
-import com.sweven.blockcovid.services.NetworkClient
-import com.sweven.blockcovid.services.gsonReceive.ErrorBody
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 import java.io.File
-import java.lang.Exception
 import java.time.LocalTime
 import java.util.*
 
@@ -53,7 +38,7 @@ class ReservationFragment : Fragment(){
             savedInstanceState: Bundle?
     ): View? {
         reservationViewModel =
-            ViewModelProvider(this).get(ReservationViewModel::class.java)
+            ViewModelProvider(this, ReservationViewModelFactory()).get(ReservationViewModel::class.java)
         return inflater.inflate(R.layout.fragment_reservation, container, false)
     }
 
@@ -135,7 +120,13 @@ class ReservationFragment : Fragment(){
         val exitTimeLayout: TextInputLayout = view.findViewById(R.id.exit_time)
         val selectDateLayout: TextInputLayout = view.findViewById(R.id.reservation_date)
         val reserveButton: Button = view.findViewById(R.id.reserve_button)
+        val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         val mainActivity = viewLifecycleOwner
+
+        reservationViewModel.reservationResult.observe(mainActivity, {
+            checkReservationResult(it, loading)
+        })
+
         reservationViewModel.reservationFormState.observe(mainActivity, Observer {
             val reservationState = it ?: return@Observer
 
@@ -182,10 +173,11 @@ class ReservationFragment : Fragment(){
 
         // Funzione per inviare la richiesta POST al server per prenotare una postazione
         reserveButton.setOnClickListener {
-            val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
             loading.show()
 
             val nameRoom = textRoom.text.toString()
+            val x = deskX.text.toString().toInt()
+            val y = deskY.text.toString().toInt()
             val date = selectDate.text.toString()
             val from = arrivalTime.text.toString()
             val to = exitTime.text.toString()
@@ -195,70 +187,22 @@ class ReservationFragment : Fragment(){
                 authorization = cacheToken.readText()
             }
 
-            val retrofit = NetworkClient.buildService(APIReserve::class.java)
-
-            val jsonObject = JSONObject()
-            jsonObject.put("x", deskX.text.toString().toInt())
-            jsonObject.put("y", deskY.text.toString().toInt())
-            jsonObject.put("date", date)
-            jsonObject.put("from", from)
-            jsonObject.put("to", to)
-
-            val jsonObjectString = jsonObject.toString()
-            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val response =
-                            retrofit.deskReserve(nameRoom, requestBody, authorization)
-                    if (response.isSuccessful) {
-                        withContext(Dispatchers.Main) {
-                            if(response.errorBody()==null) {
-                                val gson = GsonBuilder().setPrettyPrinting().create()
-                                val responseJson =
-                                        gson.toJson(JsonParser.parseString(response.body()?.string()))
-                                print("Response: ")
-                                println(responseJson)
-                                loading.hide()
-                                Toast.makeText(
-                                        context,
-                                        getString(R.string.reservation_successful),
-                                        Toast.LENGTH_LONG
-                                ).show()
-                            } else {
-                                activity?.runOnUiThread {
-                                    loading.hide()
-                                    Toast.makeText(
-                                            context,
-                                            response.errorBody()?.string().toString(),
-                                            Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                        }
-                    } else {
-                        val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                        activity?.runOnUiThread {
-                            loading.hide()
-                            Toast.makeText(
-                                    context,
-                                    getString(R.string.error).plus(" ").plus(error.error),
-                                    Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                } catch (e: Exception) {
-                    activity?.runOnUiThread {
-                        loading.hide()
-                        Toast.makeText(
-                                context,
-                                e.message,
-                                Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            }
+            reservationViewModel.reserve(nameRoom, x, y, date, from, to, authorization)
         }
+    }
+
+    fun checkReservationResult(formResult: ReservationResult, loading:CircularProgressIndicator){
+        loading.hide()
+        if (formResult.success != null) {
+            Toast.makeText(context,getString(R.string.reservation_successful),Toast.LENGTH_SHORT).show()
+        }
+        else if (formResult.error != null) {
+            showChangePasswordFailed(formResult.error)
+        }
+    }
+
+    fun showChangePasswordFailed(errorString: String){
+        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
     }
 
     private fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
