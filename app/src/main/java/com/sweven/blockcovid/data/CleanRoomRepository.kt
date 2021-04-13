@@ -23,9 +23,13 @@ class CleanRoomRepository {
         _serverResponse.value = Event(value)
     }
 
+    fun getNetworkClient(): NetworkClient {
+        return NetworkClient()
+    }
+
     fun cleanRoom(authorization: String,nameRoom:String) {
 
-        val call = NetworkClient.buildService(APIClean::class.java).cleanRoom(authorization,nameRoom)
+        val call = getNetworkClient().buildService(APIClean::class.java).cleanRoom(authorization,nameRoom)
 
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

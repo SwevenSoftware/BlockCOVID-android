@@ -23,9 +23,13 @@ class RoomViewRepository {
         _serverResponse.value = Event(value)
     }
 
+    fun getNetworkClient(): NetworkClient {
+        return NetworkClient()
+    }
+
     fun showRoom(authorization: String, roomName: String) {
 
-        val call = NetworkClient.buildService(APIDesks::class.java).getDesks(authorization, roomName)
+        val call = getNetworkClient().buildService(APIDesks::class.java).getDesks(authorization, roomName)
 
         call.enqueue(object: Callback<RoomWithDesks> {
             override fun onFailure(call: Call<RoomWithDesks>, t: Throwable) {

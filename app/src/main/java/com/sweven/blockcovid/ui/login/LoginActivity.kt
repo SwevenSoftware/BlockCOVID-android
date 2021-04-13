@@ -93,7 +93,7 @@ open class LoginActivity : AppCompatActivity() {
     }
 
     fun checkLoginResult(formResult: LoginResult, loading: CircularProgressIndicator,
-                                 editUsername: TextInputEditText, editPassword: TextInputEditText) {
+                         editUsername: TextInputEditText, editPassword: TextInputEditText) {
         loading.hide()
         if (formResult.success != null) {
             updateUiWithUser(formResult.success)
@@ -147,7 +147,6 @@ open class LoginActivity : AppCompatActivity() {
     fun updateUiWithUser(model: LoggedInUser) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
-        // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",

@@ -16,8 +16,10 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
+import java.util.concurrent.TimeoutException
 
 /**
  * Classe che richiede l'autenticazione e le informazioni sull'utente dall'origine dati remota.
@@ -33,11 +35,15 @@ class LoginRepository {
         _serverResponse.value = Event(value)
     }
 
+    fun getNetworkClient(): NetworkClient {
+        return NetworkClient()
+    }
+
     fun login(username: String, password: String) {
 
         val requestBody = makeJsonObject(username, password)
 
-        val call = NetworkClient.buildService(APIUser::class.java).loginUser(requestBody)
+        val call = getNetworkClient().buildService(APIUser::class.java).loginUser(requestBody)
 
         call.enqueue(object: Callback<TokenAuthorities> {
             override fun onFailure(call: Call<TokenAuthorities>, t: Throwable) {
@@ -61,6 +67,7 @@ class LoginRepository {
                     triggerEvent(result)
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
+                    println(response.errorBody()?.string().toString())
                     triggerEvent(Result.Error(error.error))
                 }
             }

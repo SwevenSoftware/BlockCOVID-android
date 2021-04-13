@@ -28,11 +28,15 @@ class ChangePasswordRepository {
         _serverResponse.value = Event(value)
     }
 
+    fun getNetworkClient(): NetworkClient {
+        return NetworkClient()
+    }
+
     fun changePassword(oldPasswordText: String, newPasswordText: String, authorization: String) {
 
         val requestBody = makeJsonObject(oldPasswordText, newPasswordText)
 
-        val call = NetworkClient.buildService(APIChangePassword::class.java).changePassword(authorization, requestBody)
+        val call = getNetworkClient().buildService(APIChangePassword::class.java).changePassword(authorization, requestBody)
 
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
