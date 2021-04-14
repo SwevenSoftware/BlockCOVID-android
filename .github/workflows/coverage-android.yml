@@ -21,7 +21,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Test coverage with Gradle
-        run: ./gradlew cleanTest test jacocoTestReportDebug
+        run: ./gradlew testDebugUnitTest jacocoTestReportDebug
 
       - uses: codecov/codecov-action@v1
         with:
