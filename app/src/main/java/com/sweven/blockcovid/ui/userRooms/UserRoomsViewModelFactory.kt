@@ -2,7 +2,7 @@ package com.sweven.blockcovid.ui.userRooms
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sweven.blockcovid.data.UserRoomsRepository
+import com.sweven.blockcovid.data.repositories.UserRoomsRepository
 import com.sweven.blockcovid.services.NetworkClient
 
 /**

@@ -2,7 +2,7 @@ package com.sweven.blockcovid.ui.reservation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sweven.blockcovid.data.ReservationRepository
+import com.sweven.blockcovid.data.repositories.ReservationRepository
 import com.sweven.blockcovid.services.NetworkClient
 
 /**

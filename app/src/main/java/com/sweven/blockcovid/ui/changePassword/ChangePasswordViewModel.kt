@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.InputChecks
 import com.sweven.blockcovid.R
-import com.sweven.blockcovid.data.ChangePasswordRepository
+import com.sweven.blockcovid.data.repositories.ChangePasswordRepository
 import com.sweven.blockcovid.data.Result
 
 class ChangePasswordViewModel(private val changePasswordRepository: ChangePasswordRepository) : ViewModel() {

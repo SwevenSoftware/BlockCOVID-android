@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.data.RoomViewRepository
+import com.sweven.blockcovid.data.repositories.RoomViewRepository
 import com.sweven.blockcovid.data.model.RoomDesks
 
 class RoomViewViewModel(private val roomViewRepository: RoomViewRepository) : ViewModel() {

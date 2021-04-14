@@ -2,8 +2,8 @@ package com.sweven.blockcovid.ui.cleanerRooms
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sweven.blockcovid.data.CleanRoomRepository
-import com.sweven.blockcovid.data.CleanerRoomsRepository
+import com.sweven.blockcovid.data.repositories.CleanRoomRepository
+import com.sweven.blockcovid.data.repositories.CleanerRoomsRepository
 import com.sweven.blockcovid.services.NetworkClient
 
 /**

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.InputChecks
 import com.sweven.blockcovid.R
-import com.sweven.blockcovid.data.ReservationRepository
+import com.sweven.blockcovid.data.repositories.ReservationRepository
 import com.sweven.blockcovid.data.Result
 
 class ReservationViewModel(private val reservationRepository: ReservationRepository) : ViewModel() {

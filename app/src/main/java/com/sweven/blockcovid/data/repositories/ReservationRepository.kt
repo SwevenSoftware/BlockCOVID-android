@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.data
+package com.sweven.blockcovid.data.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.Event
-import com.sweven.blockcovid.services.APIReserve
+import com.sweven.blockcovid.data.Result
+import com.sweven.blockcovid.services.apis.APIReserve
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

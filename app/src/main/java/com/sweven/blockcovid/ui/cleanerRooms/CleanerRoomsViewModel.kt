@@ -3,9 +3,9 @@ package com.sweven.blockcovid.ui.cleanerRooms
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sweven.blockcovid.data.CleanerRoomsRepository
+import com.sweven.blockcovid.data.repositories.CleanerRoomsRepository
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.data.CleanRoomRepository
+import com.sweven.blockcovid.data.repositories.CleanRoomRepository
 import com.sweven.blockcovid.data.model.CleanerRoomsList
 
 class CleanerRoomsViewModel (private val cleanerRoomsRepository: CleanerRoomsRepository, private val cleanRoomRepository: CleanRoomRepository) :

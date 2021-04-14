@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.services
+package com.sweven.blockcovid.services.apis
 
 import okhttp3.RequestBody
 import okhttp3.ResponseBody

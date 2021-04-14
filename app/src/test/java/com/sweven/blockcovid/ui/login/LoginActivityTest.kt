@@ -8,7 +8,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sweven.blockcovid.R
-import com.sweven.blockcovid.data.LoginRepository
+import com.sweven.blockcovid.data.repositories.LoginRepository
 import com.sweven.blockcovid.data.model.LoggedInUser
 import org.jetbrains.annotations.NotNull
 import org.junit.Assert.assertTrue

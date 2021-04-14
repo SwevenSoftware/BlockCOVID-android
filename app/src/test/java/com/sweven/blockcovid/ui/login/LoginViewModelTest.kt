@@ -1,7 +1,7 @@
 package com.sweven.blockcovid.ui.login
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.sweven.blockcovid.data.LoginRepository
+import com.sweven.blockcovid.data.repositories.LoginRepository
 import org.junit.Test
 import org.junit.Before
 import org.junit.Rule

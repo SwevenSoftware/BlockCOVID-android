@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.data.UserRoomsRepository
+import com.sweven.blockcovid.data.repositories.UserRoomsRepository
 import com.sweven.blockcovid.data.model.UserRoomsList
 
 

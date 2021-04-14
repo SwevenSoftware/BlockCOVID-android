@@ -2,7 +2,7 @@ package com.sweven.blockcovid.ui.changePassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sweven.blockcovid.data.ChangePasswordRepository
+import com.sweven.blockcovid.data.repositories.ChangePasswordRepository
 import com.sweven.blockcovid.services.NetworkClient
 /**
  * Factory di provider ViewModel per istanziare ChangePasswordViewModel.

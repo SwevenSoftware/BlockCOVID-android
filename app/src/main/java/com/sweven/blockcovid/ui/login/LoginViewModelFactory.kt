@@ -2,7 +2,7 @@ package com.sweven.blockcovid.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sweven.blockcovid.data.LoginRepository
+import com.sweven.blockcovid.data.repositories.LoginRepository
 import com.sweven.blockcovid.services.NetworkClient
 
 /**

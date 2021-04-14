@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'androidx.navigation.safeargs.kotlin'
     id 'jacoco'
+    id 'com.vanniktech.android.junit.jacoco'
 }
 
 android {
@@ -37,6 +38,9 @@ android {
     }
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+    jacoco {
+        version = "0.7.9"
     }
 }
 

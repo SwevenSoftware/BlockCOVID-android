@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.services
+package com.sweven.blockcovid.services.apis
 
 import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities
 import okhttp3.RequestBody

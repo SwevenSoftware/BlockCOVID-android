@@ -4,7 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.model.LoggedInUser
-import com.sweven.blockcovid.services.APIUser
+import com.sweven.blockcovid.data.repositories.LoginRepository
+import com.sweven.blockcovid.services.apis.APIUser
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.Token
 import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities

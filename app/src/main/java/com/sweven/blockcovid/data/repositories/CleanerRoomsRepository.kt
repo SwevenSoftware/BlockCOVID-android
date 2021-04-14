@@ -1,15 +1,15 @@
-package com.sweven.blockcovid.data
+package com.sweven.blockcovid.data.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sweven.blockcovid.Event
-import com.sweven.blockcovid.services.APIRooms
+import com.sweven.blockcovid.data.Result
+import com.sweven.blockcovid.services.apis.APIRooms
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.gsonReceive.Rooms
 import com.sweven.blockcovid.data.model.CleanerRoomsList
-import com.sweven.blockcovid.data.model.UserRoomsList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,7 +44,7 @@ class CleanerRoomsRepository(private val networkClient: NetworkClient) {
                             nameArray[i] = roomList[i].room.name
                             isCleanArray[i] = roomList[i].room.roomStatus == "CLEAN"
                         }
-                        val roomsList = Result.Success(CleanerRoomsList(nameArray,isCleanArray))
+                        val roomsList = Result.Success(CleanerRoomsList(nameArray, isCleanArray))
                         triggerEvent(roomsList)
                     } else {
                         triggerEvent(Result.Success(CleanerRoomsList(null, null)))

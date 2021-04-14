@@ -1,11 +1,12 @@
-package com.sweven.blockcovid.data
+package com.sweven.blockcovid.data.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sweven.blockcovid.Event
+import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.LoggedInUser
-import com.sweven.blockcovid.services.APIUser
+import com.sweven.blockcovid.services.apis.APIUser
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities
@@ -16,10 +17,8 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
-import java.util.concurrent.TimeoutException
 
 /**
  * Classe che richiede l'autenticazione e le informazioni sull'utente dall'origine dati remota.
