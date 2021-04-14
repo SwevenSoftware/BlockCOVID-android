@@ -38,7 +38,7 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
             override fun onResponse(call: Call<Rooms>, response: Response<Rooms>) {
                 if (response.errorBody() == null) {
                     val roomList = response.body()?.embedded?.roomWithDesksList
-                    roomList?.let {
+                    if (roomList != null) {
                         val listSize = roomList.size
                         val nameArray = Array(listSize) { _ -> ""}
                         val openArray = Array(listSize) { _ -> ""}
@@ -58,9 +58,10 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
                                 isOpenArray[i] = true
                             }
                         }
-
                         val roomsList = Result.Success(UserRoomsList(nameArray, openArray, closeArray, daysArray, isOpenArray))
                         triggerEvent(roomsList)
+                    } else {
+                        triggerEvent(Result.Success(UserRoomsList(null, null, null, null, null)))
                     }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)

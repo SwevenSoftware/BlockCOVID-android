@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sweven.blockcovid.Event
+import com.sweven.blockcovid.data.model.CleanerRoomsList
 import com.sweven.blockcovid.services.APIDesks
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
@@ -35,7 +36,7 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
                 if (response.errorBody() == null) {
                     val desksList = response.body()?.desks
                     println(desksList.toString())
-                    desksList?.let {
+                    if (desksList != null) {
                         val listSize = desksList.size
                         val idArray = Array(listSize) { _ -> 0}
                         val xArray = Array(listSize) { _ -> 0}
@@ -48,6 +49,8 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
                         }
                         val desks = Result.Success(RoomDesks(idArray, xArray, yArray))
                         triggerEvent(desks)
+                    } else {
+                        triggerEvent(Result.Success(RoomDesks(null, null, null)))
                     }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
