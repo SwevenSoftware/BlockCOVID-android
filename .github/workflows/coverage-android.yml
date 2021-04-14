@@ -19,16 +19,16 @@ jobs:
         with: 
             api-level: 29
             script: ./gradlew connectedCheck
-            #./gradlew createDebugCoverageReport:  
+            ./gradlew createDebugCoverageReport:  
 
-       # run: ./gradlew testDebugUnitTest
+        run: ./gradlew testDebugUnitTest
         
       - name: generate report
         uses: actions/upload-artifact@v2
         with:
           name: report 
           path: app/build/reports/coverage/debug
-         # path: app/build/test-results
+          path: app/build/test-results
             
       
       - name: Download Test Reports Folder
