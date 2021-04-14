@@ -1,0 +1,9 @@
+{
+    "fixes": [
+         - "debugAndroidTest/::app/src/test/java/"
+           "/home/runner/work/BlockCOVID-android/BlockCOVID-android>/::"
+    ],
+    "codecov": {
+        "disable_default_path_fixes": true
+    }
+}
