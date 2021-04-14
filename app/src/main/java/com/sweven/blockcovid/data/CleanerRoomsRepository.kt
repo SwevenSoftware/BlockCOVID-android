@@ -14,7 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class CleanerRoomsRepository {
+class CleanerRoomsRepository(private val networkClient: NetworkClient) {
 
     private val _serverResponse = MutableLiveData<Event<Result<CleanerRoomsList>>>()
     val serverResponse: LiveData<Event<Result<CleanerRoomsList>>>
@@ -24,13 +24,9 @@ class CleanerRoomsRepository {
         _serverResponse.value = Event(value)
     }
 
-    fun getNetworkClient(): NetworkClient {
-        return NetworkClient()
-    }
-
     fun cleanerRooms(authorization: String) {
 
-        val call = getNetworkClient().buildService(APIRooms::class.java).getRooms(authorization)
+        val call = networkClient.buildService(APIRooms::class.java).getRooms(authorization)
 
         call.enqueue(object : Callback<Rooms> {
             override fun onFailure(call: Call<Rooms>, t: Throwable) {

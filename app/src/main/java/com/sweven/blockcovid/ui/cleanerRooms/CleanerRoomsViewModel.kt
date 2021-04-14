@@ -5,9 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.data.CleanerRoomsRepository
 import com.sweven.blockcovid.data.Result
+import com.sweven.blockcovid.data.CleanRoomRepository
 import com.sweven.blockcovid.data.model.CleanerRoomsList
 
-class CleanerRoomsViewModel (private val cleanerRoomsRepository: CleanerRoomsRepository) :
+class CleanerRoomsViewModel (private val cleanerRoomsRepository: CleanerRoomsRepository, private val cleanRoomRepository: CleanRoomRepository) :
     ViewModel() {
 
     private val _cleanerRoomsResult = MutableLiveData<CleanerRoomsResult>()
@@ -25,6 +26,24 @@ class CleanerRoomsViewModel (private val cleanerRoomsRepository: CleanerRoomsRep
                         roomName = it.data.roomName, roomIsCleaned = it.data.roomIsCleaned)
                         )
                     )
+                } else if (it is Result.Error) {
+                    _cleanerRoomsResult.postValue(CleanerRoomsResult(error = it.exception))
+                }
+            }
+        }
+    }
+
+    private val _cleanRoomResult = MutableLiveData<CleanRoomResult>()
+    val cleanRoomResult: LiveData<CleanRoomResult>
+        get() = _cleanRoomResult
+
+    fun cleanRoom(authorization: String, roomName: String) {
+        cleanRoomRepository.cleanRoom(authorization, roomName)
+        cleanerRoomsRepository.serverResponse.observeForever { it ->
+            it.getContentIfNotHandled()?.let {
+                if (it is Result.Success) {
+                    _cleanerRoomsResult.postValue(
+                            CleanerRoomsResult(success = it.data))
                 } else if (it is Result.Error) {
                     _cleanerRoomsResult.postValue(CleanerRoomsResult(error = it.exception))
                 }

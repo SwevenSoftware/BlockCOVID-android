@@ -25,7 +25,7 @@ import java.util.concurrent.TimeoutException
  * Classe che richiede l'autenticazione e le informazioni sull'utente dall'origine dati remota.
  */
 
-class LoginRepository {
+class LoginRepository(private val networkClient: NetworkClient) {
 
     private val _serverResponse = MutableLiveData<Event<Result<LoggedInUser>>>()
     val serverResponse: LiveData<Event<Result<LoggedInUser>>>
@@ -35,15 +35,11 @@ class LoginRepository {
         _serverResponse.value = Event(value)
     }
 
-    fun getNetworkClient(): NetworkClient {
-        return NetworkClient()
-    }
-
     fun login(username: String, password: String) {
 
         val requestBody = makeJsonObject(username, password)
 
-        val call = getNetworkClient().buildService(APIUser::class.java).loginUser(requestBody)
+        val call = networkClient.buildService(APIUser::class.java).loginUser(requestBody)
 
         call.enqueue(object: Callback<TokenAuthorities> {
             override fun onFailure(call: Call<TokenAuthorities>, t: Throwable) {
@@ -67,7 +63,6 @@ class LoginRepository {
                     triggerEvent(result)
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                    println(response.errorBody()?.string().toString())
                     triggerEvent(Result.Error(error.error))
                 }
             }

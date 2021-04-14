@@ -3,6 +3,7 @@ package com.sweven.blockcovid.ui.roomView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sweven.blockcovid.data.RoomViewRepository
+import com.sweven.blockcovid.services.NetworkClient
 
 /**
  * Factory di provider ViewModel per istanziare RoomViewViewModel.
@@ -14,7 +15,7 @@ class RoomViewViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RoomViewViewModel::class.java)) {
             return RoomViewViewModel(
-                roomViewRepository = RoomViewRepository()
+                roomViewRepository = RoomViewRepository(NetworkClient())
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

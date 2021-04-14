@@ -3,6 +3,7 @@ package com.sweven.blockcovid.ui.reservation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sweven.blockcovid.data.ReservationRepository
+import com.sweven.blockcovid.services.NetworkClient
 
 /**
  * Factory di provider ViewModel per istanziare ChangePasswordViewModel.
@@ -15,7 +16,7 @@ class ReservationViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ReservationViewModel::class.java)) {
             return ReservationViewModel(
-                reservationRepository = ReservationRepository()
+                reservationRepository = ReservationRepository(NetworkClient())
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

@@ -38,9 +38,8 @@ class LoginRepositoryTest {
 
     @Before
     fun setUp() {
-        mockLoginRepository = spy(LoginRepository::class.java)
-        mockServerResponse = mock()
         mockNetworkClient = mock()
+        mockLoginRepository = spy(LoginRepository(mockNetworkClient))
         mockRetrofit = mock()
         mockRequestBody = mock()
         mockCall = mock()
@@ -48,17 +47,11 @@ class LoginRepositoryTest {
 
     @Test
     fun login_correct() {
-        doReturn(mockRequestBody).`when`(mockLoginRepository).makeJsonObject(
-            anyString(),
-            anyString()
-        )
-
-        `when`(mockLoginRepository.getNetworkClient()).thenReturn(mockNetworkClient)
+        doReturn(mockRequestBody).`when`(mockLoginRepository).makeJsonObject(anyString(), anyString())
         doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIUser::class.java)
         doReturn(mockCall).`when`(mockRetrofit).loginUser(mockRequestBody)
 
-        val response =
-            TokenAuthorities(
+        val response = TokenAuthorities(
                 authoritiesList = listOf("ADMIN"),
                 token = Token("bdee5ded-bb59-408f-92d6-d2be4da516cb", "2021-04-15T15:26:59.057965508", "admin")
             )
@@ -80,12 +73,7 @@ class LoginRepositoryTest {
 
     @Test
     fun login_error() {
-        doReturn(mockRequestBody).`when`(mockLoginRepository).makeJsonObject(
-                anyString(),
-                anyString()
-        )
-
-        `when`(mockLoginRepository.getNetworkClient()).thenReturn(mockNetworkClient)
+        doReturn(mockRequestBody).`when`(mockLoginRepository).makeJsonObject(anyString(), anyString())
         doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIUser::class.java)
         doReturn(mockCall).`when`(mockRetrofit).loginUser(mockRequestBody)
 
@@ -102,17 +90,11 @@ class LoginRepositoryTest {
         assertTrue(mockLoginRepository.serverResponse.value?.peekContent() ==
                 Result.Error(exception = "Internal Server Error")
         )
-
     }
 
     @Test
     fun login_exception() {
-        doReturn(mockRequestBody).`when`(mockLoginRepository).makeJsonObject(
-                anyString(),
-                anyString()
-        )
-
-        `when`(mockLoginRepository.getNetworkClient()).thenReturn(mockNetworkClient)
+        doReturn(mockRequestBody).`when`(mockLoginRepository).makeJsonObject(anyString(), anyString())
         doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIUser::class.java)
         doReturn(mockCall).`when`(mockRetrofit).loginUser(mockRequestBody)
 

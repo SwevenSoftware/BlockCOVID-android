@@ -18,7 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ChangePasswordRepository {
+class ChangePasswordRepository(private val networkClient: NetworkClient) {
 
     private val _serverResponse = MutableLiveData<Event<Result<String>>>()
     val serverResponse: LiveData<Event<Result<String>>>
@@ -28,15 +28,11 @@ class ChangePasswordRepository {
         _serverResponse.value = Event(value)
     }
 
-    fun getNetworkClient(): NetworkClient {
-        return NetworkClient()
-    }
-
     fun changePassword(oldPasswordText: String, newPasswordText: String, authorization: String) {
 
         val requestBody = makeJsonObject(oldPasswordText, newPasswordText)
 
-        val call = getNetworkClient().buildService(APIChangePassword::class.java).changePassword(authorization, requestBody)
+        val call = networkClient.buildService(APIChangePassword::class.java).changePassword(authorization, requestBody)
 
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

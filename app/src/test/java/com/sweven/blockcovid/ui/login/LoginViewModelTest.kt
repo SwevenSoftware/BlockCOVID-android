@@ -8,6 +8,7 @@ import org.junit.Rule
 import org.mockito.Mockito.*
 import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.LoggedInUser
+import com.sweven.blockcovid.services.NetworkClient
 import org.junit.Assert.*
 
 class LoginViewModelTest {
@@ -19,10 +20,12 @@ class LoginViewModelTest {
 
     private lateinit var mockLoginViewModel: LoginViewModel
     private lateinit var mockLoginRepository: LoginRepository
+    private lateinit var mockNetworkClient: NetworkClient
 
     @Before
     fun setUp() {
-        mockLoginRepository = spy(LoginRepository::class.java)
+        mockNetworkClient = mock()
+        mockLoginRepository = spy(LoginRepository(mockNetworkClient))
         mockLoginViewModel = spy(LoginViewModel(mockLoginRepository))
     }
 

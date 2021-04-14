@@ -40,8 +40,12 @@ class CleanerRoomsFragment : Fragment() {
         cleanerRoomsViewModel.cleanerRoomsResult.observe(mainActivity, {
             createCleanerRoomList(it, loading)
         })
-        loading.show()
 
+        cleanerRoomsViewModel.cleanRoomResult.observe(mainActivity, {
+            cleanRoomMessage(it, loading)
+        })
+
+        loading.show()
 
         val cacheToken = File(context?.cacheDir, "token")
         var authorization = ""
@@ -60,28 +64,40 @@ class CleanerRoomsFragment : Fragment() {
         }
     }
 
-    fun createCleanerRoomList(
-        cleanerRoomsResult: CleanerRoomsResult,
-        loading: CircularProgressIndicator
-    ) {
+    fun createCleanerRoomList(cleanerRoomsResult: CleanerRoomsResult, loading: CircularProgressIndicator) {
         loading.hide()
         if (cleanerRoomsResult.success != null) {
             val roomList = cleanerRoomsResult.success.roomName
             val roomCleaned = cleanerRoomsResult.success.roomIsCleaned
             if (roomList != null && roomCleaned != null) {
-                if (roomList.isNotEmpty())
+                if (roomList.isNotEmpty()) {
                     recyclerView = view?.findViewById(R.id.room_recycler_cleaner)!!
-                val mainActivity = viewLifecycleOwner
-                val cleanerRoomsAdapter =
-                    CleanerRoomsAdapter(context, activity, mainActivity, roomList, roomCleaned, loading)
+                    val cleanerRoomsAdapter =
+                        CleanerRoomsAdapter(roomList, roomCleaned, loading, cleanerRoomsViewModel, viewLifecycleOwner)
                     recyclerView.adapter = cleanerRoomsAdapter
                     recyclerView.layoutManager = LinearLayoutManager(context)
+                }
             } else {
                 showRoomsFailed(getString(R.string.no_rooms))
             }
-    } else if (cleanerRoomsResult.error != null)
-        {
+    } else if (cleanerRoomsResult.error != null) {
             showRoomsFailed(cleanerRoomsResult.error)
+        }
+    }
+
+    fun cleanRoomMessage(formResult: CleanRoomResult, loading: CircularProgressIndicator) {
+        loading.hide()
+        if (formResult.success != null) {
+            activity?.runOnUiThread {
+                loading.hide()
+                Toast.makeText(
+                    context,
+                    context?.getString(R.string.room_cleaned),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        } else if (formResult.error != null) {
+            showRoomsFailed(formResult.error)
         }
     }
 

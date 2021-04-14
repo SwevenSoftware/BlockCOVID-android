@@ -13,7 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RoomViewRepository {
+class RoomViewRepository(private val networkClient: NetworkClient) {
 
     private val _serverResponse = MutableLiveData<Event<Result<RoomDesks>>>()
     val serverResponse: LiveData<Event<Result<RoomDesks>>>
@@ -23,13 +23,9 @@ class RoomViewRepository {
         _serverResponse.value = Event(value)
     }
 
-    fun getNetworkClient(): NetworkClient {
-        return NetworkClient()
-    }
-
     fun showRoom(authorization: String, roomName: String) {
 
-        val call = getNetworkClient().buildService(APIDesks::class.java).getDesks(authorization, roomName)
+        val call = networkClient.buildService(APIDesks::class.java).getDesks(authorization, roomName)
 
         call.enqueue(object: Callback<RoomWithDesks> {
             override fun onFailure(call: Call<RoomWithDesks>, t: Throwable) {

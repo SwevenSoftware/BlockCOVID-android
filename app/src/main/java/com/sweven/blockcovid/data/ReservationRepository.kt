@@ -18,7 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ReservationRepository {
+class ReservationRepository(private val networkClient: NetworkClient) {
 
     private val _serverResponse = MutableLiveData<Event<Result<String>>>()
     val serverResponse: LiveData<Event<Result<String>>>
@@ -28,16 +28,12 @@ class ReservationRepository {
         _serverResponse.value = Event(value)
     }
 
-    fun getNetworkClient(): NetworkClient {
-        return NetworkClient()
-    }
-
     fun reserve(nameRoom: String, x: Int, y: Int, date: String,
                        from: String, to: String, authorization: String) {
 
         val requestBody = makeJsonObject(x, y, date, from, to)
 
-        val call = getNetworkClient().buildService(APIReserve::class.java).deskReserve(nameRoom, requestBody, authorization)
+        val call = networkClient.buildService(APIReserve::class.java).deskReserve(nameRoom, requestBody, authorization)
 
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

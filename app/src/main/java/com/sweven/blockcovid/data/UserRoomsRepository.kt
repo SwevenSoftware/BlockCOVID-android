@@ -17,7 +17,7 @@ import java.time.LocalTime
 import java.util.*
 
 
-class UserRoomsRepository {
+class UserRoomsRepository(private val networkClient: NetworkClient) {
 
     private val _serverResponse = MutableLiveData<Event<Result<UserRoomsList>>>()
     val serverResponse: LiveData<Event<Result<UserRoomsList>>>
@@ -27,13 +27,9 @@ class UserRoomsRepository {
         _serverResponse.value = Event(value)
     }
 
-    fun getNetworkClient(): NetworkClient {
-        return NetworkClient()
-    }
-
     fun cleanerRooms(authorization: String) {
 
-        val call = getNetworkClient().buildService(APIRooms::class.java).getRooms(authorization)
+        val call = networkClient.buildService(APIRooms::class.java).getRooms(authorization)
 
         call.enqueue(object : Callback<Rooms> {
             override fun onFailure(call: Call<Rooms>, t: Throwable) {
