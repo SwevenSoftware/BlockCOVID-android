@@ -19,9 +19,9 @@ jobs:
         with: 
             api-level: 29
             script: ./gradlew connectedCheck
-            ./gradlew createDebugCoverageReport:  
+            # ./gradlew createDebugCoverageReport:  
 
-        run: ./gradlew testDebugUnitTest
+        # run: ./gradlew testDebugUnitTest
         
       - name: generate report
         uses: actions/upload-artifact@v2
