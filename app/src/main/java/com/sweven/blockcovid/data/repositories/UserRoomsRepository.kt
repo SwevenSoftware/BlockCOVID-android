@@ -28,7 +28,7 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
         _serverResponse.value = Event(value)
     }
 
-    fun cleanerRooms(authorization: String) {
+    fun userRooms(authorization: String) {
 
         val call = networkClient.buildService(APIRooms::class.java).getRooms(authorization)
 

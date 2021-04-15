@@ -14,7 +14,7 @@ class UserRoomsViewModel(private val userRoomsRepository: UserRoomsRepository) :
         get() = _userRoomsResult
 
     fun showRooms(authorization: String) {
-        userRoomsRepository.cleanerRooms(authorization)
+        userRoomsRepository.userRooms(authorization)
         userRoomsRepository.serverResponse.observeForever { it ->
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
