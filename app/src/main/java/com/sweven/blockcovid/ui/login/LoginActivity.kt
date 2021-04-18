@@ -2,7 +2,6 @@ package com.sweven.blockcovid.ui.login
 
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,68 +15,31 @@ import com.google.android.material.textfield.TextInputLayout
 import com.sweven.blockcovid.CleanerActivity
 import com.sweven.blockcovid.UserActivity
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.data.model.LoggedInUser
 import java.io.File
 
-class LoginActivity : AppCompatActivity() {
+open class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_login)
 
+        val login = findViewById<Button>(R.id.login_button)
         val editUsername = findViewById<TextInputEditText>(R.id.username)
         val editPassword = findViewById<TextInputEditText>(R.id.password)
-        val username = findViewById<TextInputLayout>(R.id.username_layout)
-        val password = findViewById<TextInputLayout>(R.id.password_layout)
-        val login = findViewById<Button>(R.id.login_button)
         val loading = findViewById<CircularProgressIndicator>(R.id.loading)
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
-            val loginState = it ?: return@Observer
-            login.isEnabled = loginState.isDataValid
+        loginViewModel =
+                ViewModelProvider(this, LoginViewModelFactory()).get(LoginViewModel::class.java)
 
-            if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
-            } else {
-                username.error = null
-            }
-            if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError)
-            } else {
-                password.error = null
-            }
+        loginViewModel.loginFormState.observe(this@LoginActivity, {
+           checkLoginFormState(it, login)
         })
 
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
-            val loginResult = it ?: return@Observer
-
-            loading.hide()
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-                editUsername.text?.clear()
-                editPassword.text?.clear()
-            }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
-                saveToken(loginResult.success)
-                setResult(Activity.RESULT_OK)
-                val cacheAuth = File(cacheDir, "authority")
-                when (cacheAuth.readText()) {
-                    "USER", "ADMIN" -> {
-                        val i = Intent(this, UserActivity::class.java)
-                        startActivity(i)
-                        finish()
-                    }
-                    "CLEANER" -> {
-                        val i = Intent(this, CleanerActivity::class.java)
-                        startActivity(i)
-                        finish()
-                    }
-                }
-            }
+        loginViewModel.loginResult.observe(this@LoginActivity, {
+           checkLoginResult(it, loading, editUsername, editPassword)
         })
 
         editUsername.afterTextChanged {
@@ -113,7 +75,56 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveToken(model: LoggedInUserView) {
+    fun checkLoginFormState(formState: LoginFormState, login: Button) {
+        login.isEnabled = formState.isDataValid
+        val username = findViewById<TextInputLayout>(R.id.username_layout)
+        val password = findViewById<TextInputLayout>(R.id.password_layout)
+
+        if (formState.usernameError != null) {
+            username.error = getString(formState.usernameError)
+        } else {
+            username.error = null
+        }
+        if (formState.passwordError != null) {
+            password.error = getString(formState.passwordError)
+        } else {
+            password.error = null
+        }
+    }
+
+    fun checkLoginResult(formResult: LoginResult, loading: CircularProgressIndicator,
+                         editUsername: TextInputEditText, editPassword: TextInputEditText) {
+        loading.hide()
+        if (formResult.success != null) {
+            updateUiWithUser(formResult.success)
+            saveToken(formResult.success)
+            setResult(Activity.RESULT_OK)
+
+            when (getCacheAuth()) {
+                "USER", "ADMIN" -> {
+                    val i = Intent(this, UserActivity::class.java)
+                    startActivity(i)
+                    finish()
+                }
+                "CLEANER" -> {
+                    val i = Intent(this, CleanerActivity::class.java)
+                    startActivity(i)
+                    finish()
+                }
+            }
+        }
+        else if (formResult.error != null) {
+            showLoginFailed(formResult.error)
+            editUsername.text?.clear()
+            editPassword.text?.clear()
+        }
+    }
+
+    fun getCacheAuth(): String {
+        return File(cacheDir, "authority").readText()
+    }
+
+    fun saveToken(model: LoggedInUser) {
         val context = applicationContext
         val token = model.token
         val expiryDate = model.expiryDate
@@ -127,24 +138,15 @@ class LoginActivity : AppCompatActivity() {
         val cacheExpiry = File(context.cacheDir, "expiryDate")
         val cacheUser = File(context.cacheDir, "username")
         val cacheAuth = File(context.cacheDir, "authority")
-        if (token != null) {
-            cacheToken.writeText(token)
-        }
-        if (expiryDate != null) {
-            cacheExpiry.writeText(expiryDate.toString())
-        }
-        if (username != null) {
-            cacheUser.writeText(username)
-        }
-        if (authority != null) {
-            cacheAuth.writeText(authority)
-        }
+        cacheToken.writeText(token)
+        cacheExpiry.writeText(expiryDate.toString())
+        cacheUser.writeText(username)
+        cacheAuth.writeText(authority)
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
+    fun updateUiWithUser(model: LoggedInUser) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
-        // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",
@@ -152,22 +154,22 @@ class LoginActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun showLoginFailed(errorString: String) {
+    fun showLoginFailed(errorString: String?) {
         Toast.makeText(applicationContext, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
-}
 
-/**
- * Funzione di estensione per semplificare l'impostazione di un'azione afterTextChanged sui componenti EditText.
- */
-fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
+    /**
+     * Funzione di estensione per semplificare l'impostazione di un'azione afterTextChanged sui componenti EditText.
+     */
+    fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+        this.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(editable: Editable?) {
+                afterTextChanged.invoke(editable.toString())
+            }
 
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        })
+    }
 }

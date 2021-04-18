@@ -6,7 +6,7 @@ package com.sweven.blockcovid.data.model
  */
 data class LoggedInUser(
         val displayName: String,
-        val token: String?,
-        val expiryDate: Long?,
-        val authority: String?
+        val token: String,
+        val expiryDate: Long,
+        val authority: String
 )

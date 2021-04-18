@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.ui.rooms
+package com.sweven.blockcovid.ui.userRooms
 
 import android.content.Context
 import android.util.TypedValue
@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.sweven.blockcovid.R
 
-class RoomsAdapter(ct: Context?, nc: NavController, rl: Array<String>, ro: Array<String>, rc: Array<String>, da: Array<Array<String>>, op: Array<Boolean>): RecyclerView.Adapter<RoomsAdapter.MyViewHolder>() {
+class UserRoomsAdapter(ct: Context?, nc: NavController, rl: Array<String>, ro: Array<String>, rc: Array<String>, da: Array<Array<String>>, op: Array<Boolean>): RecyclerView.Adapter<UserRoomsAdapter.MyViewHolder>() {
 
     val context = ct
     private val navController = nc
@@ -75,9 +75,9 @@ class RoomsAdapter(ct: Context?, nc: NavController, rl: Array<String>, ro: Array
             }
         }
         holder.roomCard.setOnClickListener {
-            if(true) {      //holder.roomOpen.text == context?.getString(R.string.room_open
+            if(true) {      // TODO replace -> holder.roomOpen.text == context?.getString(R.string.room_open
                 val roomName = holder.roomText.text.toString()
-                val action = RoomsFragmentDirections.actionNavigationRoomsToNavigationRoomView(roomName)
+                val action = UserRoomsFragmentDirections.actionNavigationUserRoomsToNavigationRoomView(roomName)
                 navController.navigate(action)
             }
         }

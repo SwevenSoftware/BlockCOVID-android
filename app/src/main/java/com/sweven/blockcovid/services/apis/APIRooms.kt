@@ -1,6 +1,7 @@
-package com.sweven.blockcovid.services
+package com.sweven.blockcovid.services.apis
 
 import com.sweven.blockcovid.services.gsonReceive.Rooms
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -10,5 +11,5 @@ import retrofit2.http.*
 interface APIRooms {
     @Headers("Accept:*/*")
     @GET("/api/rooms")
-    suspend fun getRooms(@Header("Authorization") authorization: String): Response<Rooms>
+    fun getRooms(@Header("Authorization") authorization: String): Call<Rooms>
 }

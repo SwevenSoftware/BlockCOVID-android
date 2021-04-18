@@ -1,0 +1,41 @@
+name: Code Coverage
+
+on: [push, pull_request]
+
+jobs:
+  coverage:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+          
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+       # Execute unit tests
+      - name: Unit Test with Android Emulator Runner
+        uses: ReactiveCircus/android-emulator-runner@v2.14.3
+        with: 
+            api-level: 29
+            script: ./gradlew connectedCheck
+            # ./gradlew createDebugCoverageReport:  
+
+        # run: ./gradlew testDebugUnitTest
+        
+      - name: generate report
+        uses: actions/upload-artifact@v2
+        with:
+          name: report 
+          path: app/build/reports/coverage/debug
+          # path: app/build/test-results
+            
+      
+      - name: Download Test Reports Folder
+        uses: actions/download-artifact@v2
+        with:
+          name: report
+          path: app/build/reports/coverage/debug
+        
+      - name: Upload Test Report
+        run:  bash <(curl -s https://codecov.io/bash) -f "app/build/reports/coverage/debug/report.xml"

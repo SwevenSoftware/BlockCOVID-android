@@ -11,17 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
-import com.google.gson.Gson
 import com.sweven.blockcovid.R
-import com.sweven.blockcovid.services.APIRooms
-import com.sweven.blockcovid.services.NetworkClient
-import com.sweven.blockcovid.services.gsonReceive.ErrorBody
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
-import java.lang.Exception
 
 class CleanerRoomsFragment : Fragment() {
 
@@ -29,19 +20,13 @@ class CleanerRoomsFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
 
-    private var netClient = NetworkClient()
-
-    fun setNetwork(nc: NetworkClient) {
-        netClient = nc
-    }
-
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         cleanerRoomsViewModel =
-                ViewModelProvider(this).get(CleanerRoomsViewModel::class.java)
+            ViewModelProvider(this, CleanerRoomsViewModelFactory()).get(CleanerRoomsViewModel::class.java)
         return inflater.inflate(R.layout.fragment_cleaner_rooms, container, false)
     }
 
@@ -50,10 +35,17 @@ class CleanerRoomsFragment : Fragment() {
 
         val refreshButton: ExtendedFloatingActionButton = view.findViewById(R.id.refresh_button)
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
-        loading.show()
+        val mainActivity = viewLifecycleOwner
 
-        val retrofit = netClient.getClient()
-        val service = retrofit.create(APIRooms::class.java)
+        cleanerRoomsViewModel.cleanerRoomsResult.observe(mainActivity, {
+            createCleanerRoomList(it, loading)
+        })
+
+        cleanerRoomsViewModel.cleanRoomResult.observe(mainActivity, {
+            cleanRoomMessage(it, loading)
+        })
+
+        loading.show()
 
         val cacheToken = File(context?.cacheDir, "token")
         var authorization = ""
@@ -61,69 +53,55 @@ class CleanerRoomsFragment : Fragment() {
             authorization = cacheToken.readText()
         }
 
-        val getRooms = CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getRooms(authorization)
-                if (response.isSuccessful) {
-                    withContext(Dispatchers.Main) {
-                        if (response.errorBody() == null) {
-                            loading.hide()
-                            val roomList = response.body()?.embedded?.roomWithDesksList
-                            roomList?.let {
-                                val listSize = roomList.size
-                                val nameArray = Array(listSize) { _ -> ""}
-                                val isCleanArray = Array(listSize) { _ -> false}
-                                for (i in 0 until listSize) {
-                                    nameArray[i] = roomList[i].room.name
-                                    isCleanArray[i] = roomList[i].room.roomStatus == "CLEAN"
-                                }
-                                recyclerView = view.findViewById(R.id.room_recycler_cleaner)
-                                val cleanerRoomsAdapter = CleanerRoomsAdapter(context, activity, nameArray, isCleanArray, loading)
-                                recyclerView.adapter = cleanerRoomsAdapter
-                                recyclerView.layoutManager = LinearLayoutManager(context)
-                            }
-                        } else {
-                            activity?.runOnUiThread {
-                                loading.hide()
-                                Toast.makeText(
-                                        context,
-                                        response.errorBody()?.string().toString(),
-                                        Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                } else {
-                    val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                    activity?.runOnUiThread {
-                        loading.hide()
-                        Toast.makeText(
-                                context,
-                                getString(R.string.error).plus(" ").plus(error.error),
-                                Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            } catch (e: Exception) {
-                activity?.runOnUiThread {
-                    loading.hide()
-                    Toast.makeText(
-                            context,
-                            e.message,
-                            Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
+        cleanerRoomsViewModel.showRooms(authorization)
 
         refreshButton.setOnClickListener {
-            if (!getRooms.isActive) {
-                parentFragmentManager
-                        .beginTransaction()
-                        .detach(this)
-                        .attach(this)
-                        .commit()
-            }
+            parentFragmentManager
+                .beginTransaction()
+                .detach(this)
+                .attach(this)
+                .commit()
         }
+    }
+
+    fun createCleanerRoomList(cleanerRoomsResult: CleanerRoomsResult, loading: CircularProgressIndicator) {
+        loading.hide()
+        if (cleanerRoomsResult.success != null) {
+            val roomList = cleanerRoomsResult.success.roomName
+            val roomCleaned = cleanerRoomsResult.success.roomIsCleaned
+            if (roomList != null && roomCleaned != null) {
+                if (roomList.isNotEmpty()) {
+                    recyclerView = view?.findViewById(R.id.room_recycler_cleaner)!!
+                    val cleanerRoomsAdapter =
+                        CleanerRoomsAdapter(roomList, roomCleaned, loading, cleanerRoomsViewModel, viewLifecycleOwner)
+                    recyclerView.adapter = cleanerRoomsAdapter
+                    recyclerView.layoutManager = LinearLayoutManager(context)
+                }
+            } else {
+                showRoomsFailed(getString(R.string.no_rooms))
+            }
+    } else if (cleanerRoomsResult.error != null) {
+            showRoomsFailed(cleanerRoomsResult.error)
+        }
+    }
+
+    fun cleanRoomMessage(formResult: CleanRoomResult, loading: CircularProgressIndicator) {
+        loading.hide()
+        if (formResult.success != null) {
+            activity?.runOnUiThread {
+                loading.hide()
+                Toast.makeText(
+                    context,
+                    context?.getString(R.string.room_cleaned),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        } else if (formResult.error != null) {
+            showRoomsFailed(formResult.error)
+        }
+    }
+
+    fun showRoomsFailed(errorString: String){
+        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
     }
 }
