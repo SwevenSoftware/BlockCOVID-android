@@ -13,6 +13,6 @@ interface APIClean {
     @Headers("Accept:*/*")
     @PUT("/api/rooms/{nameRoom}/clean")
     fun cleanRoom (@Header("Authorization") authorization: String,
-                           @Path("nameRoom") nameRoom : String
+                   @Path("nameRoom") nameRoom : String
     ): Call<ResponseBody>
 }

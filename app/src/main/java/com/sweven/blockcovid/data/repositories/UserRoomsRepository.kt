@@ -41,11 +41,11 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
                     val roomList = response.body()?.embedded?.roomWithDesksList
                     if (roomList != null) {
                         val listSize = roomList.size
-                        val nameArray = Array(listSize) { _ -> ""}
-                        val openArray = Array(listSize) { _ -> ""}
-                        val closeArray = Array(listSize) { _ -> ""}
-                        val daysArray = Array(listSize) { _ -> Array(7) { _ -> ""} }
-                        val isOpenArray = Array(listSize) {_ -> false}
+                        val nameArray = Array(listSize) {""}
+                        val openArray = Array(listSize) {""}
+                        val closeArray = Array(listSize) {""}
+                        val daysArray = Array(listSize) {Array(7){""}}
+                        val isOpenArray = Array(listSize) {false}
                         for (i in 0 until listSize) {
                             nameArray[i] = roomList[i].room.name
                             openArray[i] = roomList[i].room.openingTime.dropLast(3)

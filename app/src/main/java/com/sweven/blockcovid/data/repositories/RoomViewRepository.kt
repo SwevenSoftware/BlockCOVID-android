@@ -38,14 +38,14 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
                     println(desksList.toString())
                     if (desksList != null) {
                         val listSize = desksList.size
-                        val idArray = Array(listSize) { _ -> 0}
-                        val xArray = Array(listSize) { _ -> 0}
-                        val yArray = Array(listSize) { _ -> 0}
+                        val idArray = Array(listSize) {0}
+                        val xArray = Array(listSize) {0}
+                        val yArray = Array(listSize) {0}
 
                         for (i in idArray.indices) {
                             idArray[i] = i + 1
-                            xArray[i] = desksList[i].x - 1
-                            yArray[i] = desksList[i].y - 1
+                            xArray[i] = (desksList[i].x - 1).toInt()
+                            yArray[i] = (desksList[i].y - 1).toInt()
                         }
                         val desks = Result.Success(RoomDesks(idArray, xArray, yArray))
                         triggerEvent(desks)

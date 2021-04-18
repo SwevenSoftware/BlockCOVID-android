@@ -23,6 +23,8 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.sweven.blockcovid.R
 import java.io.File
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 
@@ -175,19 +177,23 @@ class ReservationFragment : Fragment(){
         reserveButton.setOnClickListener {
             loading.show()
 
-            val nameRoom = textRoom.text.toString()
-            val x = deskX.text.toString().toInt()
-            val y = deskY.text.toString().toInt()
+            val nameRoom = textRoom.text.toString() // TODO maybe nameRoom also needed?
+            val deskId = "1" // TODO: val deskId = desk.text.toString().toInt()
             val date = selectDate.text.toString()
+            val localDate = LocalDate.parse(date).toString()
             val from = arrivalTime.text.toString()
+            val localTimeFrom = LocalTime.parse(from).toString()
             val to = exitTime.text.toString()
+            val localTimeTo = LocalTime.parse(to).toString()
             val cacheToken = File(context?.cacheDir, "token")
             var authorization = ""
             if (cacheToken.exists()) {
                 authorization = cacheToken.readText()
             }
+            val startTimeDate = localDate.plus(localTimeFrom)
+            val endTimeDate = localDate.plus(localTimeTo)
 
-            reservationViewModel.reserve(nameRoom, x, y, date, from, to, authorization)
+            reservationViewModel.reserve(deskId, startTimeDate, endTimeDate, authorization)
         }
     }
 

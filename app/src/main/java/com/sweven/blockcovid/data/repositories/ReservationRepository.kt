@@ -29,12 +29,11 @@ class ReservationRepository(private val networkClient: NetworkClient) {
         _serverResponse.value = Event(value)
     }
 
-    fun reserve(nameRoom: String, x: Int, y: Int, date: String,
-                       from: String, to: String, authorization: String) {
+    fun reserve(deskId: String, from: String, to: String, authorization: String) {
 
-        val requestBody = makeJsonObject(x, y, date, from, to)
+        val requestBody = makeJsonObject(deskId, from, to)
 
-        val call = networkClient.buildService(APIReserve::class.java).deskReserve(nameRoom, requestBody, authorization)
+        val call = networkClient.buildService(APIReserve::class.java).deskReserve(authorization, requestBody)
 
         call.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -57,13 +56,12 @@ class ReservationRepository(private val networkClient: NetworkClient) {
         })
     }
 
-    fun makeJsonObject(x: Int, y: Int, date: String, from: String, to: String): RequestBody {
+    fun makeJsonObject(deskId: String, from: String, to: String): RequestBody {
         val jsonObject = JSONObject()
-        jsonObject.put("x", x.toString().toInt())
-        jsonObject.put("y", y.toString().toInt())
-        jsonObject.put("date", date)
+        jsonObject.put("deskId", deskId.toString().toInt())
         jsonObject.put("from", from)
         jsonObject.put("to", to)
+        jsonObject.put("valid", true)
 
         val jsonObjectString = jsonObject.toString()
         return jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())

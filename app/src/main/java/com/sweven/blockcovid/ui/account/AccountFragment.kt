@@ -32,11 +32,14 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         val cacheUser = File(context?.cacheDir, "username")
         val cacheAuth = File(context?.cacheDir, "authority")
         val showUser= view.findViewById<TextView>(R.id.showUsername)
+        val myReservationsButton = view.findViewById<Button>(R.id.my_reservations_button)
         val changePasswordButton = view.findViewById<Button>(R.id.change_password_button)
         val logoutButton = view.findViewById<Button>(R.id.logout_button)
 
         //Funzione per mostrare il messaggio di benvenuto user
        showUserFun(showUser,cacheUser)
+        // Funzione per navigare da Account a MyReservations (bottone My Reservations)
+        myReservationsButtonFun(myReservationsButton)
         // Funzione per navigare da Account a ChangePassword (bottone Change Password)
        changePasswordButtonFun(changePasswordButton)
         // Funzione per fare il logout, elimina il file token dalla cache
@@ -49,13 +52,19 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
        }
     }
 
-    private fun changePasswordButtonFun(changePasswordButton:Button){
+    private fun changePasswordButtonFun(changePasswordButton: Button){
         changePasswordButton.setOnClickListener {
             view?.findNavController()?.navigate(R.id.action_navigation_account_to_navigation_change_password)
         }
     }
 
-    private fun logoutClearToken(logoutButton:Button,cacheToken:File,cacheExpiry:File,cacheUser:File,cacheAuth:File) {
+    private fun myReservationsButtonFun(myReservationsButton: Button){
+        myReservationsButton.setOnClickListener {
+            view?.findNavController()?.navigate(R.id.action_navigation_account_to_navigation_reservation_view)
+        }
+    }
+
+    private fun logoutClearToken(logoutButton:Button, cacheToken:File, cacheExpiry:File, cacheUser:File, cacheAuth:File) {
         logoutButton.setOnClickListener {
             if (cacheToken.exists()) {
                 cacheToken.delete()

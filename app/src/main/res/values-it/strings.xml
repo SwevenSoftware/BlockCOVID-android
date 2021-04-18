@@ -73,5 +73,10 @@
     <string name="room_cleaned">Stanza pulita</string>
     <string name="room_empty">Stanza vuota</string>
     <string name="no_rooms">Nessuna stanza</string>
+    <string name="my_reservations">Le mie prenotazioni</string>
+    <string name="reservation_id">ID Prenotazione:</string>
+    <string name="time">Orario:</string>
+    <string name="day">Giorno:</string>
+    <string name="no_reservations">Nessuna prenotazione</string>
 
 </resources>
