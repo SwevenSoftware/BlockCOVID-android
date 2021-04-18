@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.ui.account
+package com.sweven.blockcovid.ui.userAccount
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,18 +12,18 @@ import androidx.navigation.findNavController
 import com.sweven.blockcovid.R
 import java.io.File
 
-class AccountFragment : Fragment(R.layout.fragment_account) {
+class UserAccountFragment: Fragment() {
 
-    private lateinit var accountViewModel: AccountViewModel
+    private lateinit var userAccountViewModel: UserAccountViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        accountViewModel =
-            ViewModelProvider(this).get(AccountViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_account, container, false)
+        userAccountViewModel =
+            ViewModelProvider(this).get(UserAccountViewModel::class.java)
+        return inflater.inflate(R.layout.fragment_user_account, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,13 +54,13 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
     private fun changePasswordButtonFun(changePasswordButton: Button){
         changePasswordButton.setOnClickListener {
-            view?.findNavController()?.navigate(R.id.action_navigation_account_to_navigation_change_password)
+            view?.findNavController()?.navigate(R.id.action_navigation_user_account_to_navigation_change_password)
         }
     }
 
     private fun myReservationsButtonFun(myReservationsButton: Button){
         myReservationsButton.setOnClickListener {
-            view?.findNavController()?.navigate(R.id.action_navigation_account_to_navigation_reservation_view)
+            view?.findNavController()?.navigate(R.id.action_navigation_user_account_to_navigation_reservation_view)
         }
     }
 

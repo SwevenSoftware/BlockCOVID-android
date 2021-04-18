@@ -73,7 +73,7 @@ class UserActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.navigation_login) {
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_account)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_user_account)
         }
         return super.onOptionsItemSelected(item)
     }

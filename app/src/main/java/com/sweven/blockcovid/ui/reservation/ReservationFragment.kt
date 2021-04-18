@@ -29,7 +29,7 @@ import java.time.LocalTime
 import java.util.*
 
 
-class ReservationFragment : Fragment(){
+class ReservationFragment : Fragment() {
     private lateinit var reservationViewModel: ReservationViewModel
 
     private val args: ReservationFragmentArgs by navArgs()
