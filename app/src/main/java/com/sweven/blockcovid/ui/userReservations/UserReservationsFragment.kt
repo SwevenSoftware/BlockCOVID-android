@@ -15,7 +15,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.sweven.blockcovid.R
 import java.io.File
 import java.time.LocalDateTime
-import java.time.ZoneOffset.UTC
+import java.time.ZoneId
 
 class UserReservationsFragment : Fragment() {
 
@@ -50,8 +50,7 @@ class UserReservationsFragment : Fragment() {
         if (cacheToken.exists()) {
             authorization = cacheToken.readText()
         }
-        val from = LocalDateTime.now(UTC).toString()
-        println(from)
+        val from = LocalDateTime.now(ZoneId.of("Europe/Rome")).toString().dropLast(7)
 
         userReservationsViewModel.showReservations(authorization, from)
     }
@@ -67,14 +66,13 @@ class UserReservationsFragment : Fragment() {
             val startTimeArray = userReservationsResult.success.startTime
             val endTimeArray = userReservationsResult.success.endTime
             val dayArray = userReservationsResult.success.day
-            val roomArray = userReservationsResult.success.room
 
             if (reservationIdArray != null && deskIdArray != null && startTimeArray != null &&
-                endTimeArray != null && dayArray != null && roomArray != null) {
+                endTimeArray != null && dayArray != null) {
                 if (reservationIdArray.isNotEmpty()) {
                     val navController: NavController = findNavController()
                     recyclerView = view?.findViewById(R.id.reservation_recycler_user)!!
-                    val reservationsAdapter = UserReservationsAdapter(context, navController, reservationIdArray, deskIdArray, startTimeArray, endTimeArray, dayArray, roomArray)
+                    val reservationsAdapter = UserReservationsAdapter(context, navController, reservationIdArray, deskIdArray, startTimeArray, endTimeArray, dayArray)
                     recyclerView.adapter = reservationsAdapter
                     recyclerView.layoutManager = LinearLayoutManager(context)
                 }

@@ -26,7 +26,6 @@ class UserReservationsViewModel(private val userReservationsRepository: UserRese
                                 startTime = it.data.startTime,
                                 endTime = it.data.endTime,
                                 day = it.data.day,
-                                room = it.data.room
                             )
                         )
                     )

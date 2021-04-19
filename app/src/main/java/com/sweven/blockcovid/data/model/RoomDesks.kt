@@ -1,7 +1,7 @@
 package com.sweven.blockcovid.data.model
 
 data class RoomDesks(
-        val idArray: Array<Int>?,
+        val idArray: Array<String>?,
         val xArray: Array<Int>?,
         val yArray: Array<Int>?
 ) {

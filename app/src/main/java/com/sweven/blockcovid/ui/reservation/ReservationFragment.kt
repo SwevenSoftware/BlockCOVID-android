@@ -26,6 +26,7 @@ import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.util.*
 
 
@@ -52,6 +53,7 @@ class ReservationFragment : Fragment() {
         val deskY: TextView = view.findViewById(R.id.reserved_desk_y)
         val textRoom: TextView = view.findViewById(R.id.id_reserved_room)
         val roomId = args.roomId
+        val deskId = args.deskId
         deskX.text = args.deskX
         deskY.text = args.deskY
         textRoom.text = roomId
@@ -68,8 +70,8 @@ class ReservationFragment : Fragment() {
             val materialTimePicker = MaterialTimePicker.Builder()
                     .setTitleText(getString(R.string.select_time_from))
                     .setTimeFormat(TimeFormat.CLOCK_24H)
-                    .setHour(LocalTime.now().hour)
-                    .setMinute(LocalTime.now().minute)
+                    .setHour(LocalTime.now(ZoneId.of("Europe/Rome")).hour)
+                    .setMinute(LocalTime.now(ZoneId.of("Europe/Rome")).minute)
                     .build()
             materialTimePicker.addOnPositiveButtonClickListener {
                 val newHour: Int = materialTimePicker.hour
@@ -86,8 +88,8 @@ class ReservationFragment : Fragment() {
         val materialTimePicker = MaterialTimePicker.Builder()
                 .setTitleText(getString(R.string.select_time_to))
                 .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(LocalTime.now().hour)
-                .setMinute(LocalTime.now().minute)
+                .setHour(LocalTime.now(ZoneId.of("Europe/Rome")).hour)
+                .setMinute(LocalTime.now(ZoneId.of("Europe/Rome")).minute)
                 .build()
         materialTimePicker.addOnPositiveButtonClickListener {
             val newHour: Int = materialTimePicker.hour
@@ -177,27 +179,26 @@ class ReservationFragment : Fragment() {
         reserveButton.setOnClickListener {
             loading.show()
 
-            val nameRoom = textRoom.text.toString() // TODO maybe nameRoom also needed?
-            val deskId = "1" // TODO: val deskId = desk.text.toString().toInt()
             val date = selectDate.text.toString()
-            val localDate = LocalDate.parse(date).toString()
+            val localDate = LocalDate.parse(date)
             val from = arrivalTime.text.toString()
-            val localTimeFrom = LocalTime.parse(from).toString()
+            val localTimeFrom = LocalTime.parse(from)
             val to = exitTime.text.toString()
-            val localTimeTo = LocalTime.parse(to).toString()
+            val localTimeTo = LocalTime.parse(to)
             val cacheToken = File(context?.cacheDir, "token")
             var authorization = ""
             if (cacheToken.exists()) {
                 authorization = cacheToken.readText()
             }
-            val startTimeDate = localDate.plus(localTimeFrom)
-            val endTimeDate = localDate.plus(localTimeTo)
+
+            val startTimeDate = LocalDateTime.of(localDate, localTimeFrom).toString()
+            val endTimeDate = LocalDateTime.of(localDate, localTimeTo).toString()
 
             reservationViewModel.reserve(deskId, startTimeDate, endTimeDate, authorization)
         }
     }
 
-    fun checkReservationResult(formResult: ReservationResult, loading:CircularProgressIndicator){
+    fun checkReservationResult(formResult: ReservationResult, loading:CircularProgressIndicator) {
         loading.hide()
         if (formResult.success != null) {
             Toast.makeText(context,getString(R.string.reservation_successful),Toast.LENGTH_SHORT).show()

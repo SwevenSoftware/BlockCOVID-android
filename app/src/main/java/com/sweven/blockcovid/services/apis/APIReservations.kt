@@ -9,7 +9,7 @@ import retrofit2.http.*
  */
 interface APIReservations {
     @Headers("Accept:*/*")
-    @GET("/api/reservation/view")
+    @GET("/api/reservations/view/personal")
     fun getReservations(@Header("Authorization") authorization: String,
                         @Query("from") from: String,
                         ): Call<Reservations>

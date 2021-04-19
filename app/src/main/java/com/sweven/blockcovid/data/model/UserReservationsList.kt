@@ -5,8 +5,7 @@ data class UserReservationsList (
     val deskId: Array<String>?,
     val startTime: Array<String>?,
     val endTime: Array<String>?,
-    val day: Array<String>?,
-    val room: Array<String>?
+    val day: Array<String>?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -34,10 +33,6 @@ data class UserReservationsList (
             if (other.day == null) return false
             if (!day.contentEquals(other.day)) return false
         } else if (other.day != null) return false
-        if (room != null) {
-            if (other.room == null) return false
-            if (!room.contentEquals(other.room)) return false
-        } else if (other.room != null) return false
 
         return true
     }
@@ -48,7 +43,6 @@ data class UserReservationsList (
         result = 31 * result + (startTime?.contentHashCode() ?: 0)
         result = 31 * result + (endTime?.contentHashCode() ?: 0)
         result = 31 * result + (day?.contentHashCode() ?: 0)
-        result = 31 * result + (room?.contentHashCode() ?: 0)
         return result
     }
 }

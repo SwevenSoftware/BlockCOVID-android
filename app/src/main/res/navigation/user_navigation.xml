@@ -100,11 +100,15 @@
         <argument
                 android:name="deskX"
                 app:argType="string"
-                android:defaultValue="0" />
+                android:defaultValue="default" />
         <argument
                 android:name="deskY"
                 app:argType="string"
-                android:defaultValue="0" />
+                android:defaultValue="default" />
+        <argument
+                android:name="deskId"
+                app:argType="string"
+                android:defaultValue="default" />
     </fragment>
 
     <fragment
@@ -124,6 +128,10 @@
             android:name="roomId"
             app:argType="string"
             android:defaultValue="default" />
+        <argument
+                android:name="deskId"
+                app:argType="string"
+                android:defaultValue="default" />
     </fragment>
 
     <activity

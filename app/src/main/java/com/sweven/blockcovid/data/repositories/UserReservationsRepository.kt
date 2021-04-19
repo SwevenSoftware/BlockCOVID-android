@@ -34,9 +34,8 @@ class UserReservationsRepository(private val networkClient: NetworkClient) {
                 triggerEvent(Result.Error(t.message!!))
             }
             override fun onResponse(call: Call<Reservations>, response: Response<Reservations>) {
-                println(response.body().toString())
                 if (response.errorBody() == null) {
-                    val reservationList = response.body()?.content
+                    val reservationList = response.body()?.embedded?.reservationList
                     if (reservationList != null) {
                         val listSize = reservationList.size
                         val reservationId = Array(listSize) {""}
@@ -44,7 +43,6 @@ class UserReservationsRepository(private val networkClient: NetworkClient) {
                         val startArray = Array(listSize) {""}
                         val endArray = Array(listSize) {""}
                         val dayArray = Array(listSize) {""}
-                        val roomArray = Array(listSize) {""}
                         for (i in 0 until listSize) {
                             val startTime = LocalDateTime.parse(reservationList[i].start).toLocalTime().toString()
                             val endTime = LocalDateTime.parse(reservationList[i].end).toLocalTime().toString()
@@ -54,17 +52,14 @@ class UserReservationsRepository(private val networkClient: NetworkClient) {
                             startArray[i] = startTime
                             endArray[i] = endTime
                             dayArray[i] = day
-                            roomArray[i] = reservationList[i].room
                         }
-                        val reservationsList = Result.Success(UserReservationsList(reservationId, nameArray, startArray, endArray, dayArray, roomArray))
+                        val reservationsList = Result.Success(UserReservationsList(reservationId, nameArray, startArray, endArray, dayArray))
                         triggerEvent(reservationsList)
                     } else {
-                        triggerEvent(Result.Success(UserReservationsList(null, null, null, null, null, null)))
+                        triggerEvent(Result.Success(UserReservationsList(null, null, null, null, null)))
                     }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
-                    println(error.error)
-                    println(response.code())
                     triggerEvent(Result.Error(error.error))
                 }
             }

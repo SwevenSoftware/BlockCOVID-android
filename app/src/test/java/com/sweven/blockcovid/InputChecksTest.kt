@@ -6,9 +6,18 @@ import org.junit.Assert.*
 class InputChecksTest {
 
     @Test
-    fun isUsernameValid() {
-        assertTrue("L'username è valido", InputChecks.isPasswordValid("username"))
+    fun isFieldNotEmpty() {
+        assertTrue("L'username è valido", InputChecks.isFieldNotEmpty("username"))
         assertFalse("L'username è invalido", InputChecks.isPasswordValid(""))
+    }
+
+    @Test
+    fun isUsernameValid() {
+        assertTrue("L'username è valido", InputChecks.isUsernameValid("uS3rname"))
+        assertFalse("L'username è invalido", InputChecks.isUsernameValid(""))
+        assertFalse("L'username è invalido", InputChecks.isUsernameValid("use"))
+        assertFalse("L'username è invalido", InputChecks.isUsernameValid("usernamethatistoolong"))
+        assertFalse("L'username è invalido", InputChecks.isUsernameValid("invalidchar!"))
     }
 
     @Test

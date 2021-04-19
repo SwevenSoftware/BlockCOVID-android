@@ -1,7 +1,7 @@
 package com.sweven.blockcovid.services.apis
 
+import com.sweven.blockcovid.services.gsonReceive.Reservation
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -10,8 +10,8 @@ import retrofit2.http.*
  */
 interface APIReserve {
     @Headers("Accept:*/*")
-    @POST("/api/reservation/new")
+    @POST("/api/reservations/reservation")
     fun deskReserve(@Header("Authorization") authorization: String,
                     @Body requestBody: RequestBody
-                    ): Call<ResponseBody>
+                    ): Call<Reservation>
 }

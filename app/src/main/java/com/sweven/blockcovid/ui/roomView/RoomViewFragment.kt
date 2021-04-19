@@ -68,7 +68,7 @@ class RoomViewFragment : Fragment(){
                 if (idArray.isNotEmpty()) {
                     for (i in idArray.indices) {
                         val imgButton = Button(context)
-                        imgButton.id = idArray[i]
+                        imgButton.id = i+1
                         imgButton.width = 50
                         imgButton.height = 50
                         if (theme) {
@@ -77,7 +77,9 @@ class RoomViewFragment : Fragment(){
                             imgButton.background = ResourcesCompat.getDrawable(resources, R.drawable.green_desk, null)
                         }
                         imgButton.setOnClickListener {
-                            val action = RoomViewFragmentDirections.actionNavigationRoomViewToNavigationReservation((xArray[i] + 1).toString(), (yArray[i] + 1).toString(), args.roomName)
+                            val action = RoomViewFragmentDirections.actionNavigationRoomViewToNavigationReservation(
+                                (xArray[i] + 1).toString(), (yArray[i] + 1).toString(), args.roomName, idArray[i]
+                            )
                             findNavController().navigate(action)
                         }
                         val layout: ConstraintLayout? = view?.findViewById(R.id.desk_layout)
