@@ -13,7 +13,8 @@ import com.sweven.blockcovid.services.gsonReceive.Reservations
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.LocalDateTime
+import java.time.*
+import java.util.*
 
 class UserReservationsRepository(private val networkClient: NetworkClient) {
 
@@ -44,9 +45,13 @@ class UserReservationsRepository(private val networkClient: NetworkClient) {
                         val endArray = Array(listSize) {""}
                         val dayArray = Array(listSize) {""}
                         for (i in 0 until listSize) {
-                            val startTime = LocalDateTime.parse(reservationList[i].start).toLocalTime().toString()
-                            val endTime = LocalDateTime.parse(reservationList[i].end).toLocalTime().toString()
-                            val day = LocalDateTime.parse(reservationList[i].start).toLocalDate().toString()
+                            val startDateTimeUTC = reservationList[i].start
+                            val endDateTimeUTC = reservationList[i].end
+
+                            val startTime = UTCToLocalDateTime(startDateTimeUTC).toLocalTime().toString()
+                            val endTime = UTCToLocalDateTime(endDateTimeUTC).toLocalTime().toString()
+                            val day = UTCToLocalDateTime(startDateTimeUTC).toLocalDate().toString()
+
                             reservationId[i] = reservationList[i].id
                             nameArray[i] = reservationList[i].deskID
                             startArray[i] = startTime
@@ -64,5 +69,11 @@ class UserReservationsRepository(private val networkClient: NetworkClient) {
                 }
             }
         })
+    }
+
+    fun UTCToLocalDateTime(dateTime: String): ZonedDateTime {
+        val localDateTime = LocalDateTime.parse(dateTime)
+        val zonedTimeDate = ZonedDateTime.of(localDateTime, ZoneOffset.UTC)
+        return zonedTimeDate.withZoneSameInstant(TimeZone.getDefault().toZoneId())
     }
 }

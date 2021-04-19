@@ -15,7 +15,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.sweven.blockcovid.R
 import java.io.File
 import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.ZoneOffset.UTC
 
 class UserReservationsFragment : Fragment() {
 
@@ -50,7 +50,7 @@ class UserReservationsFragment : Fragment() {
         if (cacheToken.exists()) {
             authorization = cacheToken.readText()
         }
-        val from = LocalDateTime.now(ZoneId.of("Europe/Rome")).toString().dropLast(7)
+        val from = LocalDateTime.now(UTC).toString().dropLast(7)
 
         userReservationsViewModel.showReservations(authorization, from)
     }

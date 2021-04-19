@@ -23,10 +23,9 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.sweven.blockcovid.R
 import java.io.File
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
+import java.time.*
+import java.time.ZoneOffset.UTC
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -70,8 +69,8 @@ class ReservationFragment : Fragment() {
             val materialTimePicker = MaterialTimePicker.Builder()
                     .setTitleText(getString(R.string.select_time_from))
                     .setTimeFormat(TimeFormat.CLOCK_24H)
-                    .setHour(LocalTime.now(ZoneId.of("Europe/Rome")).hour)
-                    .setMinute(LocalTime.now(ZoneId.of("Europe/Rome")).minute)
+                    .setHour(LocalTime.now(TimeZone.getDefault().toZoneId()).hour)
+                    .setMinute(LocalTime.now(TimeZone.getDefault().toZoneId()).minute)
                     .build()
             materialTimePicker.addOnPositiveButtonClickListener {
                 val newHour: Int = materialTimePicker.hour
@@ -88,8 +87,8 @@ class ReservationFragment : Fragment() {
         val materialTimePicker = MaterialTimePicker.Builder()
                 .setTitleText(getString(R.string.select_time_to))
                 .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(LocalTime.now(ZoneId.of("Europe/Rome")).hour)
-                .setMinute(LocalTime.now(ZoneId.of("Europe/Rome")).minute)
+                .setHour(LocalTime.now(TimeZone.getDefault().toZoneId()).hour)
+                .setMinute(LocalTime.now(TimeZone.getDefault().toZoneId()).minute)
                 .build()
         materialTimePicker.addOnPositiveButtonClickListener {
             val newHour: Int = materialTimePicker.hour
@@ -180,22 +179,31 @@ class ReservationFragment : Fragment() {
             loading.show()
 
             val date = selectDate.text.toString()
-            val localDate = LocalDate.parse(date)
+
             val from = arrivalTime.text.toString()
-            val localTimeFrom = LocalTime.parse(from)
+            val startDateTime = localDateTimeToUTC(date, from)
+
             val to = exitTime.text.toString()
-            val localTimeTo = LocalTime.parse(to)
+            val endDateTime = localDateTimeToUTC(date, to)
+
             val cacheToken = File(context?.cacheDir, "token")
             var authorization = ""
             if (cacheToken.exists()) {
                 authorization = cacheToken.readText()
             }
 
-            val startTimeDate = LocalDateTime.of(localDate, localTimeFrom).toString()
-            val endTimeDate = LocalDateTime.of(localDate, localTimeTo).toString()
+            println(startDateTime)
+            println(endDateTime)
 
-            reservationViewModel.reserve(deskId, startTimeDate, endTimeDate, authorization)
+            reservationViewModel.reserve(deskId, startDateTime, endDateTime, authorization)
         }
+    }
+
+    fun localDateTimeToUTC(date: String, time: String): String {
+        val localDate = LocalDate.parse(date)
+        val localTime = LocalTime.parse(time)
+        val zonedTimeDate = ZonedDateTime.of(localDate, localTime, TimeZone.getDefault().toZoneId())
+        return zonedTimeDate.withZoneSameInstant(UTC).toString().dropLast(1)
     }
 
     fun checkReservationResult(formResult: ReservationResult, loading:CircularProgressIndicator) {
@@ -208,7 +216,7 @@ class ReservationFragment : Fragment() {
         }
     }
 
-    fun showChangePasswordFailed(errorString: String){
+    fun showChangePasswordFailed(errorString: String) {
         Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
     }
 
