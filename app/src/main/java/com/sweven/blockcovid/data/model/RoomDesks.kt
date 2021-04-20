@@ -1,9 +1,10 @@
 package com.sweven.blockcovid.data.model
 
 data class RoomDesks(
-        val idArray: Array<Int>?,
+        val idArray: Array<String>?,
         val xArray: Array<Int>?,
-        val yArray: Array<Int>?
+        val yArray: Array<Int>?,
+        val availableArray: Array<Boolean>?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -23,6 +24,10 @@ data class RoomDesks(
             if (other.yArray == null) return false
             if (!yArray.contentEquals(other.yArray)) return false
         } else if (other.yArray != null) return false
+        if (availableArray != null) {
+            if (other.availableArray == null) return false
+            if (!availableArray.contentEquals(other.availableArray)) return false
+        } else if (other.availableArray != null) return false
 
         return true
     }
@@ -31,6 +36,7 @@ data class RoomDesks(
         var result = idArray?.contentHashCode() ?: 0
         result = 31 * result + (xArray?.contentHashCode() ?: 0)
         result = 31 * result + (yArray?.contentHashCode() ?: 0)
+        result = 31 * result + (availableArray?.contentHashCode() ?: 0)
         return result
     }
 }

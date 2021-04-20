@@ -64,20 +64,47 @@ class RoomViewFragment : Fragment(){
             val idArray = roomDesks.success.idArray
             val xArray = roomDesks.success.xArray
             val yArray = roomDesks.success.yArray
-            if (idArray != null && xArray != null && yArray != null) {
+            val availableArray = roomDesks.success.availableArray
+            if (idArray != null && xArray != null && yArray != null && availableArray != null) {
                 if (idArray.isNotEmpty()) {
                     for (i in idArray.indices) {
                         val imgButton = Button(context)
-                        imgButton.id = idArray[i]
+                        imgButton.id = i+1
                         imgButton.width = 50
                         imgButton.height = 50
-                        if (theme) {
-                            imgButton.background = ResourcesCompat.getDrawable(resources, R.drawable.green_desk_night, null)
+                        if (availableArray[i]) {
+                            if (theme) {
+                                imgButton.background = ResourcesCompat.getDrawable(
+                                    resources,
+                                    R.drawable.green_desk_night,
+                                    null
+                                )
+                            } else {
+                                imgButton.background = ResourcesCompat.getDrawable(
+                                    resources,
+                                    R.drawable.green_desk,
+                                    null
+                                )
+                            }
                         } else {
-                            imgButton.background = ResourcesCompat.getDrawable(resources, R.drawable.green_desk, null)
+                            if (theme) {
+                                imgButton.background = ResourcesCompat.getDrawable(
+                                    resources,
+                                    R.drawable.red_desk_night,
+                                    null
+                                )
+                            } else {
+                                imgButton.background = ResourcesCompat.getDrawable(
+                                    resources,
+                                    R.drawable.red_desk,
+                                    null
+                                )
+                            }
                         }
                         imgButton.setOnClickListener {
-                            val action = RoomViewFragmentDirections.actionNavigationRoomViewToNavigationReservation((xArray[i] + 1).toString(), (yArray[i] + 1).toString(), args.roomName)
+                            val action = RoomViewFragmentDirections.actionNavigationRoomViewToNavigationReservation(
+                                (xArray[i] + 1).toString(), (yArray[i] + 1).toString(), args.roomName, idArray[i]
+                            )
                             findNavController().navigate(action)
                         }
                         val layout: ConstraintLayout? = view?.findViewById(R.id.desk_layout)

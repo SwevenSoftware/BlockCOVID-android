@@ -73,5 +73,10 @@
     <string name="room_cleaned">Room cleaned</string>
     <string name="room_empty">Room empty</string>
     <string name="no_rooms">No rooms</string>
+    <string name="my_reservations">My reservations</string>
+    <string name="reservation_id">Reservation ID:</string>
+    <string name="time">Time:</string>
+    <string name="day">Day:</string>
+    <string name="no_reservations">No reservations</string>
 
 </resources>

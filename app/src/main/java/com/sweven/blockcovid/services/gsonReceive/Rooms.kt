@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName
 
 data class Rooms (
         @SerializedName("_embedded")
-        val embedded: Embedded,
+        val embedded: EmbeddedRoom,
 
         @SerializedName("_links")
-        val links: RoomsLinks
+        val links: Links
 )
 
-data class Embedded (
+data class EmbeddedRoom (
         val roomWithDesksList: List<RoomWithDesksList>
 )
 
@@ -47,6 +47,6 @@ data class Room (
         val roomStatus: String
 )
 
-data class RoomsLinks (
+data class Links (
         val self: Self
 )

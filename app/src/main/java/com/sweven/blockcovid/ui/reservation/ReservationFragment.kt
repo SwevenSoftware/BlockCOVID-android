@@ -23,11 +23,13 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.sweven.blockcovid.R
 import java.io.File
-import java.time.LocalTime
+import java.time.*
+import java.time.ZoneOffset.UTC
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-class ReservationFragment : Fragment(){
+class ReservationFragment : Fragment() {
     private lateinit var reservationViewModel: ReservationViewModel
 
     private val args: ReservationFragmentArgs by navArgs()
@@ -50,6 +52,7 @@ class ReservationFragment : Fragment(){
         val deskY: TextView = view.findViewById(R.id.reserved_desk_y)
         val textRoom: TextView = view.findViewById(R.id.id_reserved_room)
         val roomId = args.roomId
+        val deskId = args.deskId
         deskX.text = args.deskX
         deskY.text = args.deskY
         textRoom.text = roomId
@@ -66,8 +69,8 @@ class ReservationFragment : Fragment(){
             val materialTimePicker = MaterialTimePicker.Builder()
                     .setTitleText(getString(R.string.select_time_from))
                     .setTimeFormat(TimeFormat.CLOCK_24H)
-                    .setHour(LocalTime.now().hour)
-                    .setMinute(LocalTime.now().minute)
+                    .setHour(LocalTime.now(TimeZone.getDefault().toZoneId()).hour)
+                    .setMinute(LocalTime.now(TimeZone.getDefault().toZoneId()).minute)
                     .build()
             materialTimePicker.addOnPositiveButtonClickListener {
                 val newHour: Int = materialTimePicker.hour
@@ -84,8 +87,8 @@ class ReservationFragment : Fragment(){
         val materialTimePicker = MaterialTimePicker.Builder()
                 .setTitleText(getString(R.string.select_time_to))
                 .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(LocalTime.now().hour)
-                .setMinute(LocalTime.now().minute)
+                .setHour(LocalTime.now(TimeZone.getDefault().toZoneId()).hour)
+                .setMinute(LocalTime.now(TimeZone.getDefault().toZoneId()).minute)
                 .build()
         materialTimePicker.addOnPositiveButtonClickListener {
             val newHour: Int = materialTimePicker.hour
@@ -175,23 +178,35 @@ class ReservationFragment : Fragment(){
         reserveButton.setOnClickListener {
             loading.show()
 
-            val nameRoom = textRoom.text.toString()
-            val x = deskX.text.toString().toInt()
-            val y = deskY.text.toString().toInt()
             val date = selectDate.text.toString()
+
             val from = arrivalTime.text.toString()
+            val startDateTime = localDateTimeToUTC(date, from)
+
             val to = exitTime.text.toString()
+            val endDateTime = localDateTimeToUTC(date, to)
+
             val cacheToken = File(context?.cacheDir, "token")
             var authorization = ""
             if (cacheToken.exists()) {
                 authorization = cacheToken.readText()
             }
 
-            reservationViewModel.reserve(nameRoom, x, y, date, from, to, authorization)
+            println(startDateTime)
+            println(endDateTime)
+
+            reservationViewModel.reserve(deskId, startDateTime, endDateTime, authorization)
         }
     }
 
-    fun checkReservationResult(formResult: ReservationResult, loading:CircularProgressIndicator){
+    fun localDateTimeToUTC(date: String, time: String): String {
+        val localDate = LocalDate.parse(date)
+        val localTime = LocalTime.parse(time)
+        val zonedTimeDate = ZonedDateTime.of(localDate, localTime, TimeZone.getDefault().toZoneId())
+        return zonedTimeDate.withZoneSameInstant(UTC).toString().dropLast(1)
+    }
+
+    fun checkReservationResult(formResult: ReservationResult, loading:CircularProgressIndicator) {
         loading.hide()
         if (formResult.success != null) {
             Toast.makeText(context,getString(R.string.reservation_successful),Toast.LENGTH_SHORT).show()
@@ -201,7 +216,7 @@ class ReservationFragment : Fragment(){
         }
     }
 
-    fun showChangePasswordFailed(errorString: String){
+    fun showChangePasswordFailed(errorString: String) {
         Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
     }
 

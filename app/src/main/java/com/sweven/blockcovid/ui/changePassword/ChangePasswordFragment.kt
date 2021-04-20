@@ -114,7 +114,7 @@ class ChangePasswordFragment : Fragment() {
         loading.hide()
         if (formResult.success != null) {
             Toast.makeText(context,getString(R.string.password_changed),Toast.LENGTH_SHORT).show()
-            view?.findNavController()?.navigate(R.id.action_navigation_change_password_to_navigation_account)
+            view?.findNavController()?.navigateUp()
         }
         else if (formResult.error != null) {
             oldPassword.text?.clear()

@@ -17,9 +17,8 @@ class ReservationViewModel(private val reservationRepository: ReservationReposit
     val reservationResult: LiveData<ReservationResult>
         get() = _reservationResult
 
-    fun reserve(nameRoom: String, x: Int, y: Int, date: String,
-                       from: String, to: String, authorization: String) {
-        reservationRepository.reserve(nameRoom, x, y, date, from, to, authorization)
+    fun reserve(deskId: String, start: String, end: String, authorization: String) {
+        reservationRepository.reserve(deskId, start, end, authorization)
         reservationRepository.serverResponse.observeForever { it ->
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {

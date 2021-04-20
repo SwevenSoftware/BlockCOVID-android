@@ -38,19 +38,21 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
                     println(desksList.toString())
                     if (desksList != null) {
                         val listSize = desksList.size
-                        val idArray = Array(listSize) { _ -> 0}
-                        val xArray = Array(listSize) { _ -> 0}
-                        val yArray = Array(listSize) { _ -> 0}
+                        val idArray = Array(listSize) {""}
+                        val xArray = Array(listSize) {0}
+                        val yArray = Array(listSize) {0}
+                        val availableArray = Array(listSize) {false}
 
                         for (i in idArray.indices) {
-                            idArray[i] = i + 1
-                            xArray[i] = desksList[i].x - 1
-                            yArray[i] = desksList[i].y - 1
+                            idArray[i] = (desksList[i].deskId)
+                            xArray[i] = (desksList[i].x - 1).toInt()
+                            yArray[i] = (desksList[i].y - 1).toInt()
+                            availableArray[i] = desksList[i].available
                         }
-                        val desks = Result.Success(RoomDesks(idArray, xArray, yArray))
+                        val desks = Result.Success(RoomDesks(idArray, xArray, yArray, availableArray))
                         triggerEvent(desks)
                     } else {
-                        triggerEvent(Result.Success(RoomDesks(null, null, null)))
+                        triggerEvent(Result.Success(RoomDesks(null, null, null, null)))
                     }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)

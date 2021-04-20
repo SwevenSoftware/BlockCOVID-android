@@ -11,6 +11,6 @@ interface APIDesks {
     @Headers("Accept:*/*")
     @GET("/api/rooms/{nameRoom}")
     fun getDesks (@Header("Authorization") authorization: String,
-                          @Path("nameRoom") nameRoom : String
+                  @Path("nameRoom") nameRoom : String
     ): Call<RoomWithDesks>
 }

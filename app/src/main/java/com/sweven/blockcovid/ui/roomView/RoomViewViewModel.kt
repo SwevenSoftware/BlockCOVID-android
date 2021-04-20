@@ -20,7 +20,8 @@ class RoomViewViewModel(private val roomViewRepository: RoomViewRepository) : Vi
                 if (it is Result.Success) {
                     _roomViewResult.postValue(RoomViewResult(success =
                     RoomDesks(
-                            idArray = it.data.idArray, xArray = it.data.xArray,  yArray = it.data.yArray)))
+                            idArray = it.data.idArray, xArray = it.data.xArray,
+                            yArray = it.data.yArray, availableArray = it.data.availableArray)))
                 } else if (it is Result.Error) {
                     _roomViewResult.postValue(RoomViewResult(error = it.exception))
                 }
