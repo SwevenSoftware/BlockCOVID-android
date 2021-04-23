@@ -48,12 +48,10 @@ class LoginRepository(private val networkClient: NetworkClient) {
                 if (response.errorBody() == null) {
                     val items = response.body()
                     val id = items!!.token.id
-                    println(id)
-                    println(items.token.expiryDate)
+                    println("Token: $id")
 
                     // Scadenza di scadenza del token in millisecondi
                     val expiryDate = (LocalDateTime.parse(items.token.expiryDate)).toEpochSecond(UTC)
-                    println(expiryDate.toString())
 
                     val authority = items.authoritiesList[0]
 

@@ -24,9 +24,9 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
         _serverResponse.value = Event(value)
     }
 
-    fun showRoom(authorization: String, roomName: String) {
+    fun showRoom(arrivalDateTime: String, exitDateTime: String, authorization: String, roomName: String) {
 
-        val call = networkClient.buildService(APIDesks::class.java).getDesks(authorization, roomName)
+        val call = networkClient.buildService(APIDesks::class.java).getDesks(authorization, roomName, arrivalDateTime, exitDateTime)
 
         call.enqueue(object: Callback<RoomWithDesks> {
             override fun onFailure(call: Call<RoomWithDesks>, t: Throwable) {
@@ -35,7 +35,6 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
             override fun onResponse(call: Call<RoomWithDesks>, response: Response<RoomWithDesks>) {
                 if (response.errorBody() == null) {
                     val desksList = response.body()?.desks
-                    println(desksList.toString())
                     if (desksList != null) {
                         val listSize = desksList.size
                         val idArray = Array(listSize) {""}

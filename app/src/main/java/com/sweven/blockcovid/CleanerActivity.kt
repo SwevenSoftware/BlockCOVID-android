@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.sweven.blockcovid.ui.cleanerRooms.CleanerRoomsAdapter
 
 class CleanerActivity : AppCompatActivity() {
 

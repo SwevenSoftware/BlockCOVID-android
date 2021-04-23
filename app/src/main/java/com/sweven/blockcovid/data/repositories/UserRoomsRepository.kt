@@ -15,6 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.time.*
 import java.time.ZoneOffset.UTC
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 
@@ -30,7 +31,8 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
 
     fun userRooms(authorization: String) {
 
-        val call = networkClient.buildService(APIRooms::class.java).getRooms(authorization)
+        val nowLocalDateTime = LocalDateTime.now(UTC).truncatedTo(ChronoUnit.MINUTES).toString()
+        val call = networkClient.buildService(APIRooms::class.java).getRooms(authorization, nowLocalDateTime, nowLocalDateTime)
 
         call.enqueue(object : Callback<Rooms> {
             override fun onFailure(call: Call<Rooms>, t: Throwable) {

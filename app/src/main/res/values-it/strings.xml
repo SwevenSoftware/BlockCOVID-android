@@ -11,7 +11,7 @@
     <string name="title_room2">Stanza2</string>
     <string name="title_goRoom1">Vai a Stanza 1</string>
     <string name="title_goRoom2">Vai a Stanza 2</string>
-    <string name="title_reservations">Prenotazioni</string>
+    <string name="title_reservation">Prenotazione</string>
     <string name="title_reserve">Prenota</string>
     <string name="title_log">Log</string>
     <string name="title_activity_login">Accedi</string>
@@ -33,15 +33,17 @@
     <string name="old_password_incorrect">La vecchia password è sbagliata</string>
     <string name="invalid_token">Token incorretto</string>
     <string name="incorrect_credentials">Credenziali errate</string>
+    <string name="invalid_time">Orari invalidi</string>
+    <string name="invalid_date">Data invalida</string>
     <string name="empty_field">Questo campo non può essere vuoto</string>
     <string name="login_failed">Accesso fallito</string>
     <string name="selected_room">Stanza:</string>
     <string name="selected_desk">Postazione:</string>
     <string name="selected_desk_x">X:</string>
     <string name="selected_desk_y">Y:</string>
-    <string name="select_time_to">Seleziona orario di arrivo:</string>
-    <string name="select_time_from">Seleziona orario di uscita:</string>
-    <string name="select_day">Seleziona data:</string>
+    <string name="select_time_to">Orario arrivo:</string>
+    <string name="select_time_from">Orario uscita:</string>
+    <string name="select_day">Data:</string>
     <string name="dark_theme">Attiva tema scuro</string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -70,6 +72,7 @@
     <string name="room_to_clean">da pulire</string>
     <string name="room_open">Aperta</string>
     <string name="room_closed">Chiusa</string>
+    <string name="room_is_closed">La stanza è chiusa a quest\'ora</string>
     <string name="room_cleaned">Stanza pulita</string>
     <string name="room_empty">Stanza vuota</string>
     <string name="no_rooms">Nessuna stanza</string>
@@ -78,5 +81,7 @@
     <string name="time">Orario:</string>
     <string name="day">Giorno:</string>
     <string name="no_reservations">Nessuna prenotazione</string>
-
+    <string name="desk_unavailable">Postazione non disponibile</string>
+    <string name="reservation_old">Prenotazione troppo vecchia</string>
+    <string name="reservation_expired">Prenotazione scaduta</string>
 </resources>

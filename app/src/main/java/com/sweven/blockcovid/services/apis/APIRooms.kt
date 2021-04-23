@@ -11,5 +11,8 @@ import retrofit2.http.*
 interface APIRooms {
     @Headers("Accept:*/*")
     @GET("/api/rooms")
-    fun getRooms(@Header("Authorization") authorization: String): Call<Rooms>
+    fun getRooms(@Header("Authorization") authorization: String,
+                 @Query("from") from: String,
+                 @Query("to") to: String,
+                ): Call<Rooms>
 }
