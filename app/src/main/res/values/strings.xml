@@ -72,7 +72,7 @@
     <string name="room_to_clean">to clean</string>
     <string name="room_open">Open</string>
     <string name="room_closed">Closed</string>
-    <string name="room_is_closed">Room is closed at this time</string>
+    <string name="room_is_closed">Room closed at this time</string>
     <string name="room_cleaned">Room cleaned</string>
     <string name="room_empty">Room empty</string>
     <string name="no_rooms">No rooms</string>
