@@ -15,10 +15,11 @@ import com.sweven.blockcovid.R
 import java.io.File
 
 
-class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, lo: CircularProgressIndicator, vm: CleanerRoomsViewModel, lc: LifecycleOwner): RecyclerView.Adapter<CleanerRoomsAdapter.MyViewHolder>() {
+class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, ro: Array<Boolean>, lo: CircularProgressIndicator, vm: CleanerRoomsViewModel, lc: LifecycleOwner): RecyclerView.Adapter<CleanerRoomsAdapter.MyViewHolder>() {
 
     private val roomList = rl
     private val roomCleaned = rc
+    private val roomOpened = ro
     private val loading = lo
     private val viewModel = vm
     private val lifecycleOwner = lc
@@ -27,6 +28,7 @@ class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, lo: CircularPro
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var roomText: TextView = itemView.findViewById(R.id.room_text)
         var roomStatus: TextView = itemView.findViewById(R.id.room_status)
+        var roomOpen: TextView = itemView.findViewById(R.id.room_open)
         var roomCheckBox: CheckBox = itemView.findViewById(R.id.room_checkbox)
         var roomCard: CardView = itemView.findViewById(R.id.room_card)
     }
@@ -58,7 +60,16 @@ class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, lo: CircularPro
             holder.roomCheckBox.isChecked = false
             holder.roomCard.isClickable = true
         }
-        //spostare
+
+        if (roomOpened[position]) {
+            holder.roomOpen.text = context.getString(R.string.room_open)
+            context.theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+            holder.roomOpen.setTextColor(typedValue.data)
+        } else {
+            holder.roomOpen.text = context.getString(R.string.room_closed)
+            context.theme.resolveAttribute(R.attr.colorError, typedValue, true)
+            holder.roomOpen.setTextColor(typedValue.data)
+        }
 
         holder.roomCard.setOnClickListener {
             if (!holder.roomCheckBox.isChecked) {

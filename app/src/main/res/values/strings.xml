@@ -11,7 +11,7 @@
     <string name="title_room2">Room2</string>
     <string name="title_goRoom1">Go to Room1</string>
     <string name="title_goRoom2">Go to Room2</string>
-    <string name="title_reservations">Reservations</string>
+    <string name="title_reservation">Reservation</string>
     <string name="title_reserve">Reserve</string>
     <string name="title_log">Log</string>
     <string name="title_activity_login">Login</string>
@@ -33,15 +33,17 @@
     <string name="old_password_incorrect">Old passwords is incorrect</string>
     <string name="invalid_token">Incorrect token</string>
     <string name="incorrect_credentials">Incorrect credentials</string>
+    <string name="invalid_time">Invalid times</string>
+    <string name="invalid_date">Invalid date</string>
     <string name="empty_field">This field cannot be empty</string>
     <string name="login_failed">Login failed</string>
     <string name="selected_room">Room:</string>
     <string name="selected_desk">Desk:</string>
     <string name="selected_desk_x">X:</string>
     <string name="selected_desk_y">Y:</string>
-    <string name="select_time_to">Select arrival time: </string>
-    <string name="select_time_from">Select exit time: </string>
-    <string name="select_day">Select day: </string>
+    <string name="select_time_to">Arrival time: </string>
+    <string name="select_time_from">Exit time: </string>
+    <string name="select_day">Day: </string>
     <string name="dark_theme">Enable dark theme</string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -70,6 +72,7 @@
     <string name="room_to_clean">to clean</string>
     <string name="room_open">Open</string>
     <string name="room_closed">Closed</string>
+    <string name="room_is_closed">Room closed at this time</string>
     <string name="room_cleaned">Room cleaned</string>
     <string name="room_empty">Room empty</string>
     <string name="no_rooms">No rooms</string>
@@ -78,5 +81,7 @@
     <string name="time">Time:</string>
     <string name="day">Day:</string>
     <string name="no_reservations">No reservations</string>
-
+    <string name="desk_unavailable">Desk unavailable</string>
+    <string name="reservation_old">Reservation too old</string>
+    <string name="reservation_expired">Reservation expired</string>
 </resources>

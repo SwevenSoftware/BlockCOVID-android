@@ -69,11 +69,12 @@ class CleanerRoomsFragment : Fragment() {
         if (cleanerRoomsResult.success != null) {
             val roomList = cleanerRoomsResult.success.roomName
             val roomCleaned = cleanerRoomsResult.success.roomIsCleaned
-            if (roomList != null && roomCleaned != null) {
+            val roomOpen = cleanerRoomsResult.success.roomIsOpen
+            if (roomList != null && roomCleaned != null && roomOpen != null) {
                 if (roomList.isNotEmpty()) {
                     recyclerView = view?.findViewById(R.id.room_recycler_cleaner)!!
                     val cleanerRoomsAdapter =
-                        CleanerRoomsAdapter(roomList, roomCleaned, loading, cleanerRoomsViewModel, viewLifecycleOwner)
+                        CleanerRoomsAdapter(roomList, roomCleaned, roomOpen, loading, cleanerRoomsViewModel, viewLifecycleOwner)
                     recyclerView.adapter = cleanerRoomsAdapter
                     recyclerView.layoutManager = LinearLayoutManager(context)
                 }

@@ -6,8 +6,8 @@ import com.sweven.blockcovid.data.repositories.ReservationRepository
 import com.sweven.blockcovid.services.NetworkClient
 
 /**
- * Factory di provider ViewModel per istanziare ChangePasswordViewModel.
- * Obbligatorio dato che ChangePasswordViewModel ha un costruttore non vuoto
+ * Factory di provider ViewModel per istanziare ReservationViewModel.
+ * Obbligatorio dato che ReservationViewModel ha un costruttore non vuoto
  */
 
 class ReservationViewModelFactory : ViewModelProvider.Factory {

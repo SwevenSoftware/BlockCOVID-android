@@ -23,6 +23,7 @@ class UserReservationsViewModel(private val userReservationsRepository: UserRese
                             UserReservationsList(
                                 reservationId = it.data.reservationId,
                                 deskId = it.data.deskId,
+                                room = it.data.room,
                                 startTime = it.data.startTime,
                                 endTime = it.data.endTime,
                                 day = it.data.day,

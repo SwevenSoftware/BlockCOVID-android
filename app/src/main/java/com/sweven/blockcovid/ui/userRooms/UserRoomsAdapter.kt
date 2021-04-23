@@ -75,11 +75,12 @@ class UserRoomsAdapter(ct: Context?, nc: NavController, rl: Array<String>, ro: A
             }
         }
         holder.roomCard.setOnClickListener {
-            if(true) {      // TODO replace -> holder.roomOpen.text == context?.getString(R.string.room_open
-                val roomName = holder.roomText.text.toString()
-                val action = UserRoomsFragmentDirections.actionNavigationUserRoomsToNavigationRoomView(roomName)
-                navController.navigate(action)
-            }
+            val roomName = holder.roomText.text.toString()
+            val openingTime = roomOpening[position]
+            val closingTime = roomClosing[position]
+            val daysOpen = daysArray[position]
+            val action = UserRoomsFragmentDirections.actionNavigationUserRoomsToNavigationRoomView(roomName, openingTime, closingTime, daysOpen)
+            navController.navigate(action)
         }
     }
 

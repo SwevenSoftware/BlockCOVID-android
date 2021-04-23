@@ -2,11 +2,7 @@ package com.sweven.blockcovid
 
 object InputChecks {
 
-    // Un controllo di convalida del nome utente
-    fun isFieldNotEmpty(text: String): Boolean {
-        return text.isNotEmpty()
-    }
-
+    // Regex per convalidare il nome utente
     fun isUsernameValid(username: String): Boolean {
         val pattern = "^[A-Za-z0-9]{4,16}$".toRegex()
         return pattern.matches(username)

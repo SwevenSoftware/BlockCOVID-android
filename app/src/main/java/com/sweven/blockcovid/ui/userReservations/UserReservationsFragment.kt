@@ -16,6 +16,7 @@ import com.sweven.blockcovid.R
 import java.io.File
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
+import java.time.temporal.ChronoUnit
 
 class UserReservationsFragment : Fragment() {
 
@@ -50,7 +51,7 @@ class UserReservationsFragment : Fragment() {
         if (cacheToken.exists()) {
             authorization = cacheToken.readText()
         }
-        val from = LocalDateTime.now(UTC).toString().dropLast(7)
+        val from = LocalDateTime.now(UTC).truncatedTo(ChronoUnit.MINUTES).toString()
 
         userReservationsViewModel.showReservations(authorization, from)
     }
@@ -63,16 +64,17 @@ class UserReservationsFragment : Fragment() {
         if (userReservationsResult.success != null) {
             val reservationIdArray = userReservationsResult.success.reservationId
             val deskIdArray = userReservationsResult.success.deskId
+            val roomArray = userReservationsResult.success.room
             val startTimeArray = userReservationsResult.success.startTime
             val endTimeArray = userReservationsResult.success.endTime
             val dayArray = userReservationsResult.success.day
 
-            if (reservationIdArray != null && deskIdArray != null && startTimeArray != null &&
+            if (reservationIdArray != null && deskIdArray != null && roomArray != null && startTimeArray != null &&
                 endTimeArray != null && dayArray != null) {
                 if (reservationIdArray.isNotEmpty()) {
                     val navController: NavController = findNavController()
                     recyclerView = view?.findViewById(R.id.reservation_recycler_user)!!
-                    val reservationsAdapter = UserReservationsAdapter(context, navController, reservationIdArray, deskIdArray, startTimeArray, endTimeArray, dayArray)
+                    val reservationsAdapter = UserReservationsAdapter(context, navController, reservationIdArray, deskIdArray, roomArray, startTimeArray, endTimeArray, dayArray)
                     recyclerView.adapter = reservationsAdapter
                     recyclerView.layoutManager = LinearLayoutManager(context)
                 }

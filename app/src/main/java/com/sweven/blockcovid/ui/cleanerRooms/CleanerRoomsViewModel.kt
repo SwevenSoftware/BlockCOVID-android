@@ -23,7 +23,7 @@ class CleanerRoomsViewModel (private val cleanerRoomsRepository: CleanerRoomsRep
                     _cleanerRoomsResult.postValue(
                         CleanerRoomsResult(success =
                     CleanerRoomsList(
-                        roomName = it.data.roomName, roomIsCleaned = it.data.roomIsCleaned)
+                        roomName = it.data.roomName, roomIsCleaned = it.data.roomIsCleaned, roomIsOpen = it.data.roomIsOpen)
                         )
                     )
                 } else if (it is Result.Error) {

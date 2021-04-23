@@ -83,6 +83,17 @@
             android:name="roomName"
             app:argType="string"
             android:defaultValue="default" />
+        <argument
+                android:name="openingTime"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="closingTime"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="daysOpen"
+                app:argType="string[]" />
         <action
             android:id="@+id/action_navigation_room_view_to_navigation_reservation"
             app:destination="@id/navigation_reservation" />
@@ -114,7 +125,7 @@
     <fragment
         android:id="@+id/navigation_reservation"
         android:name="com.sweven.blockcovid.ui.reservation.ReservationFragment"
-        android:label="@string/title_reservations"
+        android:label="@string/title_reservation"
         tools:layout="@layout/fragment_reservation" >
         <argument
             android:name="deskX"
@@ -124,6 +135,18 @@
             android:name="deskY"
             app:argType="string"
             android:defaultValue="0" />
+        <argument
+                android:name="arrival"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="exit"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="date"
+                app:argType="string"
+                android:defaultValue="default" />
         <argument
             android:name="roomId"
             app:argType="string"
