@@ -24,6 +24,12 @@ class ReservationFragment : Fragment() {
     private lateinit var reservationViewModel: ReservationViewModel
 
     private val args: ReservationFragmentArgs by navArgs()
+    private lateinit var deskX: TextView
+    private lateinit var deskY: TextView
+    private lateinit var textRoom: TextView
+    private lateinit var arrivalTime: TextView
+    private lateinit var exitTime: TextView
+    private lateinit var selectedDate: TextView
     private lateinit var reserve: Button
 
     override fun onCreateView(
@@ -45,12 +51,12 @@ class ReservationFragment : Fragment() {
 
         // Prende i valori del numero della postazione ed il nome della stanza dal fragment della stanza
         // per poi mostrarli nella TextView
-        val deskX: TextView = view.findViewById(R.id.reserved_desk_x)
-        val deskY: TextView = view.findViewById(R.id.reserved_desk_y)
-        val textRoom: TextView = view.findViewById(R.id.id_reserved_room)
-        val arrivalTime: TextView = view.findViewById(R.id.edit_arrival_time)
-        val exitTime: TextView = view.findViewById(R.id.edit_exit_time)
-        val selectedDate: TextView = view.findViewById(R.id.edit_reservation_date)
+        deskX = view.findViewById(R.id.reserved_desk_x)
+        deskY = view.findViewById(R.id.reserved_desk_y)
+        textRoom = view.findViewById(R.id.id_reserved_room)
+        arrivalTime = view.findViewById(R.id.edit_arrival_time)
+        exitTime = view.findViewById(R.id.edit_exit_time)
+        selectedDate = view.findViewById(R.id.edit_reservation_date)
         val roomId = args.roomId
         deskX.text = args.deskX
         deskY.text = args.deskY

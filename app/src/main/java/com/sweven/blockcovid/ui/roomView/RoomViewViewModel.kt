@@ -18,14 +18,15 @@ class RoomViewViewModel(private val roomViewRepository: RoomViewRepository) : Vi
     val roomViewResult: LiveData<RoomViewResult>
         get() = _roomViewResult
 
-    fun showRooms(arrivalDateTime: String, exitDateTime: String, authorization: String, roomName: String) {
+    fun showRoom(arrivalDateTime: String, exitDateTime: String, authorization: String, roomName: String) {
         roomViewRepository.showRoom(arrivalDateTime, exitDateTime, authorization, roomName)
         roomViewRepository.serverResponse.observeForever { it ->
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _roomViewResult.postValue(RoomViewResult(success =
                     RoomDesks(
-                            idArray = it.data.idArray, xArray = it.data.xArray,
+                            openingTime = it.data.openingTime, closingTime = it.data.closingTime,
+                            openingDays = it.data.openingDays, idArray = it.data.idArray, xArray = it.data.xArray,
                             yArray = it.data.yArray, availableArray = it.data.availableArray)))
                 } else if (it is Result.Error) {
                     _roomViewResult.postValue(RoomViewResult(error = it.exception))
@@ -63,7 +64,7 @@ class RoomViewViewModel(private val roomViewRepository: RoomViewRepository) : Vi
             _roomViewForm.value = RoomViewFormState(
                 arrivalTimeError = R.string.room_is_closed,
                 exitTimeError = R.string.room_is_closed,
-                selectedDateError = R.string.room_is_closed
+                selectedDateError = R.string.room_is_closed_day
             )
         } else {
             _roomViewForm.value = RoomViewFormState(isDataValid = true)

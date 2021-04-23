@@ -1,6 +1,9 @@
 package com.sweven.blockcovid.data.model
 
 data class RoomDesks(
+        val openingTime: String?,
+        val closingTime: String?,
+        val openingDays: Array<String>?,
         val idArray: Array<String>?,
         val xArray: Array<Int>?,
         val yArray: Array<Int>?,
@@ -12,6 +15,12 @@ data class RoomDesks(
 
         other as RoomDesks
 
+        if (openingTime != other.openingTime) return false
+        if (closingTime != other.closingTime) return false
+        if (openingDays != null) {
+            if (other.openingDays == null) return false
+            if (!openingDays.contentEquals(other.openingDays)) return false
+        } else if (other.openingDays != null) return false
         if (idArray != null) {
             if (other.idArray == null) return false
             if (!idArray.contentEquals(other.idArray)) return false
@@ -33,7 +42,10 @@ data class RoomDesks(
     }
 
     override fun hashCode(): Int {
-        var result = idArray?.contentHashCode() ?: 0
+        var result = openingTime?.hashCode() ?: 0
+        result = 31 * result + (closingTime?.hashCode() ?: 0)
+        result = 31 * result + (openingDays?.contentHashCode() ?: 0)
+        result = 31 * result + (idArray?.contentHashCode() ?: 0)
         result = 31 * result + (xArray?.contentHashCode() ?: 0)
         result = 31 * result + (yArray?.contentHashCode() ?: 0)
         result = 31 * result + (availableArray?.contentHashCode() ?: 0)

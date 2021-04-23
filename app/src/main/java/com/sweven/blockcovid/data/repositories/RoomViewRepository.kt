@@ -34,24 +34,37 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
             }
             override fun onResponse(call: Call<RoomWithDesks>, response: Response<RoomWithDesks>) {
                 if (response.errorBody() == null) {
-                    val desksList = response.body()?.desks
-                    if (desksList != null) {
-                        val listSize = desksList.size
+                    val room = response.body()
+                    if (room != null) {
+                        val listSize = room.desks.size
+                        val openingTime = room.room.openingTime
+                        val closingTime = room.room.closingTime
+                        val openingDays = Array(listSize) {""}
                         val idArray = Array(listSize) {""}
                         val xArray = Array(listSize) {0}
                         val yArray = Array(listSize) {0}
                         val availableArray = Array(listSize) {false}
 
-                        for (i in idArray.indices) {
-                            idArray[i] = (desksList[i].deskId)
-                            xArray[i] = (desksList[i].x - 1).toInt()
-                            yArray[i] = (desksList[i].y - 1).toInt()
-                            availableArray[i] = desksList[i].available
+                        for (i in room.room.openingDays.indices) {
+                            openingDays[i] = room.room.openingDays[i]
                         }
-                        val desks = Result.Success(RoomDesks(idArray, xArray, yArray, availableArray))
+
+                        for (l in idArray.indices) {
+                            idArray[l] = (room.desks[l].deskId)
+                            xArray[l] = (room.desks[l].x - 1).toInt()
+                            yArray[l] = (room.desks[l].y - 1).toInt()
+                            availableArray[l] = room.desks[l].available
+                        }
+                        val desks = Result.Success(RoomDesks(
+                            openingTime, closingTime, openingDays,
+                            idArray, xArray, yArray, availableArray
+                        ))
                         triggerEvent(desks)
                     } else {
-                        triggerEvent(Result.Success(RoomDesks(null, null, null, null)))
+                        triggerEvent(Result.Success(RoomDesks(
+                            null, null, null,
+                            null, null, null, null
+                        )))
                     }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
