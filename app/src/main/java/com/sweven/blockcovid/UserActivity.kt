@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sweven.blockcovid.ui.home.HomeFragmentDirections
+import java.io.File
 
 
 class UserActivity : AppCompatActivity() {
@@ -135,8 +136,17 @@ class UserActivity : AppCompatActivity() {
                 // Scorri tutti i record contenuti nel messaggio
                 for (curRecord in curMsg.records) {
                     logText = curRecord.payload.decodeToString().drop(3)
-                    val action = HomeFragmentDirections.actionGlobalNavigationHome(logText)
-                    findNavController(R.id.nav_host_fragment).navigate(action)
+
+                    val cacheAuth = File(this.cacheDir, "authority")
+                    when (cacheAuth.readText()) {
+                        "USER", "ADMIN" -> {
+                            val action = HomeFragmentDirections.actionGlobalNavigationHome(logText)
+                            findNavController(R.id.nav_host_fragment).navigate(action)
+                        }
+                        "CLEANER" -> {
+                            // TODO: add RFID functionality for cleaners
+                        }
+                    }
                 }
             }
         }
