@@ -221,7 +221,7 @@ class RoomViewFragment : Fragment(){
                 val to = exitTime.text.toString()
                 val endDateTime = localDateTimeToUTC(date, to)
 
-                roomViewViewModel.showRooms(startDateTime, endDateTime, authorization, args.roomName)
+                roomViewViewModel.showRoom(startDateTime, endDateTime, authorization, args.roomName)
             } else {
                 layout.removeAllViews()
             }

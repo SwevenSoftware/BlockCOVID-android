@@ -10,7 +10,9 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.sweven.blockcovid.R
 
-class UserReservationsAdapter(ct: Context?, nc: NavController, ri: Array<String>, di: Array<String>, ra: Array<String>, sa: Array<String>, ea: Array<String>, da: Array<String>): RecyclerView.Adapter<UserReservationsAdapter.MyViewHolder>() {
+class UserReservationsAdapter(ct: Context?, nc: NavController, ri: Array<String>, di: Array<String>,
+                              ra: Array<String>, sa: Array<String>, ea: Array<String>, da: Array<String>
+                                ): RecyclerView.Adapter<UserReservationsAdapter.MyViewHolder>() {
 
     val context = ct
     private val navController = nc
@@ -42,9 +44,11 @@ class UserReservationsAdapter(ct: Context?, nc: NavController, ri: Array<String>
         holder.reservationDate.text = daysArray[position]
         holder.reservationRoom.text = roomsArray[position]
         holder.reservationCard.setOnClickListener {
-            val reservationId = reservationsId[position]
-            //val action = UserReservationsFragmentDirections.actionNavigationUserRoomsToNavigationRoomView(roomName)
-            //navController.navigate(action)
+            val action = UserReservationsFragmentDirections.actionNavigationReservationViewToNavigationEditReservation(
+                startTimes[position], endTimes[position], daysArray[position],
+                roomsArray[position], desksId[position], reservationsId[position]
+            )
+            navController.navigate(action)
         }
     }
 

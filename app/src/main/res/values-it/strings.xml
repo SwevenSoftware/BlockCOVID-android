@@ -12,6 +12,7 @@
     <string name="title_goRoom1">Vai a Stanza 1</string>
     <string name="title_goRoom2">Vai a Stanza 2</string>
     <string name="title_reservation">Prenotazione</string>
+    <string name="title_edit_reservation">Modifica Prenotazione</string>
     <string name="title_reserve">Prenota</string>
     <string name="title_log">Log</string>
     <string name="title_activity_login">Accedi</string>
@@ -63,6 +64,10 @@
     <string name="saturday">SAB</string>
     <string name="reservation_successful">Prenotazione avvenuta</string>
     <string name="reservation_failed">Prenotazione fallita</string>
+    <string name="reservation_edited">Prenotazione modificata</string>
+    <string name="reservation_deleted">Prenotazione eliminata</string>
+    <string name="edit">Modifica</string>
+    <string name="remove">Rimuovi</string>
     <string name="timeout" >Timeout</string>
     <string name="connection_error">Errore di connessione</string>
     <string name="error" >Errore:</string>
@@ -73,6 +78,7 @@
     <string name="room_open">Aperta</string>
     <string name="room_closed">Chiusa</string>
     <string name="room_is_closed">Stanza chiusa a quest\'ora</string>
+    <string name="room_is_closed_day">Stanza chiusa questo giorno</string>
     <string name="room_cleaned">Stanza pulita</string>
     <string name="room_empty">Stanza vuota</string>
     <string name="no_rooms">Nessuna stanza</string>

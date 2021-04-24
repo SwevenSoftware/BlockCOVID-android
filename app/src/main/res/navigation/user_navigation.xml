@@ -120,6 +120,9 @@
                 android:name="deskId"
                 app:argType="string"
                 android:defaultValue="default" />
+        <action
+                android:id="@+id/action_navigation_reservation_view_to_navigation_edit_reservation"
+                app:destination="@id/navigation_edit_reservation" />
     </fragment>
 
     <fragment
@@ -153,6 +156,37 @@
             android:defaultValue="default" />
         <argument
                 android:name="deskId"
+                app:argType="string"
+                android:defaultValue="default" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/navigation_edit_reservation"
+            android:name="com.sweven.blockcovid.ui.editReservation.EditReservationFragment"
+            android:label="@string/title_edit_reservation"
+            tools:layout="@layout/fragment_edit_reservation" >
+        <argument
+                android:name="arrival"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="exit"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="date"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="roomId"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="deskId"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="reservationId"
                 app:argType="string"
                 android:defaultValue="default" />
     </fragment>

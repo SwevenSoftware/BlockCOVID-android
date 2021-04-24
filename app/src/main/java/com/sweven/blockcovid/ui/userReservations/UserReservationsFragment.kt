@@ -69,12 +69,15 @@ class UserReservationsFragment : Fragment() {
             val endTimeArray = userReservationsResult.success.endTime
             val dayArray = userReservationsResult.success.day
 
-            if (reservationIdArray != null && deskIdArray != null && roomArray != null && startTimeArray != null &&
-                endTimeArray != null && dayArray != null) {
+            if (reservationIdArray != null && deskIdArray != null && roomArray != null
+                && startTimeArray != null && endTimeArray != null && dayArray != null) {
                 if (reservationIdArray.isNotEmpty()) {
                     val navController: NavController = findNavController()
                     recyclerView = view?.findViewById(R.id.reservation_recycler_user)!!
-                    val reservationsAdapter = UserReservationsAdapter(context, navController, reservationIdArray, deskIdArray, roomArray, startTimeArray, endTimeArray, dayArray)
+                    val reservationsAdapter = UserReservationsAdapter(
+                        context, navController, reservationIdArray, deskIdArray,
+                        roomArray, startTimeArray, endTimeArray, dayArray
+                    )
                     recyclerView.adapter = reservationsAdapter
                     recyclerView.layoutManager = LinearLayoutManager(context)
                 }
