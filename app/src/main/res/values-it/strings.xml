@@ -87,7 +87,12 @@
     <string name="time">Orario:</string>
     <string name="day">Giorno:</string>
     <string name="no_reservations">Nessuna prenotazione</string>
+    <string name="status">Status:</string>
+    <string name="desk_free">Disponibile fino a:</string>
+    <string name="desk_available">Postazione disponibile</string>
     <string name="desk_unavailable">Postazione non disponibile</string>
     <string name="reservation_old">Prenotazione troppo vecchia</string>
     <string name="reservation_expired">Prenotazione scaduta</string>
+    <string name="nfc_disabled">Lettore NFC non disponibile</string>
+    <string name="read_rfid">Avvicina il telefono al tag RFID</string>
 </resources>

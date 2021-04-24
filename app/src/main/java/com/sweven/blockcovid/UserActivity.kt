@@ -5,19 +5,17 @@ import android.content.Intent
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.text.Html
-import android.text.Spanned
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.sweven.blockcovid.ui.home.HomeFragmentDirections
 
 
 class UserActivity : AppCompatActivity() {
@@ -28,7 +26,7 @@ class UserActivity : AppCompatActivity() {
     // Lettura NFC tags mentre l'applicazione e' attiva in primo piano
     private var nfcPendingIntent: PendingIntent? = null
 
-    private var logText = "logText: "
+    private var logText = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,10 +41,6 @@ class UserActivity : AppCompatActivity() {
 
         // Controlla se NFC è supportato e abilitato
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
-        logMessage("NFC Adapter", nfcAdapter.toString())
-        logMessage("NFC supported", (nfcAdapter != null).toString())
-        logMessage("NFC enabled", (nfcAdapter?.isEnabled).toString())
-
 
         // Leggi tutti i tag quando l'app è in esecuzione e in primo piano.
         // Crea un PendingIntent generico che verrà consegnato a questa attività. Lo stack NFC
@@ -57,7 +51,6 @@ class UserActivity : AppCompatActivity() {
 
         if (intent != null) {
             // Controlla se l'app è stata avviata tramite un intento NFC
-            logMessage("Found intent in onCreate", intent.action.toString())
             processIntent(intent)
         }
     }
@@ -84,22 +77,6 @@ class UserActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    // Funzione per navigare da Home a Scanner (bottone Scanner)
-    fun goScanner(view: View) {
-        view.findNavController().navigate(R.id.action_navigation_home_to_navigation_scanner)
-    }
-
-    // Funzione per aggiornare il log dei messaggi NFC letti
-    fun refreshLogs(view: View) {
-        println(logText)
-        val tvMessages = findViewById<TextView>(R.id.tv_messages)
-        val svMessages = findViewById<ScrollView>(R.id.sv_messages)
-        tvMessages.text = logText
-        svMessages.post {
-            svMessages.smoothScrollTo(0, svMessages.bottom)
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         // Ottieni tutti gli intenti scoperti NFC
@@ -115,10 +92,13 @@ class UserActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        logMessage("Found intent in onNewIntent", intent?.action.toString())
         // Se abbiamo un intento mentre l'app è in esecuzione, controlla anche se si tratta di un nuovo messaggio NDEF
         // che è stato scoperto
-        if (intent != null) processIntent(intent)
+        if (nfcAdapter?.isEnabled == true) {
+            if (intent != null) processIntent(intent)
+        } else {
+            Toast.makeText(this, getString(R.string.error).plus(" ").plus(R.string.nfc_disabled), Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**
@@ -130,13 +110,9 @@ class UserActivity : AppCompatActivity() {
         // Controlla se l'Intent ha l'azione di un tag NFC scoperto
         // con contenuti formattati NDEF
         if (checkIntent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
-            logMessage("New NDEF intent", checkIntent.toString())
 
             // Recupera il messaggio NDEF grezzo dal tag
             val rawMessages = checkIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
-            if (rawMessages != null) {
-                logMessage("Raw messages", rawMessages.size.toString())
-            }
 
             if (rawMessages != null) {
                 val messages = arrayOfNulls<NdefMessage?>(rawMessages.size)
@@ -156,50 +132,13 @@ class UserActivity : AppCompatActivity() {
         // Passa attraverso tutti i messaggi NDEF trovati sul tag NFC
         for (curMsg in ndefMessages) {
             if (curMsg != null) {
-                // Stampa informazioni generiche sul messaggio NDEF
-                logMessage("Message", curMsg.toString())
-                logMessage("Records", curMsg.records.size.toString())
-
                 // Scorri tutti i record contenuti nel messaggio
                 for (curRecord in curMsg.records) {
-                    if (curRecord.toUri() != null) {
-                        // URI NDEF Tag
-                        logMessage("- URI", curRecord.toUri().toString())
-                    } else {
-                        // Altri tag NDEF: stampa semplicemente il payload
-                        // il drop(3) serve ad eliminare i primi caratteri di default dal content
-                        logMessage("- Contents", curRecord.payload.decodeToString().drop(3))
-                    }
+                    logText = curRecord.payload.decodeToString().drop(3)
+                    val action = HomeFragmentDirections.actionGlobalNavigationHome(logText)
+                    findNavController(R.id.nav_host_fragment).navigate(action)
                 }
             }
-        }
-    }
-
-    /**
-     * Registra un messaggio nella visualizzazione del testo di debug.
-     * @param header testo del titolo del messaggio, stampato in grassetto
-     * @param text parametro facoltativo contenente i dettagli sul messaggio. Stampato in testo normale.
-     */
-    private fun logMessage(header: String, text: String?) {
-        logText = logText.plus(if (text.isNullOrBlank())
-            fromHtml("<b>$header</b><br>")
-        else
-            fromHtml("<b>$header</b>: $text<br>"))
-    }
-
-    /**
-     * Converte stringhe formattate HTML in testo con spanning (con stile), per l'inserimento in TextView.
-     * Esternalizzato in una funzione propria poiché il metodo fromHtml (html) è stato deprecato
-     * con Android N. Questo metodo sceglie la variante giusta a seconda del sistema operativo.
-     * @param html stringa in formato HTML da convertire in un testo con spanning.
-     */
-
-    private fun fromHtml(html: String): Spanned {
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
-        } else {
-            @Suppress("DEPRECATION")
-            Html.fromHtml(html)
         }
     }
 }

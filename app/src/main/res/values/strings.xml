@@ -87,7 +87,12 @@
     <string name="time">Time:</string>
     <string name="day">Day:</string>
     <string name="no_reservations">No reservations</string>
+    <string name="status">Status:</string>
+    <string name="desk_free">Available until:</string>
+    <string name="desk_available">Desk available</string>
     <string name="desk_unavailable">Desk unavailable</string>
     <string name="reservation_old">Reservation too old</string>
     <string name="reservation_expired">Reservation expired</string>
+    <string name="nfc_disabled">NFC reader unavailable</string>
+    <string name="read_rfid">Bring the phone close to the RFID tag </string>
 </resources>
