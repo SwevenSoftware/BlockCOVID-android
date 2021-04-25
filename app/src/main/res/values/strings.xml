@@ -45,7 +45,7 @@
     <string name="select_time_to">Arrival time: </string>
     <string name="select_time_from">Exit time: </string>
     <string name="select_day">Day: </string>
-    <string name="dark_theme">Enable dark theme</string>
+    <string name="dark_theme">Enable dark theme:</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="three">3</string>
@@ -94,5 +94,8 @@
     <string name="reservation_old">Reservation too old</string>
     <string name="reservation_expired">Reservation expired</string>
     <string name="nfc_disabled">NFC reader unavailable</string>
+    <string name="nfc_available">NFC reader available</string>
     <string name="read_rfid">Bring the phone close to the RFID tag </string>
+    <string name="verify_nfc">Verify NFC reader availability:</string>
+    <string name="check">Check</string>
 </resources>
