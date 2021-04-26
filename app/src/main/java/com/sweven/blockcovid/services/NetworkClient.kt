@@ -16,6 +16,8 @@ import javax.security.cert.CertificateException
 
 class NetworkClient {
 
+    // cambia questo url a quello del server con BlockCOVID-server
+    private val url = "https://192.168.210.30:8091"
     private val unsafeOkHttpClient: OkHttpClient
     get() = try {
         // Create a trust manager that does not validate certificate chains
@@ -51,8 +53,6 @@ class NetworkClient {
     } catch (e: Exception) {
         throw RuntimeException(e)
     }
-
-    private val url = "https://192.168.210.30:8091"
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(url)

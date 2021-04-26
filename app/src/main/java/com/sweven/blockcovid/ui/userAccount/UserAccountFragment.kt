@@ -1,5 +1,6 @@
 package com.sweven.blockcovid.ui.userAccount
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.ui.login.LoginActivity
 import java.io.File
 
 class UserAccountFragment: Fragment() {
@@ -71,9 +73,10 @@ class UserAccountFragment: Fragment() {
                 cacheExpiry.delete()
                 cacheUser.delete()
                 cacheAuth.delete()
-                view?.findNavController()
-                    ?.navigate(R.id.action_global_navigation_login)
             }
+            val i = Intent(context, LoginActivity::class.java)
+            startActivity(i)
+            activity?.finish()
         }
     }
 }

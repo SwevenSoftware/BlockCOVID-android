@@ -13,7 +13,6 @@ import java.time.ZoneOffset.UTC
 class StartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_start)
 
         val context = applicationContext
         val cacheToken = File(context.cacheDir, "token")

@@ -7,7 +7,6 @@ import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -16,7 +15,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sweven.blockcovid.ui.home.HomeFragmentDirections
-import java.io.File
 
 
 class UserActivity : AppCompatActivity() {
@@ -32,9 +30,9 @@ class UserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_user)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navController = findNavController(R.id.nav_host_fragment_user)
         val appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.navigation_home, R.id.navigation_user_rooms, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -67,14 +65,14 @@ class UserActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.navigation_login) {
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_user_account)
+            findNavController(R.id.nav_host_fragment_user).navigate(R.id.action_global_navigation_user_account)
         }
         return super.onOptionsItemSelected(item)
     }
 
     // Funzione per far funzionare il bottone per tornare indietro situato in alto a sinistra dello schermo
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navController = findNavController(R.id.nav_host_fragment_user)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
@@ -137,16 +135,8 @@ class UserActivity : AppCompatActivity() {
                 for (curRecord in curMsg.records) {
                     logText = curRecord.payload.decodeToString().drop(3)
 
-                    val cacheAuth = File(this.cacheDir, "authority")
-                    when (cacheAuth.readText()) {
-                        "USER", "ADMIN" -> {
-                            val action = HomeFragmentDirections.actionGlobalNavigationHome(logText)
-                            findNavController(R.id.nav_host_fragment).navigate(action)
-                        }
-                        "CLEANER" -> {
-                            // TODO: add RFID functionality for cleaners
-                        }
-                    }
+                    val action = HomeFragmentDirections.actionGlobalNavigationHome(logText)
+                    findNavController(R.id.nav_host_fragment_user).navigate(action)
                 }
             }
         }
