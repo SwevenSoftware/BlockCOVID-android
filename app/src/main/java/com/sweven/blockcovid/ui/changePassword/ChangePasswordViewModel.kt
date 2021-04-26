@@ -3,7 +3,6 @@ package com.sweven.blockcovid.ui.changePassword
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sweven.blockcovid.InputChecks
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.repositories.ChangePasswordRepository
 import com.sweven.blockcovid.data.Result
@@ -32,16 +31,16 @@ class ChangePasswordViewModel(private val changePasswordRepository: ChangePasswo
     }
 
     fun inputDataChanged(oldPassword: String, newPassword: String, repeatPassword: String) {
-        if (!InputChecks.isPasswordValid(oldPassword)) {
+        if (oldPassword.length <= 7) {
             _changePasswordForm.value =
                 ChangePasswordFormState(oldPasswordError = R.string.invalid_password)
-        } else if (!InputChecks.isPasswordValid(newPassword)) {
+        } else if (newPassword.length <= 7) {
             _changePasswordForm.value =
                 ChangePasswordFormState(newPasswordError = R.string.invalid_password)
-        } else if (!InputChecks.isPasswordValid(repeatPassword)) {
+        } else if (repeatPassword.length <= 7) {
             _changePasswordForm.value =
                 ChangePasswordFormState(repeatPasswordError = R.string.invalid_password)
-        } else if (!InputChecks.isPasswordSame(newPassword, repeatPassword)) {
+        } else if (newPassword != repeatPassword) {
             _changePasswordForm.value =
                 ChangePasswordFormState(repeatPasswordError = R.string.different_password)
         } else {
