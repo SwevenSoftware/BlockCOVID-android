@@ -3,7 +3,6 @@ package com.sweven.blockcovid.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sweven.blockcovid.InputChecks
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.repositories.LoginRepository
 import com.sweven.blockcovid.data.Result
@@ -38,9 +37,11 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     }
 
     fun loginDataChanged(username: String, password: String) {
-        if (!InputChecks.isUsernameValid(username)) {
+        // regex per username alfanumerico di lunghezza da 4 a 16
+        val pattern = "^[A-Za-z0-9]{4,16}$".toRegex()
+        if (!pattern.matches(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!InputChecks.isPasswordValid(password)) {
+        } else if (password.length <= 7) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)

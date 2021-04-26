@@ -45,7 +45,7 @@
     <string name="select_time_to">Orario arrivo:</string>
     <string name="select_time_from">Orario uscita:</string>
     <string name="select_day">Data:</string>
-    <string name="dark_theme">Attiva tema scuro</string>
+    <string name="dark_theme">Attiva tema scuro:</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="three">3</string>
@@ -87,7 +87,15 @@
     <string name="time">Orario:</string>
     <string name="day">Giorno:</string>
     <string name="no_reservations">Nessuna prenotazione</string>
+    <string name="status">Status:</string>
+    <string name="desk_free">Disponibile fino a:</string>
+    <string name="desk_available">Postazione disponibile</string>
     <string name="desk_unavailable">Postazione non disponibile</string>
     <string name="reservation_old">Prenotazione troppo vecchia</string>
     <string name="reservation_expired">Prenotazione scaduta</string>
+    <string name="nfc_disabled">Lettore NFC non disponibile</string>
+    <string name="nfc_available">Lettore NFC disponibile</string>
+    <string name="read_rfid">Avvicina il telefono al tag RFID</string>
+    <string name="verify_nfc">Verifica la disponibilità\ndel lettore NFC:</string>
+    <string name="check">Verifica</string>
 </resources>
