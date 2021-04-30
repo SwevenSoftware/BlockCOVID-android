@@ -65,8 +65,7 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
                                 isOpenArray[i] = true
                             }
                         }
-                        val roomsList = Result.Success(UserRoomsList(nameArray, openArray, closeArray, daysArray, isOpenArray))
-                        triggerEvent(roomsList)
+                        triggerEvent(Result.Success(UserRoomsList(nameArray, openArray, closeArray, daysArray, isOpenArray)))
                     } else {
                         triggerEvent(Result.Success(UserRoomsList(null, null, null, null, null)))
                     }

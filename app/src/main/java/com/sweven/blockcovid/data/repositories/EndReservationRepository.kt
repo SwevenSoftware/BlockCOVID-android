@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.services.apis.APIReserve
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.apis.APIEndReservation
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.gsonReceive.Reservation
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ReservationRepository(private val networkClient: NetworkClient) {
+class EndReservationRepository(private val networkClient: NetworkClient) {
 
     private val _serverResponse = MutableLiveData<Event<Result<String>>>()
     val serverResponse: LiveData<Event<Result<String>>>
@@ -27,11 +27,11 @@ class ReservationRepository(private val networkClient: NetworkClient) {
         _serverResponse.value = Event(value)
     }
 
-    fun reserve(deskId: String, start: String, end: String, authorization: String) {
+    fun endReservation(idReservation: String, authorization: String, deskCleaned: Boolean) {
 
-        val requestBody = makeJsonObject(deskId, start, end)
+        val requestBody = makeJsonObject(deskCleaned)
 
-        val call = networkClient.buildService(APIReserve::class.java).deskReserve(authorization, requestBody)
+        val call = networkClient.buildService(APIEndReservation::class.java).endReservation(authorization, idReservation, requestBody)
 
         call.enqueue(object : Callback<Reservation> {
             override fun onFailure(call: Call<Reservation>, t: Throwable) {
@@ -40,7 +40,8 @@ class ReservationRepository(private val networkClient: NetworkClient) {
             override fun onResponse(call: Call<Reservation>, response: Response<Reservation>) {
                 if (response.errorBody() == null) {
                     val responseString = response.body().toString()
-                    triggerEvent(Result.Success(responseString))
+                    val result = Result.Success(responseString)
+                    triggerEvent(result)
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
                     triggerEvent(Result.Error(error.error))
@@ -49,11 +50,9 @@ class ReservationRepository(private val networkClient: NetworkClient) {
         })
     }
 
-    fun makeJsonObject(deskId: String, from: String, to: String): RequestBody {
+    fun makeJsonObject(deskCleaned: Boolean): RequestBody {
         val jsonObject = JSONObject()
-        jsonObject.put("deskId", deskId)
-        jsonObject.put("start", from)
-        jsonObject.put("end", to)
+        jsonObject.put("deskCleaned", deskCleaned)
 
         val jsonObjectString = jsonObject.toString()
         return jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())

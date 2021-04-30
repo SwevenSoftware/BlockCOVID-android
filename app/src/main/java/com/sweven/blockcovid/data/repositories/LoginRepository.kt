@@ -55,9 +55,7 @@ class LoginRepository(private val networkClient: NetworkClient) {
 
                     val authority = items.authoritiesList[0]
 
-                    val user = LoggedInUser(username, id, expiryDate, authority)
-                    val result = Result.Success(user)
-                    triggerEvent(result)
+                    triggerEvent(Result.Success(LoggedInUser(username, id, expiryDate, authority)))
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
                     triggerEvent(Result.Error(error.error))

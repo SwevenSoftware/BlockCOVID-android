@@ -28,22 +28,22 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/selected_desk_x"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="64dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="128dp"
-        android:hint="@string/selected_desk_x"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+            android:id="@+id/selected_desk_x"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/selected_desk_x"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/selected_desk_y"
+            android:layout_marginEnd="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/reserved_desk_x"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:gravity="center" />
+                android:id="@+id/reserved_desk_x"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:gravity="center" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -157,7 +157,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="64dp"
             android:text="@string/remove"
-            android:enabled="false"
             app:icon="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

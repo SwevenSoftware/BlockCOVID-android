@@ -15,12 +15,38 @@
             android:name="rfid_content"
             app:argType="string"
             android:defaultValue="" />
+        <action
+                android:id="@+id/action_navigation_home_to_navigation_custom_reservation"
+                app:destination="@id/navigation_custom_reservation" />
     </fragment>
     <action
         android:id="@+id/action_global_navigation_home"
         app:destination="@id/navigation_home"
         app:popUpTo="@id/navigation_home"
         app:popUpToInclusive="true" />
+
+    <fragment
+            android:id="@+id/navigation_custom_reservation"
+            android:name="com.sweven.blockcovid.ui.customReservation.CustomReservationFragment"
+            android:label="@string/title_reserve"
+            tools:layout="@layout/fragment_custom_reservation" >
+        <argument
+                android:name="deskId"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="roomName"
+                app:argType="string"
+                android:defaultValue="default" />
+        <argument
+                android:name="deskX"
+                app:argType="string"
+                android:defaultValue="0" />
+        <argument
+                android:name="deskY"
+                app:argType="string"
+                android:defaultValue="0" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_user_rooms"

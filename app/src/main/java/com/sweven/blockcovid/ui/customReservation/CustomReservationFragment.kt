@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.ui.editReservation
+package com.sweven.blockcovid.ui.customReservation
 
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
@@ -23,14 +23,15 @@ import com.sweven.blockcovid.R
 import androidx.lifecycle.Observer
 import java.io.File
 import java.time.*
+import java.time.ZoneOffset.UTC
 import java.time.temporal.ChronoUnit
 import java.util.*
 
 
-class EditReservationFragment: Fragment() {
-    private lateinit var editReservationViewModel: EditReservationViewModel
+class CustomReservationFragment: Fragment() {
+    private lateinit var customReservationViewModel: CustomReservationViewModel
 
-    private val args: EditReservationFragmentArgs by navArgs()
+    private val args: CustomReservationFragmentArgs by navArgs()
     private lateinit var localDateTime: LocalDateTime
     private lateinit var textRoom: TextInputEditText
     private lateinit var deskX: TextInputEditText
@@ -44,18 +45,18 @@ class EditReservationFragment: Fragment() {
     private lateinit var openingTime: String
     private lateinit var closingTime: String
     private lateinit var openingDays: Array<String>
-    private lateinit var edit: Button
-    private lateinit var remove: Button
+    private lateinit var reserve: Button
     private lateinit var loading: CircularProgressIndicator
+    private var authorization = ""
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        editReservationViewModel =
-            ViewModelProvider(this, EditReservationViewModelFactory()).get(EditReservationViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_edit_reservation, container, false)
+        customReservationViewModel =
+            ViewModelProvider(this, CustomReservationViewModelFactory()).get(CustomReservationViewModel::class.java)
+        return inflater.inflate(R.layout.fragment_custom_reservation, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,40 +76,32 @@ class EditReservationFragment: Fragment() {
         exitTimeLayout = view.findViewById(R.id.exit_time)
         selectedDate = view.findViewById(R.id.edit_reservation_date)
         selectedDateLayout = view.findViewById(R.id.reservation_date)
-        edit = view.findViewById(R.id.edit_reservation_button)
-        remove = view.findViewById(R.id.remove_reservation_button)
-        textRoom.setText(args.roomId)
-        arrivalTime.setText(args.arrival)
-        exitTime.setText(args.exit)
-        selectedDate.setText(args.date)
+        reserve = view.findViewById(R.id.reserve_button)
+        deskX.setText(args.deskX)
+        deskY.setText(args.deskY)
+        textRoom.setText(args.roomName)
+
+        var localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
+        val localDateTimeUTC = LocalDateTime.now(UTC).truncatedTo(ChronoUnit.MINUTES).toString()
+
+        arrivalTime.setText(localDateTime.toLocalTime().toString())
+        exitTime.setText(localDateTime.toLocalTime().plusHours(1).toString())
+        selectedDate.setText(localDateTime.toLocalDate().toString())
 
         openingTime = ""
         closingTime = ""
         openingDays = Array(0){""}
 
-        val nowDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
-        val selectedDateTime = LocalDateTime.of(LocalDate.parse(args.date), LocalTime.parse(args.arrival))
-
-        if (selectedDateTime < nowDateTime) {
-            edit.isEnabled = false
-            arrivalTimeLayout.error = getString(R.string.reservation_expired)
-            exitTimeLayout.error = getString(R.string.reservation_expired)
-            selectedDateLayout.error = getString(R.string.reservation_expired)
-        }
+        loading = view.findViewById(R.id.loading)
+        val mainActivity = viewLifecycleOwner
 
         val cacheToken = File(context?.cacheDir, "token")
-        var authorization = ""
         if (cacheToken.exists()) {
             authorization = cacheToken.readText()
         }
 
-        loading = view.findViewById(R.id.loading)
-        val mainActivity = viewLifecycleOwner
-
-        val localUTCDateTime = LocalDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MINUTES).toString()
-
         loading.show()
-        editReservationViewModel.showRoom(localUTCDateTime, localUTCDateTime, authorization, args.roomId)
+        customReservationViewModel.showRoom(localDateTimeUTC, localDateTimeUTC, authorization, args.roomName)
 
         // Funzioni per aprire il TimePicker all'interno di Prenotazioni
         arrivalTime.setOnClickListener {
@@ -163,7 +156,7 @@ class EditReservationFragment: Fragment() {
 
         arrivalTime.afterTextChanged {
             localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
-            editReservationViewModel.inputDataChanged(
+            customReservationViewModel.inputDataChanged(
                 localDateTime,
                 arrivalTime.text.toString(),
                 exitTime.text.toString(),
@@ -175,7 +168,7 @@ class EditReservationFragment: Fragment() {
         }
         exitTime.afterTextChanged {
             localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
-            editReservationViewModel.inputDataChanged(
+            customReservationViewModel.inputDataChanged(
                 localDateTime,
                 arrivalTime.text.toString(),
                 exitTime.text.toString(),
@@ -187,7 +180,7 @@ class EditReservationFragment: Fragment() {
         }
         selectedDate.afterTextChanged {
             localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
-            editReservationViewModel.inputDataChanged(
+            customReservationViewModel.inputDataChanged(
                 localDateTime,
                 arrivalTime.text.toString(),
                 exitTime.text.toString(),
@@ -198,19 +191,15 @@ class EditReservationFragment: Fragment() {
             )
         }
 
-        editReservationViewModel.editReservationResult.observe(mainActivity, {
-            checkEditReservationResult(it)
+        customReservationViewModel.reservationResult.observe(mainActivity, {
+            checkCustomReservationResult(it)
         })
 
-        editReservationViewModel.deleteReservationResult.observe(mainActivity, {
-            checkDeleteReservationResult(it)
-        })
-
-        editReservationViewModel.roomViewResult.observe(mainActivity, {
+        customReservationViewModel.roomViewResult.observe(mainActivity, {
             checkRoomViewResult(it)
         })
 
-        editReservationViewModel.editReservationForm.observe(mainActivity, Observer {
+        customReservationViewModel.customReservationForm.observe(mainActivity, Observer {
             val reservationState = it ?: return@Observer
 
             if (reservationState.arrivalTimeError != null) {
@@ -228,10 +217,10 @@ class EditReservationFragment: Fragment() {
             } else {
                 selectedDateLayout.error = null
             }
-            edit.isEnabled = reservationState.isDataValid
+            reserve.isEnabled = reservationState.isDataValid
         })
 
-        edit.setOnClickListener {
+        reserve.setOnClickListener {
             val date = selectedDate.text.toString()
 
             val from = arrivalTime.text.toString()
@@ -240,41 +229,22 @@ class EditReservationFragment: Fragment() {
             val to = exitTime.text.toString()
             val endDateTime = localDateTimeToUTC(date, to)
             loading.show()
-            editReservationViewModel.editReservation(
-                idReservation = args.reservationId, deskId = args.deskId, start = startDateTime,
+            customReservationViewModel.customReservation(
+                deskId = args.deskId, start = startDateTime,
                 end = endDateTime, authorization = authorization
             )
         }
-
-        remove.setOnClickListener {
-            loading.show()
-            editReservationViewModel.deleteReservation(
-                idReservation = args.reservationId, authorization = authorization
-            )
-        }
     }
 
-    fun checkEditReservationResult(formResult: EditReservationResult) {
+    fun checkCustomReservationResult(formResult: CustomReservationResult) {
         loading.hide()
         if (formResult.success != null) {
-            Toast.makeText(context,getString(R.string.reservation_edited),Toast.LENGTH_SHORT).show()
-            findNavController().popBackStack(R.id.navigation_user_account, false)
+            Toast.makeText(context,getString(R.string.reservation_successful),Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_global_navigation_home)
         }
         else if (formResult.error != null) {
             showReservationFailed(formResult.error)
-            findNavController().popBackStack(R.id.navigation_user_account, false)
-        }
-    }
-
-    fun checkDeleteReservationResult(formResult: DeleteReservationResult) {
-        loading.hide()
-        if (formResult.success != null) {
-            Toast.makeText(context,getString(R.string.reservation_deleted),Toast.LENGTH_SHORT).show()
-            findNavController().popBackStack(R.id.navigation_user_account, false)
-        }
-        else if (formResult.error != null) {
-            showReservationFailed(formResult.error)
-            findNavController().popBackStack(R.id.navigation_user_account, false)
+            findNavController().navigate(R.id.action_global_navigation_home)
         }
     }
 
@@ -292,9 +262,9 @@ class EditReservationFragment: Fragment() {
                 if (idArray[i] == args.deskId) {
                     deskX.setText((xArray[i]+1).toString())
                     deskY.setText((yArray[i]+1).toString())
-                    edit.isEnabled = true
+                    reserve.isEnabled = true
                     localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
-                    editReservationViewModel.inputDataChanged(
+                    customReservationViewModel.inputDataChanged(
                         localDateTime,
                         arrivalTime.text.toString(),
                         exitTime.text.toString(),
@@ -308,7 +278,7 @@ class EditReservationFragment: Fragment() {
             }
         } else if (formResult.error != null) {
             showReservationFailed(formResult.error)
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.action_global_navigation_home)
         }
     }
 
@@ -320,7 +290,7 @@ class EditReservationFragment: Fragment() {
         val localDate = LocalDate.parse(date)
         val localTime = LocalTime.parse(time)
         val zonedTimeDate = ZonedDateTime.of(localDate, localTime, TimeZone.getDefault().toZoneId())
-        return zonedTimeDate.withZoneSameInstant(ZoneOffset.UTC).toString().dropLast(1)
+        return zonedTimeDate.withZoneSameInstant(UTC).toString().dropLast(1)
     }
 
     private fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {

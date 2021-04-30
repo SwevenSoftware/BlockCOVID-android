@@ -50,4 +50,4 @@ class CleanRoomRepository(private val networkClient: NetworkClient) {
             }
         })
     }
-    }
+}

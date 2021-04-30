@@ -1,4 +1,4 @@
-package com.sweven.blockcovid.ui.editReservation
+package com.sweven.blockcovid.ui.customReservation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,47 +6,28 @@ import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.RoomDesks
-import com.sweven.blockcovid.data.repositories.DeleteReservationRepository
-import com.sweven.blockcovid.data.repositories.EditReservationRepository
-import com.sweven.blockcovid.data.repositories.RoomViewRepository
+import com.sweven.blockcovid.data.repositories.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 
-class EditReservationViewModel(private val editReservationRepository: EditReservationRepository,
-                               private val deleteReservationRepository: DeleteReservationRepository,
-                               private val roomViewRepository: RoomViewRepository) : ViewModel() {
+class CustomReservationViewModel(private val reservationRepository: ReservationRepository,
+                                 private val roomViewRepository: RoomViewRepository
+) : ViewModel() {
 
-    private val _editReservationResult = MutableLiveData<EditReservationResult>()
-    val editReservationResult: LiveData<EditReservationResult>
-        get() = _editReservationResult
+    private val _reservationResult = MutableLiveData<CustomReservationResult>()
+    val reservationResult: LiveData<CustomReservationResult>
+        get() = _reservationResult
 
-    fun editReservation(idReservation: String, deskId: String, start: String, end: String, authorization: String) {
-        editReservationRepository.editReservation(idReservation, deskId, start, end, authorization)
-        editReservationRepository.serverResponse.observeForever { it ->
+    fun customReservation(deskId: String, start: String, end: String, authorization: String) {
+        reservationRepository.reserve(deskId, start, end, authorization)
+        reservationRepository.serverResponse.observeForever { it ->
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
-                    _editReservationResult.postValue(EditReservationResult(success = it.data))
+                    _reservationResult.postValue(CustomReservationResult(success = it.data))
                 } else if (it is Result.Error) {
-                    _editReservationResult.postValue(EditReservationResult(error = it.exception))
-                }
-            }
-        }
-    }
-
-    private val _deleteReservationResult = MutableLiveData<DeleteReservationResult>()
-    val deleteReservationResult: LiveData<DeleteReservationResult>
-        get() = _deleteReservationResult
-
-    fun deleteReservation(idReservation: String, authorization: String) {
-        deleteReservationRepository.deleteReservation(idReservation, authorization)
-        deleteReservationRepository.serverResponse.observeForever { it ->
-            it.getContentIfNotHandled()?.let {
-                if (it is Result.Success) {
-                    _deleteReservationResult.postValue(DeleteReservationResult(success = it.data))
-                } else if (it is Result.Error) {
-                    _deleteReservationResult.postValue(DeleteReservationResult(error = it.exception))
+                    _reservationResult.postValue(CustomReservationResult(error = it.exception))
                 }
             }
         }
@@ -76,8 +57,8 @@ class EditReservationViewModel(private val editReservationRepository: EditReserv
         }
     }
 
-    private val _editReservationForm = MutableLiveData<EditReservationFormState>()
-    val editReservationForm: LiveData<EditReservationFormState> = _editReservationForm
+    private val _customReservationForm = MutableLiveData<CustomReservationFormState>()
+    val customReservationForm: LiveData<CustomReservationFormState> = _customReservationForm
 
     fun inputDataChanged(localDateTime: LocalDateTime, arrivalTime: String, exitTime: String,
                          selectedDate: String, openingTime: String, closingTime: String, daysOpen: Array<String>) {
@@ -87,28 +68,28 @@ class EditReservationViewModel(private val editReservationRepository: EditReserv
         val localSelected = LocalDate.parse(selectedDate)
 
         if (arrivalTime > exitTime) {
-            _editReservationForm.value = EditReservationFormState(
+            _customReservationForm.value = CustomReservationFormState(
                 arrivalTimeError = R.string.invalid_time,
                 exitTimeError = R.string.invalid_time
             )
         } else if (localSelected < localToday) {
-            _editReservationForm.value = EditReservationFormState(
+            _customReservationForm.value = CustomReservationFormState(
                 selectedDateError = R.string.invalid_date
             )
         } else if (localArrivalDateTime < localDateTime) {
-            _editReservationForm.value = EditReservationFormState(
+            _customReservationForm.value = CustomReservationFormState(
                 arrivalTimeError = R.string.reservation_old,
                 exitTimeError = R.string.reservation_old,
                 selectedDateError = R.string.reservation_old
             )
         } else if (!isOpenInterval(arrivalTime, exitTime, selectedDate, openingTime, closingTime, daysOpen)) {
-            _editReservationForm.value = EditReservationFormState(
+            _customReservationForm.value = CustomReservationFormState(
                 arrivalTimeError = R.string.room_is_closed,
                 exitTimeError = R.string.room_is_closed,
                 selectedDateError = R.string.room_is_closed_day
             )
         } else {
-            _editReservationForm.value = EditReservationFormState(isDataValid = true)
+            _customReservationForm.value = CustomReservationFormState(isDataValid = true)
         }
     }
 
@@ -125,6 +106,6 @@ class EditReservationViewModel(private val editReservationRepository: EditReserv
                 todayOpen = true
             }
         }
-        return openingTime <= arrivalTime && closingTime >= exitTime && todayOpen
+        return openingTime < arrivalTime && closingTime > exitTime && todayOpen
     }
 }

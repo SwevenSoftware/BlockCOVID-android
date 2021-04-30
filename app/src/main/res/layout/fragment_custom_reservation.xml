@@ -85,7 +85,7 @@
             android:id="@+id/edit_arrival_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
+            android:focusable="false"
             android:gravity="center" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -108,7 +108,7 @@
             android:id="@+id/edit_exit_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
+            android:focusable="false"
             android:gravity="center" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -131,24 +131,24 @@
             android:id="@+id/edit_reservation_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
+            android:focusable="false"
             android:gravity="center" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/reserve_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="64dp"
-        android:gravity="center"
-        android:text="@string/title_reserve"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:icon="@drawable/ic_book" />
+            android:id="@+id/reserve_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="64dp"
+            android:gravity="center"
+            android:text="@string/title_reserve"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:icon="@drawable/ic_book" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/loading"
