@@ -52,7 +52,6 @@ class CleanerRoomsRepository(private val networkClient: NetworkClient) {
                         for (i in 0 until listSize) {
                             nameArray[i] = roomList[i].room.name
 
-                            println(roomList[i].room.roomStatus)
                             isCleanArray[i] = roomList[i].room.roomStatus == "CLEAN"
 
                             val openingTime = UTCToLocalTime(roomList[i].room.openingTime.dropLast(3))

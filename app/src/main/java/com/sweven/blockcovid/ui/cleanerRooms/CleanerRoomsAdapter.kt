@@ -41,6 +41,11 @@ class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, ro: Array<Boole
     }
 
     override fun onBindViewHolder(holder: CleanerRoomsAdapter.MyViewHolder, position: Int) {
+
+        viewModel.cleanRoomResult.observe(lifecycleOwner, {
+            cleanRoom(it, holder.roomStatus, holder.roomCard, holder.roomCheckBox)
+        })
+
         holder.roomText.text = roomList[position]
         val typedValue = TypedValue()
         if (roomCleaned[position]) {
@@ -59,6 +64,19 @@ class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, ro: Array<Boole
             holder.roomStatus.setTextColor(typedValue.data)
             holder.roomCheckBox.isChecked = false
             holder.roomCard.isClickable = true
+
+            holder.roomCard.setOnClickListener {
+
+                if (!holder.roomCheckBox.isChecked) {
+                    val cacheToken = File(context.cacheDir, "token")
+                    var authorization = ""
+                    if (cacheToken.exists()) {
+                        authorization = cacheToken.readText()
+                    }
+                    loading.show()
+                    viewModel.cleanRoom(authorization, holder.roomText.text.toString())
+                }
+            }
         }
 
         if (roomOpened[position]) {
@@ -70,27 +88,10 @@ class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, ro: Array<Boole
             context.theme.resolveAttribute(R.attr.colorError, typedValue, true)
             holder.roomOpen.setTextColor(typedValue.data)
         }
-
-        holder.roomCard.setOnClickListener {
-            if (!holder.roomCheckBox.isChecked) {
-
-                viewModel.cleanRoomResult.observe(lifecycleOwner, {
-                    cleanRoom(it, holder.roomStatus, holder.roomCard, holder.roomCheckBox)
-                })
-
-                loading.show()
-
-                val cacheToken = File(context.cacheDir, "token")
-                var authorization = ""
-                if (cacheToken.exists()) {
-                    authorization = cacheToken.readText()
-                }
-                viewModel.cleanRoom(authorization, holder.roomText.text.toString())
-            }
-        }
     }
 
     fun cleanRoom(formResult: CleanRoomResult, roomStatus: TextView, roomCard: CardView, roomCheckBox: CheckBox) {
+        loading.hide()
         if (formResult.success != null) {
             val typedValue = TypedValue()
             roomStatus.text =
