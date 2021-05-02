@@ -77,9 +77,9 @@ class DeskReservationRepository(private val networkClient: NetworkClient) {
         })
     }
 
-    fun UTCToLocalDateTime(dateTime: String): ZonedDateTime {
+    fun UTCToLocalDateTime(dateTime: String): LocalDateTime {
         val localDateTime = LocalDateTime.parse(dateTime)
         val zonedTimeDate = ZonedDateTime.of(localDateTime, ZoneOffset.UTC)
-        return zonedTimeDate.withZoneSameInstant(TimeZone.getDefault().toZoneId())
+        return zonedTimeDate.withZoneSameInstant(TimeZone.getDefault().toZoneId()).toLocalDateTime()
     }
 }

@@ -109,4 +109,7 @@
     <string name="cleaned_yourself">Cleaned yourself?</string>
     <string name="reservation_started">Reservation started</string>
     <string name="reservation_ended">Reservation ended</string>
+    <string name="reservation_almost_ended">Reservation almost ended</string>
+    <string name="last_reservation">End last reservation</string>
+    <string name="reservation_ended_long">Open the app, scan the RFID tag and press \"End\"</string>
 </resources>

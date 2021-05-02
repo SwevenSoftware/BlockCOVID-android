@@ -109,4 +109,7 @@
     <string name="cleaned_yourself">Pulito autonomamente?</string>
     <string name="reservation_started">Prenotazione iniziata</string>
     <string name="reservation_ended">Prenotazione finita</string>
+    <string name="reservation_almost_ended">Prenotazione quasi finita</string>
+    <string name="last_reservation">Finisci l\'ultima prenotazione</string>
+    <string name="reservation_ended_long">Apri l\'app, scannerizza il tag RFID e clicca su \"Finisci\"</string>
 </resources>
