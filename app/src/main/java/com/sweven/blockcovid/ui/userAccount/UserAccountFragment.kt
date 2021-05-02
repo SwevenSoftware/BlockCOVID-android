@@ -33,7 +33,9 @@ class UserAccountFragment: Fragment() {
         val cacheExpiry = File(context?.cacheDir, "expiryDate")
         val cacheUser = File(context?.cacheDir, "username")
         val cacheAuth = File(context?.cacheDir, "authority")
-        val showUser= view.findViewById<TextView>(R.id.showUsername)
+        val cacheReservationId = File(context?.cacheDir, "reservationId")
+        val reservationEndTime = File(context?.cacheDir, "reservationEndTime")
+        val showUser = view.findViewById<TextView>(R.id.showUsername)
         val myReservationsButton = view.findViewById<Button>(R.id.my_reservations_button)
         val changePasswordButton = view.findViewById<Button>(R.id.change_password_button)
         val logoutButton = view.findViewById<Button>(R.id.logout_button)
@@ -45,7 +47,7 @@ class UserAccountFragment: Fragment() {
         // Funzione per navigare da Account a ChangePassword (bottone Change Password)
        changePasswordButtonFun(changePasswordButton)
         // Funzione per fare il logout, elimina il file token dalla cache
-        logoutClearToken(logoutButton,cacheToken,cacheExpiry,cacheUser,cacheAuth)
+        logoutClearToken(logoutButton,cacheToken,cacheExpiry,cacheUser,cacheAuth,cacheReservationId, reservationEndTime)
     }
 
     private fun showUserFun(showUser:TextView,cacheUser:File) {
@@ -66,13 +68,16 @@ class UserAccountFragment: Fragment() {
         }
     }
 
-    private fun logoutClearToken(logoutButton:Button, cacheToken:File, cacheExpiry:File, cacheUser:File, cacheAuth:File) {
+    private fun logoutClearToken(logoutButton:Button, cacheToken:File, cacheExpiry:File,
+                                 cacheUser:File, cacheAuth:File, cacheReservationId:File, reservationEndTime:File) {
         logoutButton.setOnClickListener {
             if (cacheToken.exists()) {
                 cacheToken.delete()
                 cacheExpiry.delete()
                 cacheUser.delete()
                 cacheAuth.delete()
+                cacheReservationId.delete()
+                reservationEndTime.delete()
             }
             val i = Intent(context, LoginActivity::class.java)
             startActivity(i)

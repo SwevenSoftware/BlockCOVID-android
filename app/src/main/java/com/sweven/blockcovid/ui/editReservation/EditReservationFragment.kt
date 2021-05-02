@@ -270,6 +270,16 @@ class EditReservationFragment: Fragment() {
         loading.hide()
         if (formResult.success != null) {
             Toast.makeText(context,getString(R.string.reservation_deleted),Toast.LENGTH_SHORT).show()
+
+            // remove cache files for checking the reservation id/end time
+            val cacheReservationId = File(context?.cacheDir, "reservationId")
+            val reservationEndTime = File(context?.cacheDir, "reservationEndTime")
+            if (cacheReservationId.exists() && cacheReservationId.readText() == args.reservationId) {
+                if (reservationEndTime.exists()) {
+                    reservationEndTime.delete()
+                }
+                cacheReservationId.delete()
+            }
             findNavController().popBackStack(R.id.navigation_user_account, false)
         }
         else if (formResult.error != null) {
