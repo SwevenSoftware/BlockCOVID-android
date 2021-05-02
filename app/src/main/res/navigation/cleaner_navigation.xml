@@ -3,20 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cleaner_navigation"
-    app:startDestination="@+id/navigation_cleaner_rooms">
-
-    <activity
-        android:id="@+id/navigation_login"
-        android:name="com.sweven.blockcovid.ui.login.LoginActivity"
-        android:label="@string/title_login"
-        tools:layout="@layout/activity_login" />
-    <action android:id="@+id/action_global_navigation_login" app:destination="@id/navigation_login"/>
-
-    <activity
-        android:id="@+id/navigation_cleaner"
-        android:name="com.sweven.blockcovid.CleanerActivity"
-        android:label="@string/app_name"
-        tools:layout="@layout/activity_cleaner" />
+    app:startDestination="@+id/navigation_cleaner_rooms" >
 
     <fragment
         android:id="@+id/navigation_cleaner_rooms"
@@ -34,24 +21,14 @@
             android:id="@+id/action_navigation_cleaner_account_to_navigation_change_password"
             app:destination="@id/navigation_change_password" />
     </fragment>
-    <action android:id="@+id/action_global_navigation_cleaner_account" app:destination="@id/navigation_cleaner_account"/>
+    <action
+        android:id="@+id/action_global_navigation_cleaner_account"
+        app:destination="@id/navigation_cleaner_account" />
 
     <fragment
         android:id="@+id/navigation_change_password"
         android:name="com.sweven.blockcovid.ui.changePassword.ChangePasswordFragment"
         android:label="@string/change_password"
-        tools:layout="@layout/fragment_change_password" >
-        <action
-            android:id="@+id/action_navigation_change_password_to_navigation_cleaner_account"
-            app:destination="@id/navigation_cleaner_account"
-            app:popUpTo="@id/navigation_cleaner_account"
-            app:popUpToInclusive="true" />
-    </fragment>
-
-    <activity
-        android:id="@+id/navigation_start"
-        android:name="com.sweven.blockcovid.StartActivity"
-        android:label="@string/app_name"
-        tools:layout="@layout/activity_start" />
+        tools:layout="@layout/fragment_change_password" />
 
 </navigation>

@@ -35,7 +35,6 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/desk_free"
             android:visibility="invisible"
             app:startIconDrawable="@drawable/ic_query_builder"
             app:layout_constraintTop_toTopOf="parent"
@@ -54,6 +53,59 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/clean_status_text"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/clean_status"
+            android:visibility="invisible"
+            app:startIconDrawable="@drawable/ic_sanitizer"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="224dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_clean_status_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:gravity="center" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <FrameLayout
+            android:id="@+id/frame_layout_clean"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="320dp"
+            android:visibility="invisible">
+
+        <TextView
+                android:id="@+id/cleaned_yourself_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:text="@string/cleaned_yourself"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="@color/material_on_background_emphasis_medium" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cleaned_yourself_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical" />
+
+    </FrameLayout>
+
     <TextView
             android:id="@+id/helper_text"
             android:layout_width="wrap_content"
@@ -66,19 +118,34 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/start_end_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="64dp"
+            android:gravity="center"
+            android:text="@string/start"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:icon="@drawable/ic_check"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@+id/reserve_button" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/reserve_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="64dp"
             android:gravity="center"
             android:text="@string/title_reserve"
             android:visibility="invisible"
+            app:icon="@drawable/ic_book"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="64dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:icon="@drawable/ic_check" />
+            android:layout_marginStart="32dp"
+            app:layout_constraintEnd_toStartOf="@+id/start_end_button"
+            android:layout_marginEnd="8dp" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/loading"

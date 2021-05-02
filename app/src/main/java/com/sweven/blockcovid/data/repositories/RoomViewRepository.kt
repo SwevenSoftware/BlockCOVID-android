@@ -13,6 +13,8 @@ import com.sweven.blockcovid.data.model.RoomDesks
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.*
+import java.util.*
 
 class RoomViewRepository(private val networkClient: NetworkClient) {
 
@@ -37,9 +39,9 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
                     val room = response.body()
                     if (room != null) {
                         val listSize = room.desks.size
-                        val openingTime = room.room.openingTime
-                        val closingTime = room.room.closingTime
-                        val openingDays = Array(listSize) {""}
+                        val openingTime = UTCToLocalTime(room.room.openingTime)
+                        val closingTime = UTCToLocalTime(room.room.closingTime)
+                        val openingDays = Array(room.room.openingDays.size) {""}
                         val idArray = Array(listSize) {""}
                         val xArray = Array(listSize) {0}
                         val yArray = Array(listSize) {0}
@@ -55,11 +57,10 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
                             yArray[l] = (room.desks[l].y - 1).toInt()
                             availableArray[l] = room.desks[l].available
                         }
-                        val desks = Result.Success(RoomDesks(
+                        triggerEvent(Result.Success(RoomDesks(
                             openingTime, closingTime, openingDays,
                             idArray, xArray, yArray, availableArray
-                        ))
-                        triggerEvent(desks)
+                        )))
                     } else {
                         triggerEvent(Result.Success(RoomDesks(
                             null, null, null,
@@ -72,5 +73,12 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
                 }
             }
         })
+    }
+
+    fun UTCToLocalTime(time: String): String {
+        val localTime = LocalTime.parse(time)
+        val localDate = LocalDate.now(ZoneOffset.UTC)
+        val zonedTimeDate = ZonedDateTime.of(localDate, localTime, ZoneOffset.UTC)
+        return zonedTimeDate.withZoneSameInstant(TimeZone.getDefault().toZoneId()).toLocalTime().toString()
     }
 }

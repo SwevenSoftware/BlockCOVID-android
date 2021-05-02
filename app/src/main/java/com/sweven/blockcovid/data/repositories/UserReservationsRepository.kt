@@ -60,10 +60,9 @@ class UserReservationsRepository(private val networkClient: NetworkClient) {
                             endArray[i] = endTime
                             dayArray[i] = day
                         }
-                        val reservationsList = Result.Success(UserReservationsList(
+                        triggerEvent(Result.Success(UserReservationsList(
                             reservationId, deskIdArray, roomArray, startArray, endArray, dayArray
-                        ))
-                        triggerEvent(reservationsList)
+                        )))
                     } else {
                         triggerEvent(Result.Success(UserReservationsList(
                             null, null, null, null, null, null

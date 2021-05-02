@@ -81,23 +81,14 @@ class CleanerRoomsFragment : Fragment() {
             } else {
                 showRoomsFailed(getString(R.string.no_rooms))
             }
-    } else if (cleanerRoomsResult.error != null) {
+        } else if (cleanerRoomsResult.error != null) {
             showRoomsFailed(cleanerRoomsResult.error)
         }
     }
 
     fun cleanRoomMessage(formResult: CleanRoomResult, loading: CircularProgressIndicator) {
         loading.hide()
-        if (formResult.success != null) {
-            activity?.runOnUiThread {
-                loading.hide()
-                Toast.makeText(
-                    context,
-                    context?.getString(R.string.room_cleaned),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        } else if (formResult.error != null) {
+        if (formResult.error != null) {
             showRoomsFailed(formResult.error)
         }
     }

@@ -38,8 +38,6 @@ class CleanRoomRepository(private val networkClient: NetworkClient) {
                     val gson = GsonBuilder().setPrettyPrinting().create()
                     val responseJson =
                         gson.toJson(JsonParser.parseString(response.body()?.string()))
-                    print("Response: ")
-                    println(responseJson)
                     val result = Result.Success(responseJson)
                     triggerEvent(result)
                 } else {
@@ -50,4 +48,4 @@ class CleanRoomRepository(private val networkClient: NetworkClient) {
             }
         })
     }
-    }
+}

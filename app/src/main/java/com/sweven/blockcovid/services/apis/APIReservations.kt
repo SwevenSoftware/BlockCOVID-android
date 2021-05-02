@@ -11,6 +11,6 @@ interface APIReservations {
     @Headers("Accept:*/*")
     @GET("/api/reservations/view/personal")
     fun getReservations(@Header("Authorization") authorization: String,
-                        @Query("from") from: String,
+                        @Query("from") from: String
                         ): Call<Reservations>
 }

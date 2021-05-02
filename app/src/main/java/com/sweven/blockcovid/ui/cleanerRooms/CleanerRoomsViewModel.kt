@@ -39,13 +39,13 @@ class CleanerRoomsViewModel (private val cleanerRoomsRepository: CleanerRoomsRep
 
     fun cleanRoom(authorization: String, roomName: String) {
         cleanRoomRepository.cleanRoom(authorization, roomName)
-        cleanerRoomsRepository.serverResponse.observeForever { it ->
+        cleanRoomRepository.serverResponse.observeForever { it ->
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
-                    _cleanerRoomsResult.postValue(
-                            CleanerRoomsResult(success = it.data))
+                    _cleanRoomResult.postValue(
+                            CleanRoomResult(success = it.data))
                 } else if (it is Result.Error) {
-                    _cleanerRoomsResult.postValue(CleanerRoomsResult(error = it.exception))
+                    _cleanRoomResult.postValue(CleanRoomResult(error = it.exception))
                 }
             }
         }

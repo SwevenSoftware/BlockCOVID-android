@@ -9,10 +9,6 @@ import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.apis.APIDeleteReservation
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.gsonReceive.Reservation
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,15 +42,5 @@ class DeleteReservationRepository(private val networkClient: NetworkClient) {
                 }
             }
         })
-    }
-
-    fun makeJsonObject(deskId: String, from: String, to: String): RequestBody {
-        val jsonObject = JSONObject()
-        jsonObject.put("deskId", deskId)
-        jsonObject.put("start", from)
-        jsonObject.put("end", to)
-
-        val jsonObjectString = jsonObject.toString()
-        return jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
     }
 }

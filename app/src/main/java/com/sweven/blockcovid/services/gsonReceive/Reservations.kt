@@ -24,6 +24,10 @@ data class Reservation (
         val username: String,
         val start: String,
         val end: String,
+        val usageStart: String?,
+        val usageEnd: String?,
+        val deskCleaned: Boolean,
+        val ended: Boolean,
 
         @SerializedName("_links")
         val links: ReservationLinks

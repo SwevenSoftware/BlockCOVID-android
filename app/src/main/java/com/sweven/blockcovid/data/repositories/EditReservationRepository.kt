@@ -50,7 +50,6 @@ class EditReservationRepository(private val networkClient: NetworkClient) {
         })
     }
 
-
     fun makeJsonObject(deskId: String, from: String, to: String): RequestBody {
         val jsonObject = JSONObject()
         jsonObject.put("deskId", deskId)

@@ -84,6 +84,6 @@ class RoomViewViewModel(private val roomViewRepository: RoomViewRepository) : Vi
                 todayOpen = true
             }
         }
-        return openingTime < arrivalTime && closingTime > exitTime && todayOpen
+        return openingTime <= arrivalTime && closingTime >= exitTime && todayOpen
     }
 }

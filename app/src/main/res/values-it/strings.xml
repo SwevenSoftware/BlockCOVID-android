@@ -88,9 +88,12 @@
     <string name="day">Giorno:</string>
     <string name="no_reservations">Nessuna prenotazione</string>
     <string name="status">Status:</string>
-    <string name="desk_free">Disponibile fino a:</string>
+    <string name="next_reservation">Prossima prenotazione:</string>
+    <string name="reservation_ends">La prenotazione termina alle:</string>
+    <string name="none">Nessuna</string>
     <string name="desk_available">Postazione disponibile</string>
     <string name="desk_unavailable">Postazione non disponibile</string>
+    <string name="desk_reserved">Postazione prenotata</string>
     <string name="reservation_old">Prenotazione troppo vecchia</string>
     <string name="reservation_expired">Prenotazione scaduta</string>
     <string name="nfc_disabled">Lettore NFC non disponibile</string>
@@ -98,4 +101,12 @@
     <string name="read_rfid">Avvicina il telefono al tag RFID</string>
     <string name="verify_nfc">Verifica la disponibilità\ndel lettore NFC:</string>
     <string name="check">Verifica</string>
+    <string name="start">Inizia</string>
+    <string name="end">Finisci</string>
+    <string name="clean_status">Stato pulizia:</string>
+    <string name="desk_clean">Pulito</string>
+    <string name="desk_dirty">Sporco</string>
+    <string name="cleaned_yourself">Pulito autonomamente?</string>
+    <string name="reservation_started">Prenotazione iniziata</string>
+    <string name="reservation_ended">Prenotazione finita</string>
 </resources>

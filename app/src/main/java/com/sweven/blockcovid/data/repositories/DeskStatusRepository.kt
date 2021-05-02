@@ -13,6 +13,10 @@ import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.util.*
 
 class DeskStatusRepository(private val networkClient: NetworkClient) {
 
@@ -34,14 +38,30 @@ class DeskStatusRepository(private val networkClient: NetworkClient) {
             }
             override fun onResponse(call: Call<DeskStatusLinks>, response: Response<DeskStatusLinks>) {
                 if (response.errorBody() == null) {
-                    val available = response.body()?.available
-                    val nextChange = response.body()?.nextChange?.dropLast(3)?.replace("T", " - ")
-                    triggerEvent(Result.Success(DeskStatus(available = available, nextChange = nextChange)))
+                    val deskStatus = response.body()
+                    if (deskStatus != null) {
+                        val available = deskStatus.available
+                        var nextChange = deskStatus.nextChange
+                        if (deskStatus.nextChange != null) {
+                            nextChange =
+                                UTCToLocalDateTime(deskStatus.nextChange).toString()
+                                    .replace("T", " - ")
+                        }
+                        triggerEvent(Result.Success(DeskStatus(available, nextChange)))
+                    } else {
+                        triggerEvent(Result.Success(DeskStatus(null, null)))
+                    }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)
                     triggerEvent(Result.Error(error.error))
                 }
             }
         })
+    }
+
+    fun UTCToLocalDateTime(dateTime: String): LocalDateTime {
+        val localDateTime = LocalDateTime.parse(dateTime)
+        val zonedTimeDate = ZonedDateTime.of(localDateTime, ZoneOffset.UTC)
+        return zonedTimeDate.withZoneSameInstant(TimeZone.getDefault().toZoneId()).toLocalDateTime()
     }
 }
