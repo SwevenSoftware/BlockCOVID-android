@@ -9,7 +9,7 @@ import org.mockito.Mockito.*
 import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.services.NetworkClient
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 
 class LoginViewModelTest {
 

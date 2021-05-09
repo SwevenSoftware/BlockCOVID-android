@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.progressindicator.CircularProgressIndicator
@@ -89,6 +88,7 @@ class ChangePasswordFragment : Fragment() {
             changePasswordViewModel.changePassword(oldPasswordText, newPasswordText, authorization)
         }
     }
+
     fun checkPasswordFormState(changePassword:Button, changePasswordState:ChangePasswordFormState,
                            oldPassword:TextInputLayout, newPassword:TextInputLayout, repeatPassword:TextInputLayout) {
         changePassword.isEnabled = changePasswordState.isDataValid

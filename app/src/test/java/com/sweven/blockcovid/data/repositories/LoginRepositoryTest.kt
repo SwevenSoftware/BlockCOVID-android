@@ -1,10 +1,8 @@
-package com.sweven.blockcovid.data
+package com.sweven.blockcovid.data.repositories
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
-import com.sweven.blockcovid.Event
+import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.LoggedInUser
-import com.sweven.blockcovid.data.repositories.LoginRepository
 import com.sweven.blockcovid.services.apis.APIUser
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.Token
@@ -31,7 +29,6 @@ class LoginRepositoryTest {
     private inline fun <reified T> mock(): T = mock(T::class.java)
 
     private lateinit var mockLoginRepository: LoginRepository
-    private lateinit var mockServerResponse: LiveData<Event<Result<LoggedInUser>>>
     private lateinit var mockNetworkClient: NetworkClient
     private lateinit var mockRetrofit: APIUser
     private lateinit var mockRequestBody: RequestBody
@@ -67,7 +64,8 @@ class LoginRepositoryTest {
         assertTrue(mockLoginRepository.serverResponse.value?.peekContent() ==
             Result.Success(
                 LoggedInUser(
-            "admin", "bdee5ded-bb59-408f-92d6-d2be4da516cb", 1618500419, "ADMIN")
+                    "admin", "bdee5ded-bb59-408f-92d6-d2be4da516cb", 1618500419, "ADMIN"
+                )
             )
         )
     }
@@ -78,12 +76,12 @@ class LoginRepositoryTest {
         doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIUser::class.java)
         doReturn(mockCall).`when`(mockRetrofit).loginUser(mockRequestBody)
 
-        val response = "{error: \"Internal Server Error\", message:\"\", path:\"/ api/account/login\",status=500, timestamp:\"2021-04-13T15:39:37.015+00:00\"}"
+        val response = "{error: \"Internal Server Error\", message:\"\", path:\"/ api/account/login\",status=400, timestamp:\"2021-04-13T15:39:37.015+00:00\"}"
         val errorResponse = response.toResponseBody("application/json".toMediaTypeOrNull())
 
         doAnswer { invocation ->
             val callback: Callback<TokenAuthorities> = invocation.getArgument(0)
-            callback.onResponse(mockCall, Response.error(500, errorResponse))
+            callback.onResponse(mockCall, Response.error(400, errorResponse))
             null
         }.`when`(mockCall).enqueue(any())
 
@@ -106,7 +104,6 @@ class LoginRepositoryTest {
         }.`when`(mockCall).enqueue(any())
 
         mockLoginRepository.login("admin", "password")
-        println(mockLoginRepository.serverResponse.value?.peekContent().toString())
         assertTrue(mockLoginRepository.serverResponse.value?.peekContent() ==
                 Result.Error(exception = "Timeout")
         )

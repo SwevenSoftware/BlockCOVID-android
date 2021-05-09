@@ -87,8 +87,7 @@ class CleanerRoomsRepository(private val networkClient: NetworkClient) {
         val nowTime = LocalTime.now(TimeZone.getDefault().toZoneId())
 
         var todayOpen = false
-        val thisDay = LocalDate.now(TimeZone.getDefault().toZoneId()).dayOfWeek.toString().toUpperCase(
-            Locale.ITALIAN)
+        val thisDay = LocalDate.now(TimeZone.getDefault().toZoneId()).dayOfWeek.toString().uppercase(Locale.ITALIAN)
         for (i in day.indices) {
             if (thisDay == day[i]) {
                 todayOpen = true
