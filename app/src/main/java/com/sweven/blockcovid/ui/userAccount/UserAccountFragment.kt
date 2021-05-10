@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.ui.login.LoginActivity
@@ -16,15 +15,11 @@ import java.io.File
 
 class UserAccountFragment: Fragment() {
 
-    private lateinit var userAccountViewModel: UserAccountViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        userAccountViewModel =
-            ViewModelProvider(this).get(UserAccountViewModel::class.java)
         return inflater.inflate(R.layout.fragment_user_account, container, false)
     }
 
@@ -41,13 +36,25 @@ class UserAccountFragment: Fragment() {
         val logoutButton = view.findViewById<Button>(R.id.logout_button)
 
         //Funzione per mostrare il messaggio di benvenuto user
-       showUserFun(showUser,cacheUser)
+        showUserFun(showUser,cacheUser)
         // Funzione per navigare da Account a MyReservations (bottone My Reservations)
         myReservationsButtonFun(myReservationsButton)
         // Funzione per navigare da Account a ChangePassword (bottone Change Password)
-       changePasswordButtonFun(changePasswordButton)
+        changePasswordButtonFun(changePasswordButton)
         // Funzione per fare il logout, elimina il file token dalla cache
-        logoutClearToken(logoutButton,cacheToken,cacheExpiry,cacheUser,cacheAuth,cacheReservationId, reservationEndTime)
+        logoutButton.setOnClickListener {
+            logoutClearToken(
+                cacheToken,
+                cacheExpiry,
+                cacheUser,
+                cacheAuth,
+                cacheReservationId,
+                reservationEndTime
+            )
+            val i = Intent(context, LoginActivity::class.java)
+            startActivity(i)
+            activity?.finish()
+        }
     }
 
     private fun showUserFun(showUser:TextView,cacheUser:File) {
@@ -68,20 +75,13 @@ class UserAccountFragment: Fragment() {
         }
     }
 
-    private fun logoutClearToken(logoutButton:Button, cacheToken:File, cacheExpiry:File,
-                                 cacheUser:File, cacheAuth:File, cacheReservationId:File, reservationEndTime:File) {
-        logoutButton.setOnClickListener {
-            if (cacheToken.exists()) {
-                cacheToken.delete()
-                cacheExpiry.delete()
-                cacheUser.delete()
-                cacheAuth.delete()
-                cacheReservationId.delete()
-                reservationEndTime.delete()
-            }
-            val i = Intent(context, LoginActivity::class.java)
-            startActivity(i)
-            activity?.finish()
-        }
+    fun logoutClearToken(cacheToken:File, cacheExpiry:File, cacheUser:File,
+                         cacheAuth:File, cacheReservationId:File, reservationEndTime:File) {
+        cacheToken.delete()
+        cacheExpiry.delete()
+        cacheUser.delete()
+        cacheAuth.delete()
+        cacheReservationId.delete()
+        reservationEndTime.delete()
     }
 }

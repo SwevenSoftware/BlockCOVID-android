@@ -54,13 +54,13 @@ class CleanerAccountFragment: Fragment() {
         }
     }
 
-    fun showUserFun(showUser:TextView,cacheUser:File) {
+    private fun showUserFun(showUser:TextView,cacheUser:File) {
     if(cacheUser.exists()) {
          showUser.text = getString(R.string.welcome).plus(" ").plus(cacheUser.readText())
        }
     }
 
-    fun changePasswordButtonFun(changePasswordButton: Button){
+    private fun changePasswordButtonFun(changePasswordButton: Button){
         changePasswordButton.setOnClickListener {
             view?.findNavController()?.navigate(R.id.action_navigation_cleaner_account_to_navigation_change_password)
         }
