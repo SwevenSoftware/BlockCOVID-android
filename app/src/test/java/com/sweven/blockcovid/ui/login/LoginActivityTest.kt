@@ -203,7 +203,6 @@ class LoginActivityTest {
         File.createTempFile("authority", null, context.cacheDir)
         val cacheAuth = File(context.cacheDir, "authority")
         cacheAuth.writeText("test")
-        activityTest.getCacheAuth()
         val token = activityTest.getCacheAuth()
         assertTrue(token == "test")
         cacheAuth.delete()

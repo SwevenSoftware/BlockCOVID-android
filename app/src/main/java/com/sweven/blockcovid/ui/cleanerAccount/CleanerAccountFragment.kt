@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.ui.login.LoginActivity
@@ -16,15 +15,11 @@ import java.io.File
 
 class CleanerAccountFragment: Fragment() {
 
-    private lateinit var cleanerAccountViewModel: CleanerAccountViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        cleanerAccountViewModel =
-            ViewModelProvider(this).get(CleanerAccountViewModel::class.java)
         return inflater.inflate(R.layout.fragment_cleaner_account, container, false)
     }
 
@@ -44,35 +39,40 @@ class CleanerAccountFragment: Fragment() {
         // Funzione per navigare da Account a ChangePassword (bottone Change Password)
        changePasswordButtonFun(changePasswordButton)
         // Funzione per fare il logout, elimina il file token dalla cache
-        logoutClearToken(logoutButton,cacheToken,cacheExpiry,cacheUser,cacheAuth,cacheReservationId,reservationEndTime)
+        logoutButton.setOnClickListener {
+            logoutClearToken(
+                cacheToken,
+                cacheExpiry,
+                cacheUser,
+                cacheAuth,
+                cacheReservationId,
+                reservationEndTime
+            )
+            val i = Intent(context, LoginActivity::class.java)
+            startActivity(i)
+            activity?.finish()
+        }
     }
 
-    private fun showUserFun(showUser:TextView,cacheUser:File) {
+    fun showUserFun(showUser:TextView,cacheUser:File) {
     if(cacheUser.exists()) {
          showUser.text = getString(R.string.welcome).plus(" ").plus(cacheUser.readText())
        }
     }
 
-    private fun changePasswordButtonFun(changePasswordButton: Button){
+    fun changePasswordButtonFun(changePasswordButton: Button){
         changePasswordButton.setOnClickListener {
             view?.findNavController()?.navigate(R.id.action_navigation_cleaner_account_to_navigation_change_password)
         }
     }
 
-    private fun logoutClearToken(logoutButton:Button, cacheToken:File, cacheExpiry:File,
-                                 cacheUser:File, cacheAuth:File, cacheReservationId:File, reservationEndTime:File) {
-        logoutButton.setOnClickListener {
-            if (cacheToken.exists()) {
-                cacheToken.delete()
-                cacheExpiry.delete()
-                cacheUser.delete()
-                cacheAuth.delete()
-                cacheReservationId.delete()
-                reservationEndTime.delete()
-            }
-            val i = Intent(context, LoginActivity::class.java)
-            startActivity(i)
-            activity?.finish()
-        }
+    fun logoutClearToken(cacheToken:File, cacheExpiry:File, cacheUser:File,
+                         cacheAuth:File, cacheReservationId:File, reservationEndTime:File) {
+        cacheToken.delete()
+        cacheExpiry.delete()
+        cacheUser.delete()
+        cacheAuth.delete()
+        cacheReservationId.delete()
+        reservationEndTime.delete()
     }
 }
