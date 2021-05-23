@@ -15,9 +15,10 @@ For building and running instructions, refer to the section ["Installazione"](ht
 We adopt a [Gitflow workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).
 So in order to contribute to the application the steps are:
 - start from `develop` branch
-- `git flow feature start [faeture name]` (alternatively `git checkout -b feature/[feature name]`)
+- `git flow feature start [feature name]` (alternatively `git checkout -b feature/[feature name]`)
 - Implement the new feature and the corresponding tests
 - commit your changes
-- `git flow feature pulish [feature name]` (alternatively `git push -u origin feature/[feature name]`)
-- open a pull request describing your changes and addressing issues if necessary
-eventually an administrator will review your work and merge it in the develop branch.
+- `git flow feature publish [feature name]` (alternatively `git push -u origin feature/[feature name]`)
+- open a pull request describing your changes and addressing issues if necessary. 
+
+Eventually an administrator will review your work and merge it in the develop branch.
