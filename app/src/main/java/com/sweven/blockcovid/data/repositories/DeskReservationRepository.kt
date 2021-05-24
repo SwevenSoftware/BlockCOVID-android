@@ -13,8 +13,10 @@ import com.sweven.blockcovid.services.gsonReceive.Reservations
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.*
-import java.util.*
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.util.TimeZone
 
 class DeskReservationRepository(private val networkClient: NetworkClient) {
 

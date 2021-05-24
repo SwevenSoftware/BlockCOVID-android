@@ -2,7 +2,10 @@ package com.sweven.blockcovid.services.apis
 
 import com.sweven.blockcovid.services.gsonReceive.DeskStatusLinks
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Headers
+import retrofit2.http.Path
 
 /**
  * API per ottenere lo status di una postazione

@@ -22,9 +22,15 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.sweven.blockcovid.R
 import java.io.File
-import java.time.*
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class EditReservationFragment : Fragment() {
     private lateinit var editReservationViewModel: EditReservationViewModel

@@ -15,9 +15,13 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputLayout
 import com.sweven.blockcovid.R
 import java.io.File
-import java.time.*
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.TimeZone
 
 class ReservationFragment : Fragment() {
     private lateinit var reservationViewModel: ReservationViewModel

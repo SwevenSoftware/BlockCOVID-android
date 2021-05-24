@@ -13,10 +13,14 @@ import com.sweven.blockcovid.services.gsonReceive.Rooms
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.*
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset.UTC
+import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 
 class UserRoomsRepository(private val networkClient: NetworkClient) {
 
@@ -82,7 +86,9 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
         val nowTime = LocalTime.now(TimeZone.getDefault().toZoneId())
 
         var todayOpen = false
-        val thisDay = LocalDate.now(TimeZone.getDefault().toZoneId()).dayOfWeek.toString().toUpperCase(Locale.ITALIAN)
+        val thisDay = LocalDate.now(TimeZone.getDefault().toZoneId()).dayOfWeek.toString().toUpperCase(
+            Locale.ITALIAN
+        )
         for (i in day.indices) {
             if (thisDay == day[i]) {
                 todayOpen = true

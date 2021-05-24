@@ -7,7 +7,12 @@ import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.DeskReservationData
 import com.sweven.blockcovid.data.model.DeskStatus
 import com.sweven.blockcovid.data.model.ThisDeskInfo
-import com.sweven.blockcovid.data.repositories.*
+import com.sweven.blockcovid.data.repositories.DeleteReservationRepository
+import com.sweven.blockcovid.data.repositories.DeskInfoRepository
+import com.sweven.blockcovid.data.repositories.DeskReservationRepository
+import com.sweven.blockcovid.data.repositories.DeskStatusRepository
+import com.sweven.blockcovid.data.repositories.EndReservationRepository
+import com.sweven.blockcovid.data.repositories.StartReservationRepository
 
 class HomeViewModel(
     private val deskStatusRepository: DeskStatusRepository,

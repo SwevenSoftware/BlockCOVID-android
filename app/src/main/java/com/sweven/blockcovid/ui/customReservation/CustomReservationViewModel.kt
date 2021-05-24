@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.RoomDesks
-import com.sweven.blockcovid.data.repositories.*
+import com.sweven.blockcovid.data.repositories.ReservationRepository
+import com.sweven.blockcovid.data.repositories.RoomViewRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.*
+import java.util.Locale
 
 class CustomReservationViewModel(
     private val reservationRepository: ReservationRepository,

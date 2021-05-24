@@ -13,8 +13,11 @@ import com.sweven.blockcovid.services.gsonReceive.RoomWithDesks
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.*
-import java.util.*
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.util.TimeZone
 
 class RoomViewRepository(private val networkClient: NetworkClient) {
 
