@@ -1,4 +1,7 @@
 ![Build status](https://github.com/SwevenSoftware/BlockCOVID-android/actions/workflows/build-app.yml/badge.svg)
+[![codecov](https://codecov.io/gh/SwevenSoftware/BlockCOVID-android/branch/develop/graph/badge.svg)](https://codecov.io/gh/SwevenSoftware/BlockCOVID-android)
+[![Code Style](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io)
+
 # BlockCOVID-android
 ## Description
 Android module for the project BlockCOVID.
