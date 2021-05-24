@@ -46,7 +46,7 @@ class ChangePasswordRepositoryTest {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIChangePassword::class.java)
         Mockito.doReturn(mockCall).`when`(mockRetrofit).changePassword("token", mockRequestBody)
 
-        val response = ResponseBody.create("application/json".toMediaTypeOrNull(), "success")
+        val response = "success".toResponseBody("application/json".toMediaTypeOrNull())
 
         Mockito.doAnswer { invocation ->
             val callback: Callback<ResponseBody> = invocation.getArgument(0)
@@ -82,8 +82,6 @@ class ChangePasswordRepositoryTest {
         Mockito.doReturn(mockRequestBody).`when`(mockChangePasswordRepository).makeJsonObject(Mockito.anyString(), Mockito.anyString())
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIChangePassword::class.java)
         Mockito.doReturn(mockCall).`when`(mockRetrofit).changePassword("token", mockRequestBody)
-
-        val response = ResponseBody.create("application/json".toMediaTypeOrNull(), "timeout")
 
         Mockito.doAnswer { invocation ->
             val callback: Callback<ResponseBody> = invocation.getArgument(0)

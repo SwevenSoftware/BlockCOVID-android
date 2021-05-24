@@ -19,7 +19,6 @@ import java.time.LocalTime
 import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.Locale
 import java.util.TimeZone
 
 class UserRoomsRepository(private val networkClient: NetworkClient) {
@@ -54,8 +53,8 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
                         for (i in 0 until listSize) {
                             nameArray[i] = roomList[i].room.name
 
-                            val openingTime = UTCToLocalTime(roomList[i].room.openingTime.dropLast(3))
-                            val closingTime = UTCToLocalTime(roomList[i].room.closingTime.dropLast(3))
+                            val openingTime = utcToLocalTime(roomList[i].room.openingTime.dropLast(3))
+                            val closingTime = utcToLocalTime(roomList[i].room.closingTime.dropLast(3))
 
                             openArray[i] = openingTime
                             closeArray[i] = closingTime
@@ -86,9 +85,7 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
         val nowTime = LocalTime.now(TimeZone.getDefault().toZoneId())
 
         var todayOpen = false
-        val thisDay = LocalDate.now(TimeZone.getDefault().toZoneId()).dayOfWeek.toString().toUpperCase(
-            Locale.ITALIAN
-        )
+        val thisDay = LocalDate.now(TimeZone.getDefault().toZoneId()).dayOfWeek.toString().uppercase()
         for (i in day.indices) {
             if (thisDay == day[i]) {
                 todayOpen = true
@@ -97,7 +94,7 @@ class UserRoomsRepository(private val networkClient: NetworkClient) {
         return openingTime < nowTime && closingTime > nowTime && todayOpen
     }
 
-    fun UTCToLocalTime(time: String): String {
+    fun utcToLocalTime(time: String): String {
         val localTime = LocalTime.parse(time)
         val localDate = LocalDate.now(UTC)
         val zonedTimeDate = ZonedDateTime.of(localDate, localTime, UTC)

@@ -110,7 +110,6 @@ class LoginRepositoryTest {
         }.`when`(mockCall).enqueue(any())
 
         mockLoginRepository.login("admin", "password")
-        println(mockLoginRepository.serverResponse.value?.peekContent().toString())
         assertTrue(
             mockLoginRepository.serverResponse.value?.peekContent() ==
                 Result.Error(exception = "Timeout")
