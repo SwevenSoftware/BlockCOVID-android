@@ -13,8 +13,10 @@ import com.sweven.blockcovid.services.gsonReceive.Reservations
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.*
-import java.util.*
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.util.TimeZone
 
 class UserReservationsRepository(private val networkClient: NetworkClient) {
 
@@ -39,12 +41,12 @@ class UserReservationsRepository(private val networkClient: NetworkClient) {
                     val reservationList = response.body()?.embedded?.reservationWithRoomList
                     if (reservationList != null) {
                         val listSize = reservationList.size
-                        val reservationId = Array(listSize) {""}
-                        val deskIdArray = Array(listSize) {""}
-                        val roomArray = Array(listSize) {""}
-                        val startArray = Array(listSize) {""}
-                        val endArray = Array(listSize) {""}
-                        val dayArray = Array(listSize) {""}
+                        val reservationId = Array(listSize) { "" }
+                        val deskIdArray = Array(listSize) { "" }
+                        val roomArray = Array(listSize) { "" }
+                        val startArray = Array(listSize) { "" }
+                        val endArray = Array(listSize) { "" }
+                        val dayArray = Array(listSize) { "" }
                         for (i in 0 until listSize) {
                             val startDateTimeUTC = reservationList[i].start
                             val endDateTimeUTC = reservationList[i].end
@@ -60,13 +62,21 @@ class UserReservationsRepository(private val networkClient: NetworkClient) {
                             endArray[i] = endTime
                             dayArray[i] = day
                         }
-                        triggerEvent(Result.Success(UserReservationsList(
-                            reservationId, deskIdArray, roomArray, startArray, endArray, dayArray
-                        )))
+                        triggerEvent(
+                            Result.Success(
+                                UserReservationsList(
+                                    reservationId, deskIdArray, roomArray, startArray, endArray, dayArray
+                                )
+                            )
+                        )
                     } else {
-                        triggerEvent(Result.Success(UserReservationsList(
-                            null, null, null, null, null, null
-                        )))
+                        triggerEvent(
+                            Result.Success(
+                                UserReservationsList(
+                                    null, null, null, null, null, null
+                                )
+                            )
+                        )
                     }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)

@@ -1,13 +1,13 @@
 package com.sweven.blockcovid.data.model
 
 data class RoomDesks(
-        val openingTime: String?,
-        val closingTime: String?,
-        val openingDays: Array<String>?,
-        val idArray: Array<String>?,
-        val xArray: Array<Int>?,
-        val yArray: Array<Int>?,
-        val availableArray: Array<Boolean>?
+    val openingTime: String?,
+    val closingTime: String?,
+    val openingDays: Array<String>?,
+    val idArray: Array<String>?,
+    val xArray: Array<Int>?,
+    val yArray: Array<Int>?,
+    val availableArray: Array<Boolean>?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

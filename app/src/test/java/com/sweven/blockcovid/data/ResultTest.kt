@@ -1,9 +1,8 @@
 package com.sweven.blockcovid.data
 
 import com.sweven.blockcovid.data.model.LoggedInUser
+import org.junit.Assert.assertTrue
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class ResultTest {
 

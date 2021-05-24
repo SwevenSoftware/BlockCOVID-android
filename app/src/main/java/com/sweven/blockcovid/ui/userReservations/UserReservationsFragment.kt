@@ -25,12 +25,12 @@ class UserReservationsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         userReservationsViewModel =
-                ViewModelProvider(this, UserReservationsViewModelFactory()).get(UserReservationsViewModel::class.java)
+            ViewModelProvider(this, UserReservationsViewModelFactory()).get(UserReservationsViewModel::class.java)
         return inflater.inflate(R.layout.fragment_user_reservations, container, false)
     }
 
@@ -40,9 +40,12 @@ class UserReservationsFragment : Fragment() {
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         val mainActivity = viewLifecycleOwner
 
-        userReservationsViewModel.userReservationsResult.observe(mainActivity, {
-            createUserReservationsList(it, loading)
-        })
+        userReservationsViewModel.userReservationsResult.observe(
+            mainActivity,
+            {
+                createUserReservationsList(it, loading)
+            }
+        )
 
         loading.show()
 
@@ -57,8 +60,8 @@ class UserReservationsFragment : Fragment() {
     }
 
     fun createUserReservationsList(
-            userReservationsResult: UserReservationsResult,
-            loading: CircularProgressIndicator
+        userReservationsResult: UserReservationsResult,
+        loading: CircularProgressIndicator
     ) {
         loading.hide()
         if (userReservationsResult.success != null) {
@@ -69,8 +72,9 @@ class UserReservationsFragment : Fragment() {
             val endTimeArray = userReservationsResult.success.endTime
             val dayArray = userReservationsResult.success.day
 
-            if (reservationIdArray != null && deskIdArray != null && roomArray != null
-                && startTimeArray != null && endTimeArray != null && dayArray != null) {
+            if (reservationIdArray != null && deskIdArray != null && roomArray != null &&
+                startTimeArray != null && endTimeArray != null && dayArray != null
+            ) {
                 if (reservationIdArray.isNotEmpty()) {
                     val navController: NavController = findNavController()
                     recyclerView = view?.findViewById(R.id.reservation_recycler_user)!!
@@ -84,13 +88,12 @@ class UserReservationsFragment : Fragment() {
             } else {
                 showReservationsFailed(getString(R.string.no_reservations))
             }
-        } else if (userReservationsResult.error != null)
-        {
+        } else if (userReservationsResult.error != null) {
             showReservationsFailed(userReservationsResult.error)
         }
     }
 
-    fun showReservationsFailed(errorString: String){
-        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
+    fun showReservationsFailed(errorString: String) {
+        Toast.makeText(context, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 }

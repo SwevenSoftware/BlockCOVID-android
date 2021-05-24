@@ -12,11 +12,13 @@ import com.sweven.blockcovid.data.repositories.RoomViewRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.*
+import java.util.Locale
 
-class EditReservationViewModel(private val editReservationRepository: EditReservationRepository,
-                               private val deleteReservationRepository: DeleteReservationRepository,
-                               private val roomViewRepository: RoomViewRepository) : ViewModel() {
+class EditReservationViewModel(
+    private val editReservationRepository: EditReservationRepository,
+    private val deleteReservationRepository: DeleteReservationRepository,
+    private val roomViewRepository: RoomViewRepository
+) : ViewModel() {
 
     private val _editReservationResult = MutableLiveData<EditReservationResult>()
     val editReservationResult: LiveData<EditReservationResult>
@@ -62,11 +64,13 @@ class EditReservationViewModel(private val editReservationRepository: EditReserv
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _roomViewResult.postValue(
-                        RoomViewResult(success =
-                    RoomDesks(
-                        openingTime = it.data.openingTime, closingTime = it.data.closingTime,
-                        openingDays = it.data.openingDays, idArray = it.data.idArray, xArray = it.data.xArray,
-                        yArray = it.data.yArray, availableArray = it.data.availableArray)
+                        RoomViewResult(
+                            success =
+                            RoomDesks(
+                                openingTime = it.data.openingTime, closingTime = it.data.closingTime,
+                                openingDays = it.data.openingDays, idArray = it.data.idArray, xArray = it.data.xArray,
+                                yArray = it.data.yArray, availableArray = it.data.availableArray
+                            )
                         )
                     )
                 } else if (it is Result.Error) {
@@ -79,8 +83,15 @@ class EditReservationViewModel(private val editReservationRepository: EditReserv
     private val _editReservationForm = MutableLiveData<EditReservationFormState>()
     val editReservationForm: LiveData<EditReservationFormState> = _editReservationForm
 
-    fun inputDataChanged(localDateTime: LocalDateTime, arrivalTime: String, exitTime: String,
-                         selectedDate: String, openingTime: String, closingTime: String, daysOpen: Array<String>) {
+    fun inputDataChanged(
+        localDateTime: LocalDateTime,
+        arrivalTime: String,
+        exitTime: String,
+        selectedDate: String,
+        openingTime: String,
+        closingTime: String,
+        daysOpen: Array<String>
+    ) {
         val localToday = localDateTime.toLocalDate()
         val localArrivalDateTime = LocalDateTime.of(LocalDate.parse(selectedDate), LocalTime.parse(arrivalTime))
 

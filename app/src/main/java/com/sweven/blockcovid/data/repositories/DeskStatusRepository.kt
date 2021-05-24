@@ -16,7 +16,7 @@ import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.TimeZone
 
 class DeskStatusRepository(private val networkClient: NetworkClient) {
 

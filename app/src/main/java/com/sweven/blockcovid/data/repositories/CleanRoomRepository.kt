@@ -7,8 +7,8 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.services.apis.APIClean
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.apis.APIClean
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import okhttp3.ResponseBody
 import retrofit2.Call

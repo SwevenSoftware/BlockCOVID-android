@@ -13,46 +13,45 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 import javax.security.cert.CertificateException
 
-
 class NetworkClient {
 
     // cambia questo url a quello del server con BlockCOVID-server
     private val url = "http://192.168.210.30:8091"
     private val unsafeOkHttpClient: OkHttpClient
-    get() = try {
-        // Create a trust manager that does not validate certificate chains
-        val trustAllCerts: Array<TrustManager> = arrayOf(
-            object : X509TrustManager {
-                @Throws(CertificateException::class)
-                override fun checkClientTrusted(chain: Array<X509Certificate?>?, authType: String?) {
+        get() = try {
+            // Create a trust manager that does not validate certificate chains
+            val trustAllCerts: Array<TrustManager> = arrayOf(
+                object : X509TrustManager {
+                    @Throws(CertificateException::class)
+                    override fun checkClientTrusted(chain: Array<X509Certificate?>?, authType: String?) {
+                    }
+
+                    @Throws(CertificateException::class)
+                    override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?) {
+                    }
+
+                    override fun getAcceptedIssuers(): Array<X509Certificate> {
+                        return arrayOf()
+                    }
                 }
+            )
 
-                @Throws(CertificateException::class)
-                override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?) {
-                }
+            // Install the all-trusting trust manager
+            val sslContext: SSLContext = SSLContext.getInstance("SSL")
+            sslContext.init(null, trustAllCerts, SecureRandom())
 
-                override fun getAcceptedIssuers(): Array<X509Certificate> {
-                    return arrayOf()
-                }
-            }
-        )
+            // Create an ssl socket factory with our all-trusting manager
+            val sslSocketFactory: SSLSocketFactory = sslContext.socketFactory
 
-        // Install the all-trusting trust manager
-        val sslContext: SSLContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, SecureRandom())
-
-        // Create an ssl socket factory with our all-trusting manager
-        val sslSocketFactory: SSLSocketFactory = sslContext.socketFactory
-
-        val timeout = 10
-        val builder: OkHttpClient.Builder = OkHttpClient.Builder()
-        builder.connectTimeout(timeout.toLong(), TimeUnit.SECONDS)
-        builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
-        builder.hostnameVerifier { _, _ -> true }
-        builder.build()
-    } catch (e: Exception) {
-        throw RuntimeException(e)
-    }
+            val timeout = 10
+            val builder: OkHttpClient.Builder = OkHttpClient.Builder()
+            builder.connectTimeout(timeout.toLong(), TimeUnit.SECONDS)
+            builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
+            builder.hostnameVerifier { _, _ -> true }
+            builder.build()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(url)
@@ -61,8 +60,7 @@ class NetworkClient {
         .client(unsafeOkHttpClient)
         .build()
 
-    fun<T> buildService(service: Class<T>): T {
+    fun <T> buildService(service: Class<T>): T {
         return retrofit.create(service)
     }
 }
-

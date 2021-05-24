@@ -6,9 +6,9 @@ import com.google.gson.Gson
 import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.LoggedInUser
+import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.apis.APIUser
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
-import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -40,7 +40,7 @@ class LoginRepository(private val networkClient: NetworkClient) {
 
         val call = networkClient.buildService(APIUser::class.java).loginUser(requestBody)
 
-        call.enqueue(object: Callback<TokenAuthorities> {
+        call.enqueue(object : Callback<TokenAuthorities> {
             override fun onFailure(call: Call<TokenAuthorities>, t: Throwable) {
                 triggerEvent(Result.Error(t.message!!))
             }

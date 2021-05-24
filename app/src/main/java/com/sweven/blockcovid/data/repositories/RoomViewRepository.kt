@@ -5,16 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.services.apis.APIDesks
+import com.sweven.blockcovid.data.model.RoomDesks
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.apis.APIDesks
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.gsonReceive.RoomWithDesks
-import com.sweven.blockcovid.data.model.RoomDesks
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.*
-import java.util.*
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.util.TimeZone
 
 class RoomViewRepository(private val networkClient: NetworkClient) {
 
@@ -30,7 +33,7 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
 
         val call = networkClient.buildService(APIDesks::class.java).getDesks(authorization, roomName, arrivalDateTime, exitDateTime)
 
-        call.enqueue(object: Callback<RoomWithDesks> {
+        call.enqueue(object : Callback<RoomWithDesks> {
             override fun onFailure(call: Call<RoomWithDesks>, t: Throwable) {
                 triggerEvent(Result.Error(t.message!!))
             }
@@ -41,11 +44,11 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
                         val listSize = room.desks.size
                         val openingTime = UTCToLocalTime(room.room.openingTime)
                         val closingTime = UTCToLocalTime(room.room.closingTime)
-                        val openingDays = Array(room.room.openingDays.size) {""}
-                        val idArray = Array(listSize) {""}
-                        val xArray = Array(listSize) {0}
-                        val yArray = Array(listSize) {0}
-                        val availableArray = Array(listSize) {false}
+                        val openingDays = Array(room.room.openingDays.size) { "" }
+                        val idArray = Array(listSize) { "" }
+                        val xArray = Array(listSize) { 0 }
+                        val yArray = Array(listSize) { 0 }
+                        val availableArray = Array(listSize) { false }
 
                         for (i in room.room.openingDays.indices) {
                             openingDays[i] = room.room.openingDays[i]
@@ -57,15 +60,23 @@ class RoomViewRepository(private val networkClient: NetworkClient) {
                             yArray[l] = (room.desks[l].y - 1).toInt()
                             availableArray[l] = room.desks[l].available
                         }
-                        triggerEvent(Result.Success(RoomDesks(
-                            openingTime, closingTime, openingDays,
-                            idArray, xArray, yArray, availableArray
-                        )))
+                        triggerEvent(
+                            Result.Success(
+                                RoomDesks(
+                                    openingTime, closingTime, openingDays,
+                                    idArray, xArray, yArray, availableArray
+                                )
+                            )
+                        )
                     } else {
-                        triggerEvent(Result.Success(RoomDesks(
-                            null, null, null,
-                            null, null, null, null
-                        )))
+                        triggerEvent(
+                            Result.Success(
+                                RoomDesks(
+                                    null, null, null,
+                                    null, null, null, null
+                                )
+                            )
+                        )
                     }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)

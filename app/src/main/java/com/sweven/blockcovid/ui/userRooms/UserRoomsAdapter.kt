@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.sweven.blockcovid.R
 
-class UserRoomsAdapter(ct: Context?, nc: NavController, rl: Array<String>, ro: Array<String>, rc: Array<String>, da: Array<Array<String>>, op: Array<Boolean>): RecyclerView.Adapter<UserRoomsAdapter.MyViewHolder>() {
+class UserRoomsAdapter(ct: Context?, nc: NavController, rl: Array<String>, ro: Array<String>, rc: Array<String>, da: Array<Array<String>>, op: Array<Boolean>) : RecyclerView.Adapter<UserRoomsAdapter.MyViewHolder>() {
 
     val context = ct
     private val navController = nc
@@ -21,8 +21,7 @@ class UserRoomsAdapter(ct: Context?, nc: NavController, rl: Array<String>, ro: A
     private val daysArray = da
     private val roomOpened = op
 
-
-    inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var roomText: TextView = itemView.findViewById(R.id.room_text)
         var desksTaken: TextView = itemView.findViewById(R.id.desks_taken)
         var roomOpen: TextView = itemView.findViewById(R.id.room_open)

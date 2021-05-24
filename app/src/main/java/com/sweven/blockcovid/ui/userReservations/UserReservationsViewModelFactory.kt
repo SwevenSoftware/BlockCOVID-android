@@ -16,7 +16,7 @@ class UserReservationsViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(UserReservationsViewModel::class.java)) {
             return UserReservationsViewModel(
-                    userReservationsRepository = UserReservationsRepository(NetworkClient())
+                userReservationsRepository = UserReservationsRepository(NetworkClient())
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

@@ -17,8 +17,8 @@ class CleanerRoomsViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CleanerRoomsViewModel::class.java)) {
             return CleanerRoomsViewModel(
-                    cleanerRoomsRepository = CleanerRoomsRepository(NetworkClient()),
-                    cleanRoomRepository = CleanRoomRepository(NetworkClient())
+                cleanerRoomsRepository = CleanerRoomsRepository(NetworkClient()),
+                cleanRoomRepository = CleanRoomRepository(NetworkClient())
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
