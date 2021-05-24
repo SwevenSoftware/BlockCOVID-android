@@ -8,11 +8,10 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Test
-import org.junit.Assert.*
 import org.junit.Rule
-import org.mockito.ArgumentMatchers.*
+import org.junit.Test
 import org.mockito.Mockito
 import retrofit2.Call
 import retrofit2.Callback

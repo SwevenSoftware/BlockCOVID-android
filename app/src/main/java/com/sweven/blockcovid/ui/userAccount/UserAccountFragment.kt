@@ -63,7 +63,7 @@ class UserAccountFragment : Fragment() {
         }
     }
 
-    private fun logoutClearToken(
+    fun logoutClearToken(
         logoutButton: Button,
         cacheToken: File,
         cacheExpiry: File,

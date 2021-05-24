@@ -47,7 +47,6 @@ class ChangePasswordFragmentTest {
         mockView = mock()
         mockNavController = mock()
         Navigation.setViewNavController(mockView, mockNavController)
-
     }
 
     @Test

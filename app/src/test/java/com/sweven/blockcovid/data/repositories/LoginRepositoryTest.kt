@@ -3,7 +3,6 @@ package com.sweven.blockcovid.data.repositories
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.LoggedInUser
-import com.sweven.blockcovid.data.repositories.LoginRepository
 import com.sweven.blockcovid.services.NetworkClient
 import com.sweven.blockcovid.services.apis.APIUser
 import com.sweven.blockcovid.services.gsonReceive.Token

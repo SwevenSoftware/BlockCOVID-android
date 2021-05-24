@@ -1,11 +1,12 @@
 package com.sweven.blockcovid.ui.cleanerAccount
 
 import android.content.Context
+import android.widget.Button
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import org.junit.Test
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.mockito.Mockito
 import java.io.File
 
@@ -27,6 +28,7 @@ class CleanerAccountFragmentTest {
     fun logoutClearToken_test() {
         val context: Context = mock()
 
+        val logoutButton: Button = mock()
         File.createTempFile("token", null, context.cacheDir)
         File.createTempFile("expiryDate", null, context.cacheDir)
         File.createTempFile("username", null, context.cacheDir)
@@ -40,7 +42,7 @@ class CleanerAccountFragmentTest {
         val cacheReservationId = File(context.cacheDir, "reservationId")
         val reservationEndTime = File(context.cacheDir, "reservationEndTime")
 
-        fragmentTest.logoutClearToken(cacheToken, cacheExpiry, cacheUser, cacheAuth, cacheReservationId, reservationEndTime)
+        fragmentTest.logoutClearToken(logoutButton, cacheToken, cacheExpiry, cacheUser, cacheAuth, cacheReservationId, reservationEndTime)
         assertTrue(!cacheToken.exists())
         assertTrue(!cacheExpiry.exists())
         assertTrue(!cacheUser.exists())
