@@ -21,7 +21,7 @@ jobs:
           java-version: 8
 
       - name: Test coverage with Gradle
-        run: ./gradlew cleanTest test jacocoTestReport -x app:connectedDebugAndroidTest
+        run: ./gradlew cleanTest test jacocoTestReport -x app:connectedDebugAndroidTest -x app:createDebugAndroidTestCoverageReport
 
       - uses: codecov/codecov-action@v1
         with:
