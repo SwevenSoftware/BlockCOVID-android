@@ -37,13 +37,19 @@ class CleanerRoomsFragment : Fragment() {
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         val mainActivity = viewLifecycleOwner
 
-        cleanerRoomsViewModel.cleanerRoomsResult.observe(mainActivity, {
-            createCleanerRoomList(it, loading)
-        })
+        cleanerRoomsViewModel.cleanerRoomsResult.observe(
+            mainActivity,
+            {
+                createCleanerRoomList(it, loading)
+            }
+        )
 
-        cleanerRoomsViewModel.cleanRoomResult.observe(mainActivity, {
-            cleanRoomMessage(it, loading)
-        })
+        cleanerRoomsViewModel.cleanRoomResult.observe(
+            mainActivity,
+            {
+                cleanRoomMessage(it, loading)
+            }
+        )
 
         loading.show()
 
@@ -93,7 +99,7 @@ class CleanerRoomsFragment : Fragment() {
         }
     }
 
-    fun showRoomsFailed(errorString: String){
-        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
+    fun showRoomsFailed(errorString: String) {
+        Toast.makeText(context, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 }

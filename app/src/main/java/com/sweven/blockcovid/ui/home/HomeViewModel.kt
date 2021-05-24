@@ -7,14 +7,20 @@ import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.DeskReservationData
 import com.sweven.blockcovid.data.model.DeskStatus
 import com.sweven.blockcovid.data.model.ThisDeskInfo
-import com.sweven.blockcovid.data.repositories.*
+import com.sweven.blockcovid.data.repositories.DeleteReservationRepository
+import com.sweven.blockcovid.data.repositories.DeskInfoRepository
+import com.sweven.blockcovid.data.repositories.DeskReservationRepository
+import com.sweven.blockcovid.data.repositories.DeskStatusRepository
+import com.sweven.blockcovid.data.repositories.EndReservationRepository
+import com.sweven.blockcovid.data.repositories.StartReservationRepository
 
-class HomeViewModel (private val deskStatusRepository: DeskStatusRepository,
-                     private val deskInfoRepository: DeskInfoRepository,
-                     private val deskReservationRepository: DeskReservationRepository,
-                     private val startReservationRepository: StartReservationRepository,
-                     private val endReservationRepository: EndReservationRepository,
-                     private val deleteReservationRepository: DeleteReservationRepository
+class HomeViewModel(
+    private val deskStatusRepository: DeskStatusRepository,
+    private val deskInfoRepository: DeskInfoRepository,
+    private val deskReservationRepository: DeskReservationRepository,
+    private val startReservationRepository: StartReservationRepository,
+    private val endReservationRepository: EndReservationRepository,
+    private val deleteReservationRepository: DeleteReservationRepository
 ) : ViewModel() {
 
     private val _deskStatusResult = MutableLiveData<DeskStatusResult>()
@@ -27,9 +33,11 @@ class HomeViewModel (private val deskStatusRepository: DeskStatusRepository,
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _deskStatusResult.postValue(
-                        DeskStatusResult(success =
+                        DeskStatusResult(
+                            success =
                             DeskStatus(it.data.available, it.data.nextChange)
-                    ))
+                        )
+                    )
                 } else if (it is Result.Error) {
                     _deskStatusResult.postValue(DeskStatusResult(error = it.exception))
                 }
@@ -47,10 +55,12 @@ class HomeViewModel (private val deskStatusRepository: DeskStatusRepository,
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _deskInfoResult.postValue(
-                        DeskInfoResult(success =
-                        ThisDeskInfo(
-                            x = it.data.x, y = it.data.y,
-                            room = it.data.room, deskClean = it.data.deskClean)
+                        DeskInfoResult(
+                            success =
+                            ThisDeskInfo(
+                                x = it.data.x, y = it.data.y,
+                                room = it.data.room, deskClean = it.data.deskClean
+                            )
                         )
                     )
                 } else if (it is Result.Error) {
@@ -70,11 +80,14 @@ class HomeViewModel (private val deskStatusRepository: DeskStatusRepository,
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _deskReservationResult.postValue(
-                        DeskReservationResult(success =
-                        DeskReservationData(
-                            id = it.data.id, room = it.data.room, start = it.data.start, end = it.data.end,
-                            usageStart = it.data.usageStart, usageEnd = it.data.usageEnd, clean = it.data.clean
-                        )))
+                        DeskReservationResult(
+                            success =
+                            DeskReservationData(
+                                id = it.data.id, room = it.data.room, start = it.data.start, end = it.data.end,
+                                usageStart = it.data.usageStart, usageEnd = it.data.usageEnd, clean = it.data.clean
+                            )
+                        )
+                    )
                 } else if (it is Result.Error) {
                     _deskReservationResult.postValue(DeskReservationResult(error = it.exception))
                 }
@@ -92,7 +105,8 @@ class HomeViewModel (private val deskStatusRepository: DeskStatusRepository,
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _startReservationResult.postValue(
-                        StartReservationResult(success = it.data))
+                        StartReservationResult(success = it.data)
+                    )
                 } else if (it is Result.Error) {
                     _startReservationResult.postValue(StartReservationResult(error = it.exception))
                 }
@@ -110,7 +124,8 @@ class HomeViewModel (private val deskStatusRepository: DeskStatusRepository,
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _endReservationResult.postValue(
-                        EndReservationResult(success = it.data))
+                        EndReservationResult(success = it.data)
+                    )
                 } else if (it is Result.Error) {
                     _endReservationResult.postValue(EndReservationResult(error = it.exception))
                 }

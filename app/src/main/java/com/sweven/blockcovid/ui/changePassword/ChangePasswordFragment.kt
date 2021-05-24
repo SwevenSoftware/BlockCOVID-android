@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.progressindicator.CircularProgressIndicator
-import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.sweven.blockcovid.R
 import java.io.File
 
@@ -22,12 +22,12 @@ class ChangePasswordFragment : Fragment() {
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         changePasswordViewModel =
-                ViewModelProvider(this, ChangePasswordViewModelFactory()).get(ChangePasswordViewModel::class.java)
+            ViewModelProvider(this, ChangePasswordViewModelFactory()).get(ChangePasswordViewModel::class.java)
         return inflater.inflate(R.layout.fragment_change_password, container, false)
     }
 
@@ -45,13 +45,19 @@ class ChangePasswordFragment : Fragment() {
 
         val mainActivity = viewLifecycleOwner
 
-        changePasswordViewModel.changePasswordFormState.observe(mainActivity, {
-            checkPasswordFormState(changePassword, it, oldPassword, newPassword, repeatPassword)
-        })
+        changePasswordViewModel.changePasswordFormState.observe(
+            mainActivity,
+            {
+                checkPasswordFormState(changePassword, it, oldPassword, newPassword, repeatPassword)
+            }
+        )
 
-        changePasswordViewModel.changePasswordResult.observe(mainActivity, {
-            checkPasswordResult(it, loading, editOldPassword, editNewPassword, editRepeatPassword)
-        })
+        changePasswordViewModel.changePasswordResult.observe(
+            mainActivity,
+            {
+                checkPasswordResult(it, loading, editOldPassword, editNewPassword, editRepeatPassword)
+            }
+        )
 
         editOldPassword.afterTextChanged {
             changePasswordViewModel.inputDataChanged(
@@ -88,9 +94,13 @@ class ChangePasswordFragment : Fragment() {
             changePasswordViewModel.changePassword(oldPasswordText, newPasswordText, authorization)
         }
     }
-
-    fun checkPasswordFormState(changePassword:Button, changePasswordState:ChangePasswordFormState,
-                           oldPassword:TextInputLayout, newPassword:TextInputLayout, repeatPassword:TextInputLayout) {
+    fun checkPasswordFormState(
+        changePassword: Button,
+        changePasswordState: ChangePasswordFormState,
+        oldPassword: TextInputLayout,
+        newPassword: TextInputLayout,
+        repeatPassword: TextInputLayout
+    ) {
         changePassword.isEnabled = changePasswordState.isDataValid
         if (changePasswordState.oldPasswordError != null) {
             oldPassword.error = getString(changePasswordState.oldPasswordError)
@@ -109,14 +119,18 @@ class ChangePasswordFragment : Fragment() {
         }
     }
 
-    fun checkPasswordResult(formResult: ChangePasswordResult, loading:CircularProgressIndicator,
-                            oldPassword: TextInputEditText, newPassword: TextInputEditText, repeatPassword: TextInputEditText){
+    fun checkPasswordResult(
+        formResult: ChangePasswordResult,
+        loading: CircularProgressIndicator,
+        oldPassword: TextInputEditText,
+        newPassword: TextInputEditText,
+        repeatPassword: TextInputEditText
+    ) {
         loading.hide()
         if (formResult.success != null) {
-            Toast.makeText(context,getString(R.string.password_changed),Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.password_changed), Toast.LENGTH_SHORT).show()
             view?.findNavController()?.navigateUp()
-        }
-        else if (formResult.error != null) {
+        } else if (formResult.error != null) {
             oldPassword.text?.clear()
             newPassword.text?.clear()
             repeatPassword.text?.clear()
@@ -124,8 +138,8 @@ class ChangePasswordFragment : Fragment() {
         }
     }
 
-    fun showChangePasswordFailed(errorString: String){
-        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
+    fun showChangePasswordFailed(errorString: String) {
+        Toast.makeText(context, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 
     private fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
@@ -140,5 +154,3 @@ class ChangePasswordFragment : Fragment() {
         })
     }
 }
-
-

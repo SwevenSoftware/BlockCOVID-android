@@ -2,7 +2,7 @@ package com.sweven.blockcovid.services.gsonReceive
 
 import com.google.gson.annotations.SerializedName
 
-data class DeskInfo (
+data class DeskInfo(
     val roomName: String,
     @SerializedName("deskId")
     val deskId: String,

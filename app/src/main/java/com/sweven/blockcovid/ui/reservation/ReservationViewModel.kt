@@ -3,8 +3,8 @@ package com.sweven.blockcovid.ui.reservation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sweven.blockcovid.data.repositories.ReservationRepository
 import com.sweven.blockcovid.data.Result
+import com.sweven.blockcovid.data.repositories.ReservationRepository
 
 class ReservationViewModel(private val reservationRepository: ReservationRepository) : ViewModel() {
 

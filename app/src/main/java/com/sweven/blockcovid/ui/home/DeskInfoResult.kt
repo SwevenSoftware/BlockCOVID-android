@@ -5,7 +5,7 @@ import com.sweven.blockcovid.data.model.ThisDeskInfo
 /**
  * Risultato delle info della postazione: successo (dettagli postazione) o messaggio di errore.
  */
-data class DeskInfoResult (
-        val success: ThisDeskInfo? = null,
-        val error: String? = null
+data class DeskInfoResult(
+    val success: ThisDeskInfo? = null,
+    val error: String? = null
 )

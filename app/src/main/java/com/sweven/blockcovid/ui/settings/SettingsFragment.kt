@@ -16,10 +16,12 @@ import java.io.File
 class SettingsFragment : Fragment() {
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
+        settingsViewModel =
+            ViewModelProvider(this).get(SettingsViewModel::class.java)
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 

@@ -7,7 +7,6 @@ import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.UserReservationsList
 import com.sweven.blockcovid.data.repositories.UserReservationsRepository
 
-
 class UserReservationsViewModel(private val userReservationsRepository: UserReservationsRepository) : ViewModel() {
     private val _userReservationsResult = MutableLiveData<UserReservationsResult>()
     val userReservationsResult: LiveData<UserReservationsResult>
@@ -19,7 +18,8 @@ class UserReservationsViewModel(private val userReservationsRepository: UserRese
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _userReservationsResult.postValue(
-                        UserReservationsResult(success =
+                        UserReservationsResult(
+                            success =
                             UserReservationsList(
                                 reservationId = it.data.reservationId,
                                 deskId = it.data.deskId,

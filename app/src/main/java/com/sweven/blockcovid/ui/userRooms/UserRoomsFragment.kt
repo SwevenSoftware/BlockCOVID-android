@@ -23,12 +23,12 @@ class UserRoomsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         userRoomsViewModel =
-                ViewModelProvider(this, UserRoomsViewModelFactory()).get(UserRoomsViewModel::class.java)
+            ViewModelProvider(this, UserRoomsViewModelFactory()).get(UserRoomsViewModel::class.java)
         return inflater.inflate(R.layout.fragment_user_rooms, container, false)
     }
 
@@ -39,9 +39,12 @@ class UserRoomsFragment : Fragment() {
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         val mainActivity = viewLifecycleOwner
 
-        userRoomsViewModel.userRoomsResult.observe(mainActivity, {
-            createUserRoomList(it, loading)
-        })
+        userRoomsViewModel.userRoomsResult.observe(
+            mainActivity,
+            {
+                createUserRoomList(it, loading)
+            }
+        )
 
         loading.show()
 
@@ -55,17 +58,16 @@ class UserRoomsFragment : Fragment() {
 
         refreshButton.setOnClickListener {
             parentFragmentManager
-                    .beginTransaction()
-                    .detach(this)
-                    .attach(this)
-                    .commit()
-
+                .beginTransaction()
+                .detach(this)
+                .attach(this)
+                .commit()
         }
     }
 
     fun createUserRoomList(
-            userRoomsResult: UserRoomsResult,
-            loading: CircularProgressIndicator
+        userRoomsResult: UserRoomsResult,
+        loading: CircularProgressIndicator
     ) {
         loading.hide()
         if (userRoomsResult.success != null) {
@@ -76,7 +78,8 @@ class UserRoomsFragment : Fragment() {
             val isOpenArray = userRoomsResult.success.roomIsOpen
 
             if (nameArray != null && openArray != null && closeArray != null &&
-                daysArray != null && isOpenArray != null) {
+                daysArray != null && isOpenArray != null
+            ) {
                 if (nameArray.isNotEmpty()) {
                     val navController: NavController = findNavController()
                     recyclerView = view?.findViewById(R.id.room_recycler_user)!!
@@ -87,13 +90,12 @@ class UserRoomsFragment : Fragment() {
             } else {
                 showRoomsFailed(getString(R.string.no_rooms))
             }
-        } else if (userRoomsResult.error != null)
-        {
+        } else if (userRoomsResult.error != null) {
             showRoomsFailed(userRoomsResult.error)
         }
     }
 
-    fun showRoomsFailed(errorString: String){
-        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
+    fun showRoomsFailed(errorString: String) {
+        Toast.makeText(context, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 }

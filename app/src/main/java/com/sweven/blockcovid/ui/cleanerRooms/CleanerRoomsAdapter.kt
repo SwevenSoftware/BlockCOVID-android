@@ -14,8 +14,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.sweven.blockcovid.R
 import java.io.File
 
-
-class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, ro: Array<Boolean>, lo: CircularProgressIndicator, vm: CleanerRoomsViewModel, lc: LifecycleOwner): RecyclerView.Adapter<CleanerRoomsAdapter.MyViewHolder>() {
+class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, ro: Array<Boolean>, lo: CircularProgressIndicator, vm: CleanerRoomsViewModel, lc: LifecycleOwner) : RecyclerView.Adapter<CleanerRoomsAdapter.MyViewHolder>() {
 
     private val roomList = rl
     private val roomCleaned = rc
@@ -42,9 +41,12 @@ class CleanerRoomsAdapter(rl: Array<String>, rc: Array<Boolean>, ro: Array<Boole
 
     override fun onBindViewHolder(holder: CleanerRoomsAdapter.MyViewHolder, position: Int) {
 
-        viewModel.cleanRoomResult.observe(lifecycleOwner, {
-            cleanRoom(it, holder.roomStatus, holder.roomCard, holder.roomCheckBox)
-        })
+        viewModel.cleanRoomResult.observe(
+            lifecycleOwner,
+            {
+                cleanRoom(it, holder.roomStatus, holder.roomCard, holder.roomCheckBox)
+            }
+        )
 
         holder.roomText.text = roomList[position]
         val typedValue = TypedValue()

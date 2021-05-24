@@ -2,7 +2,12 @@ package com.sweven.blockcovid.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sweven.blockcovid.data.repositories.*
+import com.sweven.blockcovid.data.repositories.DeleteReservationRepository
+import com.sweven.blockcovid.data.repositories.DeskInfoRepository
+import com.sweven.blockcovid.data.repositories.DeskReservationRepository
+import com.sweven.blockcovid.data.repositories.DeskStatusRepository
+import com.sweven.blockcovid.data.repositories.EndReservationRepository
+import com.sweven.blockcovid.data.repositories.StartReservationRepository
 import com.sweven.blockcovid.services.NetworkClient
 
 /**

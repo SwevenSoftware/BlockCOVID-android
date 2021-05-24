@@ -7,30 +7,36 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.sweven.blockcovid.R
 import java.io.File
-import java.util.*
-import androidx.lifecycle.Observer
-import com.google.android.material.textfield.TextInputLayout
-import java.time.*
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
-
-class RoomViewFragment : Fragment(){
+class RoomViewFragment : Fragment() {
 
     private lateinit var roomViewViewModel: RoomViewViewModel
     private val args: RoomViewFragmentArgs by navArgs()
@@ -43,12 +49,12 @@ class RoomViewFragment : Fragment(){
     private lateinit var layout: ConstraintLayout
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         roomViewViewModel =
-                ViewModelProvider(this, RoomViewViewModelFactory()).get(RoomViewViewModel::class.java)
+            ViewModelProvider(this, RoomViewViewModelFactory()).get(RoomViewViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_room_view, container, false)
         val activity: AppCompatActivity = activity as AppCompatActivity
         val actionBar = activity.supportActionBar
@@ -150,7 +156,6 @@ class RoomViewFragment : Fragment(){
             materialDatePicker.show(childFragmentManager, "reservationDate")
         }
 
-
         arrivalTime.afterTextChanged {
             localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
             roomViewViewModel.inputDataChanged(
@@ -188,44 +193,50 @@ class RoomViewFragment : Fragment(){
             )
         }
 
-        roomViewViewModel.roomViewResult.observe(mainActivity, {
-            createRoomViewResult(it, loading, darkTheme)
-        })
-
-        roomViewViewModel.roomViewForm.observe(mainActivity, Observer {
-            val reservationState = it ?: return@Observer
-
-            if (reservationState.arrivalTimeError != null) {
-                arrivalTimeLayout.error = getString(reservationState.arrivalTimeError)
-            } else {
-                arrivalTimeLayout.error = null
+        roomViewViewModel.roomViewResult.observe(
+            mainActivity,
+            {
+                createRoomViewResult(it, loading, darkTheme)
             }
-            if (reservationState.exitTimeError != null) {
-                exitTimeLayout.error = getString(reservationState.exitTimeError)
-            } else {
-                exitTimeLayout.error = null
+        )
+
+        roomViewViewModel.roomViewForm.observe(
+            mainActivity,
+            Observer {
+                val reservationState = it ?: return@Observer
+
+                if (reservationState.arrivalTimeError != null) {
+                    arrivalTimeLayout.error = getString(reservationState.arrivalTimeError)
+                } else {
+                    arrivalTimeLayout.error = null
+                }
+                if (reservationState.exitTimeError != null) {
+                    exitTimeLayout.error = getString(reservationState.exitTimeError)
+                } else {
+                    exitTimeLayout.error = null
+                }
+                if (reservationState.selectedDateError != null) {
+                    selectDateLayout.error = getString(reservationState.selectedDateError)
+                } else {
+                    selectDateLayout.error = null
+                }
+
+                if (reservationState.isDataValid) {
+                    loading.show()
+                    val date = selectDate.text.toString()
+
+                    val from = arrivalTime.text.toString()
+                    val startDateTime = localDateTimeToUTC(date, from)
+
+                    val to = exitTime.text.toString()
+                    val endDateTime = localDateTimeToUTC(date, to)
+
+                    roomViewViewModel.showRoom(startDateTime, endDateTime, authorization, args.roomName)
+                } else {
+                    layout.removeAllViews()
+                }
             }
-            if (reservationState.selectedDateError != null) {
-                selectDateLayout.error = getString(reservationState.selectedDateError)
-            } else {
-                selectDateLayout.error = null
-            }
-
-            if(reservationState.isDataValid) {
-                loading.show()
-                val date = selectDate.text.toString()
-
-                val from = arrivalTime.text.toString()
-                val startDateTime = localDateTimeToUTC(date, from)
-
-                val to = exitTime.text.toString()
-                val endDateTime = localDateTimeToUTC(date, to)
-
-                roomViewViewModel.showRoom(startDateTime, endDateTime, authorization, args.roomName)
-            } else {
-                layout.removeAllViews()
-            }
-        })
+        )
     }
 
     fun createRoomViewResult(roomDesks: RoomViewResult, loading: CircularProgressIndicator, theme: Boolean) {
@@ -241,7 +252,7 @@ class RoomViewFragment : Fragment(){
                 if (idArray.isNotEmpty()) {
                     for (i in idArray.indices) {
                         val imgButton = Button(context)
-                        imgButton.id = i+1
+                        imgButton.id = i + 1
                         imgButton.width = 50
                         imgButton.height = 50
                         if (availableArray[i]) {
@@ -299,8 +310,8 @@ class RoomViewFragment : Fragment(){
         }
     }
 
-    fun showDesksFailed(errorString: String){
-        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
+    fun showDesksFailed(errorString: String) {
+        Toast.makeText(context, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 
     fun localDateTimeToUTC(date: String, time: String): String {
