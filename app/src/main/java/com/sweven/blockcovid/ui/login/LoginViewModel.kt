@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.R
-import com.sweven.blockcovid.data.repositories.LoginRepository
 import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.data.model.LoggedInUser
-
+import com.sweven.blockcovid.data.repositories.LoginRepository
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -15,7 +14,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     val loginFormState: LiveData<LoginFormState>
         get() = _loginForm
     private val _loginResult = MutableLiveData<LoginResult>()
-    val  loginResult: LiveData<LoginResult>
+    val loginResult: LiveData<LoginResult>
         get() = _loginResult
 
     fun login(username: String, password: String) {
@@ -23,12 +22,15 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         loginRepository.serverResponse.observeForever { it ->
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
-                    _loginResult.postValue(LoginResult(success =
-                    LoggedInUser(
-                            displayName = it.data.displayName, token = it.data.token,
-                            expiryDate = it.data.expiryDate, authority = it.data.authority
+                    _loginResult.postValue(
+                        LoginResult(
+                            success =
+                            LoggedInUser(
+                                displayName = it.data.displayName, token = it.data.token,
+                                expiryDate = it.data.expiryDate, authority = it.data.authority
+                            )
+                        )
                     )
-                    ))
                 } else if (it is Result.Error) {
                     _loginResult.postValue(LoginResult(error = it.exception))
                 }

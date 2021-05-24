@@ -10,7 +10,8 @@ import retrofit2.http.*
 interface APIDeleteReservation {
     @Headers("Accept:*/*")
     @DELETE("/api/reservations/reservation/{idReservation}")
-    fun deleteReservation(@Header("Authorization") authorization: String,
-                          @Path("idReservation") idReservation: String
+    fun deleteReservation(
+        @Header("Authorization") authorization: String,
+        @Path("idReservation") idReservation: String
     ): Call<Reservation>
 }

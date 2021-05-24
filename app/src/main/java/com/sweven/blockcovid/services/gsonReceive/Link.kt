@@ -1,6 +1,6 @@
 package com.sweven.blockcovid.services.gsonReceive
 
-data class Link (
+data class Link(
     val rel: String,
     val href: String,
     val hreflang: String,

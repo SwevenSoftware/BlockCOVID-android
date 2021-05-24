@@ -16,7 +16,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sweven.blockcovid.ui.home.HomeFragmentDirections
 
-
 class UserActivity : AppCompatActivity() {
 
     // Controllo dello stato dell'adattatore NFC
@@ -33,8 +32,11 @@ class UserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment_user)
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_user_rooms, R.id.navigation_settings))
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_home, R.id.navigation_user_rooms, R.id.navigation_settings
+            )
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -45,8 +47,10 @@ class UserActivity : AppCompatActivity() {
         // Crea un PendingIntent generico che verrà consegnato a questa attività. Lo stack NFC
         // riempirà l'Intent con i dettagli del tag scoperto prima di
         // consegnarlo a questa attività.
-        nfcPendingIntent = PendingIntent.getActivity(this, 0,
-                Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0)
+        nfcPendingIntent = PendingIntent.getActivity(
+            this, 0,
+            Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0
+        )
 
         if (intent != null) {
             // Controlla se l'app è stata avviata tramite un intento NFC

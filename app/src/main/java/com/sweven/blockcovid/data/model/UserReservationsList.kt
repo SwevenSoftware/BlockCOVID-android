@@ -1,6 +1,6 @@
 package com.sweven.blockcovid.data.model
 
-data class UserReservationsList (
+data class UserReservationsList(
     val reservationId: Array<String>?,
     val deskId: Array<String>?,
     val room: Array<String>?,

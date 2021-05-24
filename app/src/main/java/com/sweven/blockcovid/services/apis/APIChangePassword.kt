@@ -11,7 +11,8 @@ import retrofit2.http.*
 interface APIChangePassword {
     @Headers("Accept:*/*")
     @PUT("/api/account/modify/password")
-    fun changePassword(@Header("Authorization") authorization: String,
-                        @Body requestBody: RequestBody
-                        ): Call<ResponseBody>
+    fun changePassword(
+        @Header("Authorization") authorization: String,
+        @Body requestBody: RequestBody
+    ): Call<ResponseBody>
 }

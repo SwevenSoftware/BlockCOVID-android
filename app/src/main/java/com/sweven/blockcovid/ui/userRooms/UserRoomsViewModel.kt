@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.data.repositories.UserRoomsRepository
 import com.sweven.blockcovid.data.model.UserRoomsList
-
+import com.sweven.blockcovid.data.repositories.UserRoomsRepository
 
 class UserRoomsViewModel(private val userRoomsRepository: UserRoomsRepository) : ViewModel() {
     private val _userRoomsResult = MutableLiveData<UserRoomsResult>()
@@ -19,13 +18,14 @@ class UserRoomsViewModel(private val userRoomsRepository: UserRoomsRepository) :
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _userRoomsResult.postValue(
-                        UserRoomsResult(success =
+                        UserRoomsResult(
+                            success =
                             UserRoomsList(
-                                    roomName = it.data.roomName,
-                                    roomOpen = it.data.roomOpen,
-                                    roomClose = it.data.roomClose,
-                                    roomDays = it.data.roomDays,
-                                    roomIsOpen = it.data.roomIsOpen
+                                roomName = it.data.roomName,
+                                roomOpen = it.data.roomOpen,
+                                roomClose = it.data.roomClose,
+                                roomDays = it.data.roomDays,
+                                roomIsOpen = it.data.roomIsOpen
                             )
                         )
                     )

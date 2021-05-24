@@ -11,7 +11,8 @@ import retrofit2.http.*
 interface APIDeskInfo {
     @Headers("Accept:*/*")
     @GET("/api/rooms/desks/{deskId}")
-    fun getDeskInfo(@Header("Authorization") authorization: String,
-                    @Path("deskId") deskId : String,
+    fun getDeskInfo(
+        @Header("Authorization") authorization: String,
+        @Path("deskId") deskId: String,
     ): Call<DeskInfo>
 }

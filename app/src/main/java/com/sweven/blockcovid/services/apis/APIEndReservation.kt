@@ -11,8 +11,9 @@ import retrofit2.http.*
 interface APIEndReservation {
     @Headers("Accept:*/*")
     @PUT("/api/reservations/end/{reservationID}")
-    fun endReservation(@Header("Authorization") authorization: String,
-                       @Path("reservationID") reservationID: String,
-                       @Body requestBody: RequestBody
-                       ): Call<Reservation>
+    fun endReservation(
+        @Header("Authorization") authorization: String,
+        @Path("reservationID") reservationID: String,
+        @Body requestBody: RequestBody
+    ): Call<Reservation>
 }

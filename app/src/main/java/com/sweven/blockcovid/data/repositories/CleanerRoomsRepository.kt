@@ -5,18 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.services.apis.APIRooms
+import com.sweven.blockcovid.data.model.CleanerRoomsList
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.apis.APIRooms
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.gsonReceive.Rooms
-import com.sweven.blockcovid.data.model.CleanerRoomsList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
-
 
 class CleanerRoomsRepository(private val networkClient: NetworkClient) {
 
@@ -42,13 +41,13 @@ class CleanerRoomsRepository(private val networkClient: NetworkClient) {
                     val roomList = response.body()?.embedded?.roomWithDesksList
                     if (roomList != null) {
                         val listSize = roomList.size
-                        val nameArray = Array(listSize) { _ -> ""}
-                        val isCleanArray = Array(listSize) { _ -> false}
+                        val nameArray = Array(listSize) { _ -> "" }
+                        val isCleanArray = Array(listSize) { _ -> false }
 
-                        val openArray = Array(listSize) {""}
-                        val closeArray = Array(listSize) {""}
-                        val daysArray = Array(listSize) {Array(7){""}}
-                        val isOpenArray = Array(listSize) {false}
+                        val openArray = Array(listSize) { "" }
+                        val closeArray = Array(listSize) { "" }
+                        val daysArray = Array(listSize) { Array(7) { "" } }
+                        val isOpenArray = Array(listSize) { false }
                         for (i in 0 until listSize) {
                             nameArray[i] = roomList[i].room.name
 
@@ -81,14 +80,15 @@ class CleanerRoomsRepository(private val networkClient: NetworkClient) {
         })
     }
 
-    fun isOpen (ot: String, ct: String, day: Array<String>): Boolean {
+    fun isOpen(ot: String, ct: String, day: Array<String>): Boolean {
         val openingTime = LocalTime.parse(ot)
         val closingTime = LocalTime.parse(ct)
         val nowTime = LocalTime.now(TimeZone.getDefault().toZoneId())
 
         var todayOpen = false
         val thisDay = LocalDate.now(TimeZone.getDefault().toZoneId()).dayOfWeek.toString().toUpperCase(
-            Locale.ITALIAN)
+            Locale.ITALIAN
+        )
         for (i in day.indices) {
             if (thisDay == day[i]) {
                 todayOpen = true

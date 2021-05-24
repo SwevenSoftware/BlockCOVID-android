@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.model.LoggedInUser
 import com.sweven.blockcovid.data.repositories.LoginRepository
-import com.sweven.blockcovid.services.apis.APIUser
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.apis.APIUser
 import com.sweven.blockcovid.services.gsonReceive.Token
 import com.sweven.blockcovid.services.gsonReceive.TokenAuthorities
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -21,7 +21,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.TimeoutException
-
 
 class LoginRepositoryTest {
 
@@ -53,9 +52,9 @@ class LoginRepositoryTest {
         doReturn(mockCall).`when`(mockRetrofit).loginUser(mockRequestBody)
 
         val response = TokenAuthorities(
-                authoritiesList = listOf("ADMIN"),
-                token = Token("bdee5ded-bb59-408f-92d6-d2be4da516cb", "2021-04-15T15:26:59.057965508", "admin")
-            )
+            authoritiesList = listOf("ADMIN"),
+            token = Token("bdee5ded-bb59-408f-92d6-d2be4da516cb", "2021-04-15T15:26:59.057965508", "admin")
+        )
 
         doAnswer { invocation ->
             val callback: Callback<TokenAuthorities> = invocation.getArgument(0)
@@ -64,11 +63,13 @@ class LoginRepositoryTest {
         }.`when`(mockCall).enqueue(any())
 
         mockLoginRepository.login("admin", "password")
-        assertTrue(mockLoginRepository.serverResponse.value?.peekContent() ==
-            Result.Success(
-                LoggedInUser(
-            "admin", "bdee5ded-bb59-408f-92d6-d2be4da516cb", 1618500419, "ADMIN")
-            )
+        assertTrue(
+            mockLoginRepository.serverResponse.value?.peekContent() ==
+                Result.Success(
+                    LoggedInUser(
+                        "admin", "bdee5ded-bb59-408f-92d6-d2be4da516cb", 1618500419, "ADMIN"
+                    )
+                )
         )
     }
 
@@ -88,7 +89,8 @@ class LoginRepositoryTest {
         }.`when`(mockCall).enqueue(any())
 
         mockLoginRepository.login("admin", "password")
-        assertTrue(mockLoginRepository.serverResponse.value?.peekContent() ==
+        assertTrue(
+            mockLoginRepository.serverResponse.value?.peekContent() ==
                 Result.Error(exception = "Internal Server Error")
         )
     }
@@ -107,7 +109,8 @@ class LoginRepositoryTest {
 
         mockLoginRepository.login("admin", "password")
         println(mockLoginRepository.serverResponse.value?.peekContent().toString())
-        assertTrue(mockLoginRepository.serverResponse.value?.peekContent() ==
+        assertTrue(
+            mockLoginRepository.serverResponse.value?.peekContent() ==
                 Result.Error(exception = "Timeout")
         )
     }

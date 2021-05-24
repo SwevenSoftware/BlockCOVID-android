@@ -12,8 +12,9 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 
-class CustomReservationViewModel(private val reservationRepository: ReservationRepository,
-                                 private val roomViewRepository: RoomViewRepository
+class CustomReservationViewModel(
+    private val reservationRepository: ReservationRepository,
+    private val roomViewRepository: RoomViewRepository
 ) : ViewModel() {
 
     private val _reservationResult = MutableLiveData<CustomReservationResult>()
@@ -43,11 +44,13 @@ class CustomReservationViewModel(private val reservationRepository: ReservationR
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
                     _roomViewResult.postValue(
-                        RoomViewResult(success =
-                    RoomDesks(
-                        openingTime = it.data.openingTime, closingTime = it.data.closingTime,
-                        openingDays = it.data.openingDays, idArray = it.data.idArray, xArray = it.data.xArray,
-                        yArray = it.data.yArray, availableArray = it.data.availableArray)
+                        RoomViewResult(
+                            success =
+                            RoomDesks(
+                                openingTime = it.data.openingTime, closingTime = it.data.closingTime,
+                                openingDays = it.data.openingDays, idArray = it.data.idArray, xArray = it.data.xArray,
+                                yArray = it.data.yArray, availableArray = it.data.availableArray
+                            )
                         )
                     )
                 } else if (it is Result.Error) {
@@ -60,8 +63,15 @@ class CustomReservationViewModel(private val reservationRepository: ReservationR
     private val _customReservationForm = MutableLiveData<CustomReservationFormState>()
     val customReservationForm: LiveData<CustomReservationFormState> = _customReservationForm
 
-    fun inputDataChanged(localDateTime: LocalDateTime, arrivalTime: String, exitTime: String,
-                         selectedDate: String, openingTime: String, closingTime: String, daysOpen: Array<String>) {
+    fun inputDataChanged(
+        localDateTime: LocalDateTime,
+        arrivalTime: String,
+        exitTime: String,
+        selectedDate: String,
+        openingTime: String,
+        closingTime: String,
+        daysOpen: Array<String>
+    ) {
         val localToday = localDateTime.toLocalDate()
         val localArrivalDateTime = LocalDateTime.of(LocalDate.parse(selectedDate), LocalTime.parse(arrivalTime))
 

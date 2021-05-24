@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.services.apis.APIReserve
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.apis.APIReserve
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import com.sweven.blockcovid.services.gsonReceive.Reservation
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

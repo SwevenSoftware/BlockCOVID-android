@@ -10,8 +10,9 @@ import retrofit2.http.*
 interface APIDeskReservation {
     @Headers("Accept:*/*")
     @GET("/api/reservations/view/personal/{deskId}")
-    fun getDeskReservation(@Header("Authorization") authorization: String,
-                           @Path("deskId") deskId: String,
-                           @Query("from") from: String
+    fun getDeskReservation(
+        @Header("Authorization") authorization: String,
+        @Path("deskId") deskId: String,
+        @Query("from") from: String
     ): Call<Reservations>
 }

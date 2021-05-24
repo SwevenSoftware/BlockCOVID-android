@@ -1,6 +1,6 @@
 package com.sweven.blockcovid.data.model
 
-data class CleanerRoomsList (
+data class CleanerRoomsList(
     val roomName: Array<String>?,
     val roomIsCleaned: Array<Boolean>?,
     val roomIsOpen: Array<Boolean>?

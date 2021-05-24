@@ -19,7 +19,6 @@ import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
 
-
 class ReservationFragment : Fragment() {
     private lateinit var reservationViewModel: ReservationViewModel
 
@@ -33,9 +32,9 @@ class ReservationFragment : Fragment() {
     private lateinit var reserve: Button
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         reservationViewModel =
             ViewModelProvider(this, ReservationViewModelFactory()).get(ReservationViewModel::class.java)
@@ -84,9 +83,12 @@ class ReservationFragment : Fragment() {
         val loading: CircularProgressIndicator = view.findViewById(R.id.loading)
         val mainActivity = viewLifecycleOwner
 
-        reservationViewModel.reservationResult.observe(mainActivity, {
-            checkReservationResult(it, loading)
-        })
+        reservationViewModel.reservationResult.observe(
+            mainActivity,
+            {
+                checkReservationResult(it, loading)
+            }
+        )
 
         val date = selectedDate.text.toString()
 
@@ -101,20 +103,19 @@ class ReservationFragment : Fragment() {
         }
     }
 
-    fun checkReservationResult(formResult: ReservationResult, loading:CircularProgressIndicator) {
+    fun checkReservationResult(formResult: ReservationResult, loading: CircularProgressIndicator) {
         loading.hide()
         if (formResult.success != null) {
-            Toast.makeText(context,getString(R.string.reservation_successful),Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.reservation_successful), Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
-        }
-        else if (formResult.error != null) {
+        } else if (formResult.error != null) {
             showReservationFailed(formResult.error)
             findNavController().navigateUp()
         }
     }
 
     fun showReservationFailed(errorString: String) {
-        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 
     fun localDateTimeToUTC(date: String, time: String): String {

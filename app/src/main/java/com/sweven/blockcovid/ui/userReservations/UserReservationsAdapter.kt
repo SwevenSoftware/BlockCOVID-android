@@ -10,9 +10,16 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.sweven.blockcovid.R
 
-class UserReservationsAdapter(ct: Context?, nc: NavController, ri: Array<String>, di: Array<String>,
-                              ra: Array<String>, sa: Array<String>, ea: Array<String>, da: Array<String>
-                                ): RecyclerView.Adapter<UserReservationsAdapter.MyViewHolder>() {
+class UserReservationsAdapter(
+    ct: Context?,
+    nc: NavController,
+    ri: Array<String>,
+    di: Array<String>,
+    ra: Array<String>,
+    sa: Array<String>,
+    ea: Array<String>,
+    da: Array<String>
+) : RecyclerView.Adapter<UserReservationsAdapter.MyViewHolder>() {
 
     val context = ct
     private val navController = nc
@@ -23,7 +30,7 @@ class UserReservationsAdapter(ct: Context?, nc: NavController, ri: Array<String>
     private val endTimes = ea
     private val daysArray = da
 
-    inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var reservationCard: CardView = itemView.findViewById(R.id.reservation_card)
         var reservationDesk: TextView = itemView.findViewById(R.id.edit_reservation_desk)
         var reservationTime: TextView = itemView.findViewById(R.id.edit_reservation_time)

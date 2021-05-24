@@ -10,7 +10,8 @@ import retrofit2.http.*
 interface APIStartReservation {
     @Headers("Accept:*/*")
     @PUT("/api/reservations/start/{reservationID}")
-    fun startReservation(@Header("Authorization") authorization: String,
-                        @Path("reservationID") reservationID: String
-                        ): Call<Reservation>
+    fun startReservation(
+        @Header("Authorization") authorization: String,
+        @Path("reservationID") reservationID: String
+    ): Call<Reservation>
 }

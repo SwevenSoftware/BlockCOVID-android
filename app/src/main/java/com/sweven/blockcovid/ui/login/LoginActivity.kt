@@ -2,19 +2,19 @@ package com.sweven.blockcovid.ui.login
 
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sweven.blockcovid.CleanerActivity
-import com.sweven.blockcovid.UserActivity
 import com.sweven.blockcovid.R
+import com.sweven.blockcovid.UserActivity
 import com.sweven.blockcovid.data.model.LoggedInUser
 import java.io.File
 
@@ -32,15 +32,21 @@ open class LoginActivity : AppCompatActivity() {
         val loading = findViewById<CircularProgressIndicator>(R.id.loading)
 
         loginViewModel =
-                ViewModelProvider(this, LoginViewModelFactory()).get(LoginViewModel::class.java)
+            ViewModelProvider(this, LoginViewModelFactory()).get(LoginViewModel::class.java)
 
-        loginViewModel.loginFormState.observe(this@LoginActivity, {
-           checkLoginFormState(it, login)
-        })
+        loginViewModel.loginFormState.observe(
+            this@LoginActivity,
+            {
+                checkLoginFormState(it, login)
+            }
+        )
 
-        loginViewModel.loginResult.observe(this@LoginActivity, {
-           checkLoginResult(it, loading, editUsername, editPassword)
-        })
+        loginViewModel.loginResult.observe(
+            this@LoginActivity,
+            {
+                checkLoginResult(it, loading, editUsername, editPassword)
+            }
+        )
 
         editUsername.afterTextChanged {
             loginViewModel.loginDataChanged(
@@ -92,8 +98,12 @@ open class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun checkLoginResult(formResult: LoginResult, loading: CircularProgressIndicator,
-                         editUsername: TextInputEditText, editPassword: TextInputEditText) {
+    fun checkLoginResult(
+        formResult: LoginResult,
+        loading: CircularProgressIndicator,
+        editUsername: TextInputEditText,
+        editPassword: TextInputEditText
+    ) {
         loading.hide()
         if (formResult.success != null) {
             updateUiWithUser(formResult.success)
@@ -112,8 +122,7 @@ open class LoginActivity : AppCompatActivity() {
                     finish()
                 }
             }
-        }
-        else if (formResult.error != null) {
+        } else if (formResult.error != null) {
             showLoginFailed(formResult.error)
             editUsername.text?.clear()
             editPassword.text?.clear()

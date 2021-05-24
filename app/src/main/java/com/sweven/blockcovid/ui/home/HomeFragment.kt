@@ -55,9 +55,9 @@ class HomeFragment : Fragment() {
     private var roomName = ""
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         homeViewModel =
             ViewModelProvider(this, HomeViewModelFactory()).get(HomeViewModel::class.java)
@@ -67,29 +67,47 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeViewModel.deskStatusResult.observe(viewLifecycleOwner, {
-            showDeskStatusResult(it)
-        })
+        homeViewModel.deskStatusResult.observe(
+            viewLifecycleOwner,
+            {
+                showDeskStatusResult(it)
+            }
+        )
 
-        homeViewModel.deskInfoResult.observe(viewLifecycleOwner, {
-            showDeskInfoResult(it)
-        })
+        homeViewModel.deskInfoResult.observe(
+            viewLifecycleOwner,
+            {
+                showDeskInfoResult(it)
+            }
+        )
 
-        homeViewModel.deskReservationResult.observe(viewLifecycleOwner, {
-            showDeskReservationResult(it)
-        })
+        homeViewModel.deskReservationResult.observe(
+            viewLifecycleOwner,
+            {
+                showDeskReservationResult(it)
+            }
+        )
 
-        homeViewModel.startReservationResult.observe(viewLifecycleOwner, {
-            showStartReservationResult(it)
-        })
+        homeViewModel.startReservationResult.observe(
+            viewLifecycleOwner,
+            {
+                showStartReservationResult(it)
+            }
+        )
 
-        homeViewModel.endReservationResult.observe(viewLifecycleOwner, {
-            showEndReservationResult(it)
-        })
+        homeViewModel.endReservationResult.observe(
+            viewLifecycleOwner,
+            {
+                showEndReservationResult(it)
+            }
+        )
 
-        homeViewModel.deleteReservationResult.observe(viewLifecycleOwner, {
-            showDeleteReservationResult(it)
-        })
+        homeViewModel.deleteReservationResult.observe(
+            viewLifecycleOwner,
+            {
+                showDeleteReservationResult(it)
+            }
+        )
 
         helperText = view.findViewById(R.id.helper_text)
         availableTextLayout = view.findViewById(R.id.available_text)
@@ -165,8 +183,7 @@ class HomeFragment : Fragment() {
                     freeUntilTextView.setText(getString(R.string.none))
                 }
             }
-        }
-        else if (formResult.error != null) {
+        } else if (formResult.error != null) {
             showError(formResult.error)
         }
     }
@@ -188,8 +205,7 @@ class HomeFragment : Fragment() {
                 loading.show()
                 homeViewModel.deskReservation(authorization, localDeskId, timestamp)
             }
-        }
-        else if (formResult.error != null) {
+        } else if (formResult.error != null) {
             showError(formResult.error)
         }
     }
@@ -197,13 +213,13 @@ class HomeFragment : Fragment() {
     fun showDeskReservationResult(formResult: DeskReservationResult) {
         loading.hide()
         if (formResult.success != null) {
-            if (formResult.success.end  != null) {
+            if (formResult.success.end != null) {
                 saveToken("reservationEndTime", formResult.success.end)
             }
 
             reserveButton.setOnClickListener {
                 val action = HomeFragmentDirections.actionNavigationHomeToNavigationCustomReservation(
-                        localDeskId, roomName, deskX.toString(), deskY.toString()
+                    localDeskId, roomName, deskX.toString(), deskY.toString()
                 )
                 findNavController().navigate(action)
             }
@@ -241,8 +257,7 @@ class HomeFragment : Fragment() {
             cleanStatusTextLayout.visibility = VISIBLE
             reserveButton.visibility = VISIBLE
             freeUntilTextLayout.visibility = VISIBLE
-        }
-        else if (formResult.error != null) {
+        } else if (formResult.error != null) {
             showError(formResult.error)
         }
     }
@@ -262,8 +277,7 @@ class HomeFragment : Fragment() {
             alarmManager.set(AlarmManager.RTC_WAKEUP, millisEndTime, pendingIntent)
 
             findNavController().navigate(R.id.action_global_navigation_home)
-        }
-        else if (formResult.error != null) {
+        } else if (formResult.error != null) {
             showError(formResult.error)
         }
     }
@@ -277,8 +291,7 @@ class HomeFragment : Fragment() {
             loading.show()
             homeViewModel.deleteReservation(reservationId, authorization)
             findNavController().navigate(R.id.action_global_navigation_home)
-        }
-        else if (formResult.error != null) {
+        } else if (formResult.error != null) {
             showError(formResult.error)
         }
     }

@@ -7,8 +7,8 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.sweven.blockcovid.Event
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.services.apis.APIChangePassword
 import com.sweven.blockcovid.services.NetworkClient
+import com.sweven.blockcovid.services.apis.APIChangePassword
 import com.sweven.blockcovid.services.gsonReceive.ErrorBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -43,7 +43,7 @@ class ChangePasswordRepository(private val networkClient: NetworkClient) {
                 if (response.errorBody() == null) {
                     val gson = GsonBuilder().setPrettyPrinting().create()
                     val responseJson =
-                            gson.toJson(JsonParser.parseString(response.body()?.string()))
+                        gson.toJson(JsonParser.parseString(response.body()?.string()))
                     val result = Result.Success(responseJson)
                     triggerEvent(result)
                 } else {

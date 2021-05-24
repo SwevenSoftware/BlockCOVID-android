@@ -10,8 +10,9 @@ import retrofit2.http.*
 interface APIDeskStatus {
     @Headers("Accept:*/*")
     @GET("/api/reservations/desk/{deskId}/{timestamp}")
-    fun getDeskStatus(@Header("Authorization") authorization: String,
-                      @Path("timestamp") timestamp : String,
-                      @Path("deskId") deskId : String,
+    fun getDeskStatus(
+        @Header("Authorization") authorization: String,
+        @Path("timestamp") timestamp: String,
+        @Path("deskId") deskId: String,
     ): Call<DeskStatusLinks>
 }

@@ -11,7 +11,8 @@ import retrofit2.http.*
 interface APIReserve {
     @Headers("Accept:*/*")
     @POST("/api/reservations/reservation")
-    fun deskReserve(@Header("Authorization") authorization: String,
-                    @Body requestBody: RequestBody
-                    ): Call<Reservation>
+    fun deskReserve(
+        @Header("Authorization") authorization: String,
+        @Body requestBody: RequestBody
+    ): Call<Reservation>
 }

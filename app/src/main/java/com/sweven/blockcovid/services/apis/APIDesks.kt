@@ -10,9 +10,10 @@ import retrofit2.http.*
 interface APIDesks {
     @Headers("Accept:*/*")
     @GET("/api/rooms/{nameRoom}")
-    fun getDesks (@Header("Authorization") authorization: String,
-                  @Path("nameRoom") nameRoom : String,
-                  @Query("from") from: String,
-                  @Query("to") to: String
+    fun getDesks(
+        @Header("Authorization") authorization: String,
+        @Path("nameRoom") nameRoom: String,
+        @Query("from") from: String,
+        @Query("to") to: String
     ): Call<RoomWithDesks>
 }

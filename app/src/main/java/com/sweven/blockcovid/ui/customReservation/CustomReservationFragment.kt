@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -20,15 +21,13 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.sweven.blockcovid.R
-import androidx.lifecycle.Observer
 import java.io.File
 import java.time.*
 import java.time.ZoneOffset.UTC
 import java.time.temporal.ChronoUnit
 import java.util.*
 
-
-class CustomReservationFragment: Fragment() {
+class CustomReservationFragment : Fragment() {
     private lateinit var customReservationViewModel: CustomReservationViewModel
 
     private val args: CustomReservationFragmentArgs by navArgs()
@@ -50,9 +49,9 @@ class CustomReservationFragment: Fragment() {
     private var authorization = ""
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         customReservationViewModel =
             ViewModelProvider(this, CustomReservationViewModelFactory()).get(CustomReservationViewModel::class.java)
@@ -90,7 +89,7 @@ class CustomReservationFragment: Fragment() {
 
         openingTime = ""
         closingTime = ""
-        openingDays = Array(0){""}
+        openingDays = Array(0) { "" }
 
         loading = view.findViewById(R.id.loading)
         val mainActivity = viewLifecycleOwner
@@ -191,34 +190,43 @@ class CustomReservationFragment: Fragment() {
             )
         }
 
-        customReservationViewModel.reservationResult.observe(mainActivity, {
-            checkCustomReservationResult(it)
-        })
-
-        customReservationViewModel.roomViewResult.observe(mainActivity, {
-            checkRoomViewResult(it)
-        })
-
-        customReservationViewModel.customReservationForm.observe(mainActivity, Observer {
-            val reservationState = it ?: return@Observer
-
-            if (reservationState.arrivalTimeError != null) {
-                arrivalTimeLayout.error = getString(reservationState.arrivalTimeError)
-            } else {
-                arrivalTimeLayout.error = null
+        customReservationViewModel.reservationResult.observe(
+            mainActivity,
+            {
+                checkCustomReservationResult(it)
             }
-            if (reservationState.exitTimeError != null) {
-                exitTimeLayout.error = getString(reservationState.exitTimeError)
-            } else {
-                exitTimeLayout.error = null
+        )
+
+        customReservationViewModel.roomViewResult.observe(
+            mainActivity,
+            {
+                checkRoomViewResult(it)
             }
-            if (reservationState.selectedDateError != null) {
-                selectedDateLayout.error = getString(reservationState.selectedDateError)
-            } else {
-                selectedDateLayout.error = null
+        )
+
+        customReservationViewModel.customReservationForm.observe(
+            mainActivity,
+            Observer {
+                val reservationState = it ?: return@Observer
+
+                if (reservationState.arrivalTimeError != null) {
+                    arrivalTimeLayout.error = getString(reservationState.arrivalTimeError)
+                } else {
+                    arrivalTimeLayout.error = null
+                }
+                if (reservationState.exitTimeError != null) {
+                    exitTimeLayout.error = getString(reservationState.exitTimeError)
+                } else {
+                    exitTimeLayout.error = null
+                }
+                if (reservationState.selectedDateError != null) {
+                    selectedDateLayout.error = getString(reservationState.selectedDateError)
+                } else {
+                    selectedDateLayout.error = null
+                }
+                reserve.isEnabled = reservationState.isDataValid
             }
-            reserve.isEnabled = reservationState.isDataValid
-        })
+        )
 
         reserve.setOnClickListener {
             val date = selectedDate.text.toString()
@@ -239,16 +247,15 @@ class CustomReservationFragment: Fragment() {
     fun checkCustomReservationResult(formResult: CustomReservationResult) {
         loading.hide()
         if (formResult.success != null) {
-            Toast.makeText(context,getString(R.string.reservation_successful),Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.reservation_successful), Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_global_navigation_home)
-        }
-        else if (formResult.error != null) {
+        } else if (formResult.error != null) {
             showReservationFailed(formResult.error)
             findNavController().navigate(R.id.action_global_navigation_home)
         }
     }
 
-    fun checkRoomViewResult (formResult: RoomViewResult) {
+    fun checkRoomViewResult(formResult: RoomViewResult) {
         loading.hide()
         if (formResult.success != null) {
             openingTime = formResult.success.openingTime!!
@@ -260,8 +267,8 @@ class CustomReservationFragment: Fragment() {
 
             for (i in formResult.success.idArray.indices) {
                 if (idArray[i] == args.deskId) {
-                    deskX.setText((xArray[i]+1).toString())
-                    deskY.setText((yArray[i]+1).toString())
+                    deskX.setText((xArray[i] + 1).toString())
+                    deskY.setText((yArray[i] + 1).toString())
                     reserve.isEnabled = true
                     localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
                     customReservationViewModel.inputDataChanged(
@@ -283,7 +290,7 @@ class CustomReservationFragment: Fragment() {
     }
 
     fun showReservationFailed(errorString: String) {
-        Toast.makeText(context,getString(R.string.error).plus(" ").plus(errorString),Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
     }
 
     fun localDateTimeToUTC(date: String, time: String): String {

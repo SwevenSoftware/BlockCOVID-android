@@ -8,8 +8,8 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sweven.blockcovid.R
-import com.sweven.blockcovid.data.repositories.LoginRepository
 import com.sweven.blockcovid.data.model.LoggedInUser
+import com.sweven.blockcovid.data.repositories.LoginRepository
 import org.jetbrains.annotations.NotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -17,7 +17,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.*
 import java.io.File
-
 
 class LoginActivityTest {
 
@@ -33,7 +32,6 @@ class LoginActivityTest {
     private lateinit var mockLoginResult: LiveData<LoginResult>
     private lateinit var mockRepository: LoginRepository
 
-
     @Before
     fun setUp() {
         mockLoginViewModel = mock()
@@ -48,9 +46,9 @@ class LoginActivityTest {
     @Test
     fun checkLoginFormState_correct() {
         val formState = LoginFormState(
-                usernameError = null,
-                passwordError = null,
-                isDataValid = true
+            usernameError = null,
+            passwordError = null,
+            isDataValid = true
         )
         @NotNull val loginButton: Button = mock()
         @NotNull val usernameLayout: TextInputLayout = mock()
@@ -68,9 +66,9 @@ class LoginActivityTest {
     @Test
     fun checkLoginFormState_userError() {
         val formState = LoginFormState(
-                usernameError = 1,
-                passwordError = null,
-                isDataValid = false
+            usernameError = 1,
+            passwordError = null,
+            isDataValid = false
         )
         @NotNull val loginButton: Button = mock()
         @NotNull val usernameLayout: TextInputLayout = mock()
@@ -82,7 +80,6 @@ class LoginActivityTest {
         doReturn("user_error").`when`(activityTest).getString(formState.usernameError!!)
         doReturn("user_error").`when`(usernameLayout).error
 
-
         activityTest.checkLoginFormState(formState, loginButton)
         assertTrue(usernameLayout.error != null)
     }
@@ -90,9 +87,9 @@ class LoginActivityTest {
     @Test
     fun checkLoginFormState_passError() {
         val formState = LoginFormState(
-                usernameError = null,
-                passwordError = 1,
-                isDataValid = false
+            usernameError = null,
+            passwordError = 1,
+            isDataValid = false
         )
         @NotNull val loginButton: Button = mock()
         @NotNull val usernameLayout: TextInputLayout = mock()

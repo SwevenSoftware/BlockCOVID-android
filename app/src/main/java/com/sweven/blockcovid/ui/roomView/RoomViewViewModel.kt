@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.data.Result
-import com.sweven.blockcovid.data.repositories.RoomViewRepository
 import com.sweven.blockcovid.data.model.RoomDesks
+import com.sweven.blockcovid.data.repositories.RoomViewRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -23,11 +23,16 @@ class RoomViewViewModel(private val roomViewRepository: RoomViewRepository) : Vi
         roomViewRepository.serverResponse.observeForever { it ->
             it.getContentIfNotHandled()?.let {
                 if (it is Result.Success) {
-                    _roomViewResult.postValue(RoomViewResult(success =
-                    RoomDesks(
-                            openingTime = it.data.openingTime, closingTime = it.data.closingTime,
-                            openingDays = it.data.openingDays, idArray = it.data.idArray, xArray = it.data.xArray,
-                            yArray = it.data.yArray, availableArray = it.data.availableArray)))
+                    _roomViewResult.postValue(
+                        RoomViewResult(
+                            success =
+                            RoomDesks(
+                                openingTime = it.data.openingTime, closingTime = it.data.closingTime,
+                                openingDays = it.data.openingDays, idArray = it.data.idArray, xArray = it.data.xArray,
+                                yArray = it.data.yArray, availableArray = it.data.availableArray
+                            )
+                        )
+                    )
                 } else if (it is Result.Error) {
                     _roomViewResult.postValue(RoomViewResult(error = it.exception))
                 }
@@ -38,8 +43,15 @@ class RoomViewViewModel(private val roomViewRepository: RoomViewRepository) : Vi
     private val _roomViewForm = MutableLiveData<RoomViewFormState>()
     val roomViewForm: LiveData<RoomViewFormState> = _roomViewForm
 
-    fun inputDataChanged(localDateTime: LocalDateTime, arrivalTime: String, exitTime: String,
-                         selectedDate: String, openingTime: String, closingTime: String, daysOpen: Array<String>) {
+    fun inputDataChanged(
+        localDateTime: LocalDateTime,
+        arrivalTime: String,
+        exitTime: String,
+        selectedDate: String,
+        openingTime: String,
+        closingTime: String,
+        daysOpen: Array<String>
+    ) {
         val localToday = localDateTime.toLocalDate()
         val localArrivalDateTime = LocalDateTime.of(LocalDate.parse(selectedDate), LocalTime.parse(arrivalTime))
 

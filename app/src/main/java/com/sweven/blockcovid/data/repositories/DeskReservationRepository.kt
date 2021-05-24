@@ -14,7 +14,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.*
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 class DeskReservationRepository(private val networkClient: NetworkClient) {
@@ -65,9 +64,13 @@ class DeskReservationRepository(private val networkClient: NetworkClient) {
 
                         triggerEvent(Result.Success(DeskReservationData(id, room, start, end, usageStart, usageEnd, clean)))
                     } else {
-                        triggerEvent(Result.Success(DeskReservationData(
-                            null, null, null, null, null, null, null
-                        )))
+                        triggerEvent(
+                            Result.Success(
+                                DeskReservationData(
+                                    null, null, null, null, null, null, null
+                                )
+                            )
+                        )
                     }
                 } else {
                     val error = Gson().fromJson(response.errorBody()?.string(), ErrorBody::class.java)

@@ -13,7 +13,6 @@ import java.io.File
 import java.time.LocalDateTime
 import java.time.ZoneOffset.UTC
 
-
 class StartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +34,7 @@ class StartActivity : AppCompatActivity() {
             }
         }
 
-        if(cacheToken.exists()) {
+        if (cacheToken.exists()) {
             val cacheExpiry = File(context.cacheDir, "expiryDate")
             val cacheAuth = File(context.cacheDir, "authority")
             val expiryDate = cacheExpiry.readText().toLong()
