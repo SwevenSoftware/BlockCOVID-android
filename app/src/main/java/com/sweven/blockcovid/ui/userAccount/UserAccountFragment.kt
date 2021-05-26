@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.sweven.blockcovid.R
 import com.sweven.blockcovid.ui.login.LoginActivity
@@ -16,15 +15,11 @@ import java.io.File
 
 class UserAccountFragment : Fragment() {
 
-    private lateinit var userAccountViewModel: UserAccountViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        userAccountViewModel =
-            ViewModelProvider(this).get(UserAccountViewModel::class.java)
         return inflater.inflate(R.layout.fragment_user_account, container, false)
     }
 
@@ -68,7 +63,7 @@ class UserAccountFragment : Fragment() {
         }
     }
 
-    private fun logoutClearToken(
+    fun logoutClearToken(
         logoutButton: Button,
         cacheToken: File,
         cacheExpiry: File,

@@ -126,7 +126,7 @@ class EditReservationViewModel(
     fun isOpenInterval(at: String, et: String, sd: String, ot: String, ct: String, openDays: Array<String>): Boolean {
         val arrivalTime = LocalTime.parse(at)
         val exitTime = LocalTime.parse(et)
-        val selectedDate = LocalDate.parse(sd).dayOfWeek.toString().toUpperCase(Locale.ITALIAN)
+        val selectedDate = LocalDate.parse(sd).dayOfWeek.toString().uppercase(Locale.ITALIAN)
         val openingTime = LocalTime.parse(ot)
         val closingTime = LocalTime.parse(ct)
 

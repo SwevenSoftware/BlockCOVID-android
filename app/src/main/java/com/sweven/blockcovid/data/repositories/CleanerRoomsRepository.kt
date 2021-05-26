@@ -19,7 +19,6 @@ import java.time.LocalTime
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
-import java.util.Locale
 import java.util.TimeZone
 
 class CleanerRoomsRepository(private val networkClient: NetworkClient) {
@@ -46,8 +45,8 @@ class CleanerRoomsRepository(private val networkClient: NetworkClient) {
                     val roomList = response.body()?.embedded?.roomWithDesksList
                     if (roomList != null) {
                         val listSize = roomList.size
-                        val nameArray = Array(listSize) { _ -> "" }
-                        val isCleanArray = Array(listSize) { _ -> false }
+                        val nameArray = Array(listSize) { "" }
+                        val isCleanArray = Array(listSize) { false }
 
                         val openArray = Array(listSize) { "" }
                         val closeArray = Array(listSize) { "" }
@@ -58,8 +57,8 @@ class CleanerRoomsRepository(private val networkClient: NetworkClient) {
 
                             isCleanArray[i] = roomList[i].room.roomStatus == "CLEAN"
 
-                            val openingTime = UTCToLocalTime(roomList[i].room.openingTime.dropLast(3))
-                            val closingTime = UTCToLocalTime(roomList[i].room.closingTime.dropLast(3))
+                            val openingTime = utcToLocalTime(roomList[i].room.openingTime.dropLast(3))
+                            val closingTime = utcToLocalTime(roomList[i].room.closingTime.dropLast(3))
 
                             openArray[i] = openingTime
                             closeArray[i] = closingTime
@@ -91,9 +90,7 @@ class CleanerRoomsRepository(private val networkClient: NetworkClient) {
         val nowTime = LocalTime.now(TimeZone.getDefault().toZoneId())
 
         var todayOpen = false
-        val thisDay = LocalDate.now(TimeZone.getDefault().toZoneId()).dayOfWeek.toString().toUpperCase(
-            Locale.ITALIAN
-        )
+        val thisDay = LocalDate.now(TimeZone.getDefault().toZoneId()).dayOfWeek.toString().uppercase()
         for (i in day.indices) {
             if (thisDay == day[i]) {
                 todayOpen = true
@@ -102,7 +99,7 @@ class CleanerRoomsRepository(private val networkClient: NetworkClient) {
         return openingTime < nowTime && closingTime > nowTime && todayOpen
     }
 
-    fun UTCToLocalTime(time: String): String {
+    fun utcToLocalTime(time: String): String {
         val localTime = LocalTime.parse(time)
         val localDate = LocalDate.now(ZoneOffset.UTC)
         val zonedTimeDate = ZonedDateTime.of(localDate, localTime, ZoneOffset.UTC)
