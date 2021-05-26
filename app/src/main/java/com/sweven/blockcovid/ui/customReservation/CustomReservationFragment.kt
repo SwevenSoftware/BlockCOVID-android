@@ -1,0 +1,319 @@
+package com.sweven.blockcovid.ui.customReservation
+
+import android.icu.text.SimpleDateFormat
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import com.sweven.blockcovid.R
+import java.io.File
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset.UTC
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+
+class CustomReservationFragment : Fragment() {
+    private lateinit var customReservationViewModel: CustomReservationViewModel
+
+    private val args: CustomReservationFragmentArgs by navArgs()
+    private lateinit var localDateTime: LocalDateTime
+    private lateinit var textRoom: TextInputEditText
+    private lateinit var deskX: TextInputEditText
+    private lateinit var deskY: TextInputEditText
+    private lateinit var arrivalTime: TextInputEditText
+    private lateinit var arrivalTimeLayout: TextInputLayout
+    private lateinit var exitTime: TextInputEditText
+    private lateinit var exitTimeLayout: TextInputLayout
+    private lateinit var selectedDate: TextInputEditText
+    private lateinit var selectedDateLayout: TextInputLayout
+    private lateinit var openingTime: String
+    private lateinit var closingTime: String
+    private lateinit var openingDays: Array<String>
+    private lateinit var reserve: Button
+    private lateinit var loading: CircularProgressIndicator
+    private var authorization = ""
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        customReservationViewModel =
+            ViewModelProvider(this, CustomReservationViewModelFactory()).get(CustomReservationViewModel::class.java)
+        return inflater.inflate(R.layout.fragment_custom_reservation, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        // Convertitori di formato delle ore e date
+        val timeFormatter = SimpleDateFormat("HH:mm", Locale.ITALIAN)
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ITALIAN)
+
+        // Prende i valori del numero della postazione ed il nome della stanza dal fragment della stanza
+        // per poi mostrarli nella TextView
+        textRoom = view.findViewById(R.id.id_reserved_room)
+        deskX = view.findViewById(R.id.reserved_desk_x)
+        deskY = view.findViewById(R.id.reserved_desk_y)
+        arrivalTime = view.findViewById(R.id.edit_arrival_time)
+        arrivalTimeLayout = view.findViewById(R.id.arrival_time)
+        exitTime = view.findViewById(R.id.edit_exit_time)
+        exitTimeLayout = view.findViewById(R.id.exit_time)
+        selectedDate = view.findViewById(R.id.edit_reservation_date)
+        selectedDateLayout = view.findViewById(R.id.reservation_date)
+        reserve = view.findViewById(R.id.reserve_button)
+        deskX.setText(args.deskX)
+        deskY.setText(args.deskY)
+        textRoom.setText(args.roomName)
+
+        var localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
+        val localDateTimeUTC = LocalDateTime.now(UTC).truncatedTo(ChronoUnit.MINUTES).toString()
+
+        arrivalTime.setText(localDateTime.toLocalTime().toString())
+        exitTime.setText(localDateTime.toLocalTime().plusHours(1).toString())
+        selectedDate.setText(localDateTime.toLocalDate().toString())
+
+        openingTime = ""
+        closingTime = ""
+        openingDays = Array(0) { "" }
+
+        loading = view.findViewById(R.id.loading)
+        val mainActivity = viewLifecycleOwner
+
+        val cacheToken = File(context?.cacheDir, "token")
+        if (cacheToken.exists()) {
+            authorization = cacheToken.readText()
+        }
+
+        loading.show()
+        customReservationViewModel.showRoom(localDateTimeUTC, localDateTimeUTC, authorization, args.roomName)
+
+        // Funzioni per aprire il TimePicker all'interno di Prenotazioni
+        arrivalTime.setOnClickListener {
+            val materialTimePicker = MaterialTimePicker.Builder()
+                .setTitleText(getString(R.string.select_time_to))
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(LocalTime.now(TimeZone.getDefault().toZoneId()).hour)
+                .setMinute(LocalTime.now(TimeZone.getDefault().toZoneId()).minute)
+                .build()
+            materialTimePicker.addOnPositiveButtonClickListener {
+                val newHour: Int = materialTimePicker.hour
+                val newMinute: Int = materialTimePicker.minute
+                val newTime = "$newHour:$newMinute"
+                val time = timeFormatter.parse(newTime).time
+                val correctTime = timeFormatter.format(Date(time))
+                arrivalTime.setText(correctTime)
+            }
+            materialTimePicker.show(childFragmentManager, "arrivalTime")
+        }
+
+        exitTime.setOnClickListener {
+            val materialTimePicker = MaterialTimePicker.Builder()
+                .setTitleText(getString(R.string.select_time_from))
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(LocalTime.now(TimeZone.getDefault().toZoneId()).hour)
+                .setMinute(LocalTime.now(TimeZone.getDefault().toZoneId()).minute)
+                .build()
+            materialTimePicker.addOnPositiveButtonClickListener {
+                val newHour: Int = materialTimePicker.hour
+                val newMinute: Int = materialTimePicker.minute
+                val newTime = "$newHour:$newMinute"
+                val time = timeFormatter.parse(newTime).time
+                val correctTime = timeFormatter.format(Date(time))
+                exitTime.setText(correctTime)
+            }
+            materialTimePicker.show(childFragmentManager, "exitTime")
+        }
+
+        // Invia la data selezionata sul calendario alla MainActivity per poi poterla inviare al server
+        selectedDate.setOnClickListener {
+            val materialDatePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText(getString(R.string.select_day))
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build()
+            materialDatePicker.addOnPositiveButtonClickListener {
+                val selectDate = materialDatePicker.selection
+                val correctDate = dateFormatter.format(selectDate)
+                selectedDate.setText(correctDate)
+            }
+            materialDatePicker.show(childFragmentManager, "reservationDate")
+        }
+
+        arrivalTime.afterTextChanged {
+            localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
+            customReservationViewModel.inputDataChanged(
+                localDateTime,
+                arrivalTime.text.toString(),
+                exitTime.text.toString(),
+                selectedDate.text.toString(),
+                openingTime,
+                closingTime,
+                openingDays
+            )
+        }
+        exitTime.afterTextChanged {
+            localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
+            customReservationViewModel.inputDataChanged(
+                localDateTime,
+                arrivalTime.text.toString(),
+                exitTime.text.toString(),
+                selectedDate.text.toString(),
+                openingTime,
+                closingTime,
+                openingDays
+            )
+        }
+        selectedDate.afterTextChanged {
+            localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
+            customReservationViewModel.inputDataChanged(
+                localDateTime,
+                arrivalTime.text.toString(),
+                exitTime.text.toString(),
+                selectedDate.text.toString(),
+                openingTime,
+                closingTime,
+                openingDays
+            )
+        }
+
+        customReservationViewModel.reservationResult.observe(
+            mainActivity,
+            {
+                checkCustomReservationResult(it)
+            }
+        )
+
+        customReservationViewModel.roomViewResult.observe(
+            mainActivity,
+            {
+                checkRoomViewResult(it)
+            }
+        )
+
+        customReservationViewModel.customReservationForm.observe(
+            mainActivity,
+            Observer {
+                val reservationState = it ?: return@Observer
+
+                if (reservationState.arrivalTimeError != null) {
+                    arrivalTimeLayout.error = getString(reservationState.arrivalTimeError)
+                } else {
+                    arrivalTimeLayout.error = null
+                }
+                if (reservationState.exitTimeError != null) {
+                    exitTimeLayout.error = getString(reservationState.exitTimeError)
+                } else {
+                    exitTimeLayout.error = null
+                }
+                if (reservationState.selectedDateError != null) {
+                    selectedDateLayout.error = getString(reservationState.selectedDateError)
+                } else {
+                    selectedDateLayout.error = null
+                }
+                reserve.isEnabled = reservationState.isDataValid
+            }
+        )
+
+        reserve.setOnClickListener {
+            val date = selectedDate.text.toString()
+
+            val from = arrivalTime.text.toString()
+            val startDateTime = localDateTimeToUTC(date, from)
+
+            val to = exitTime.text.toString()
+            val endDateTime = localDateTimeToUTC(date, to)
+            loading.show()
+            customReservationViewModel.customReservation(
+                deskId = args.deskId, start = startDateTime,
+                end = endDateTime, authorization = authorization
+            )
+        }
+    }
+
+    fun checkCustomReservationResult(formResult: CustomReservationResult) {
+        loading.hide()
+        if (formResult.success != null) {
+            Toast.makeText(context, getString(R.string.reservation_successful), Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_global_navigation_home)
+        } else if (formResult.error != null) {
+            showReservationFailed(formResult.error)
+            findNavController().navigate(R.id.action_global_navigation_home)
+        }
+    }
+
+    fun checkRoomViewResult(formResult: RoomViewResult) {
+        loading.hide()
+        if (formResult.success != null) {
+            openingTime = formResult.success.openingTime!!
+            closingTime = formResult.success.closingTime!!
+            openingDays = formResult.success.openingDays!!
+            val idArray = formResult.success.idArray!!
+            val xArray = formResult.success.xArray!!
+            val yArray = formResult.success.yArray!!
+
+            for (i in formResult.success.idArray.indices) {
+                if (idArray[i] == args.deskId) {
+                    deskX.setText((xArray[i] + 1).toString())
+                    deskY.setText((yArray[i] + 1).toString())
+                    reserve.isEnabled = true
+                    localDateTime = LocalDateTime.now(TimeZone.getDefault().toZoneId()).truncatedTo(ChronoUnit.MINUTES)
+                    customReservationViewModel.inputDataChanged(
+                        localDateTime,
+                        arrivalTime.text.toString(),
+                        exitTime.text.toString(),
+                        selectedDate.text.toString(),
+                        openingTime,
+                        closingTime,
+                        openingDays
+                    )
+                    break
+                }
+            }
+        } else if (formResult.error != null) {
+            showReservationFailed(formResult.error)
+            findNavController().navigate(R.id.action_global_navigation_home)
+        }
+    }
+
+    fun showReservationFailed(errorString: String) {
+        Toast.makeText(context, getString(R.string.error).plus(" ").plus(errorString), Toast.LENGTH_SHORT).show()
+    }
+
+    fun localDateTimeToUTC(date: String, time: String): String {
+        val localDate = LocalDate.parse(date)
+        val localTime = LocalTime.parse(time)
+        val zonedTimeDate = ZonedDateTime.of(localDate, localTime, TimeZone.getDefault().toZoneId())
+        return zonedTimeDate.withZoneSameInstant(UTC).toString().dropLast(1)
+    }
+
+    private fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+        this.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(editable: Editable?) {
+                afterTextChanged.invoke(editable.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        })
+    }
+}
