@@ -3,7 +3,6 @@ package com.sweven.blockcovid.data.repositories
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.services.NetworkClient
-import com.sweven.blockcovid.services.apis.APIChangePassword
 import com.sweven.blockcovid.services.apis.APIEndReservation
 import com.sweven.blockcovid.services.gsonReceive.NewReservation
 import com.sweven.blockcovid.services.gsonReceive.Reservation
@@ -11,7 +10,6 @@ import com.sweven.blockcovid.services.gsonReceive.ReservationLinks
 import com.sweven.blockcovid.services.gsonReceive.SelfReservations
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -49,14 +47,16 @@ class EndReservationRepositoryTest {
     fun endReservation_correct() {
         Mockito.doReturn(mockRequestBody).`when`(mockEndReservationRepository).makeJsonObject(Mockito.anyBoolean())
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIEndReservation::class.java)
-        Mockito.doReturn(mockCall).`when`(mockRetrofit).endReservation("password","password", mockRequestBody)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).endReservation("password", "password", mockRequestBody)
 
-        val response = Reservation("id","deskID","room","username","start",
-            "end","usageStart","usageEnd",true,true,
+        val response = Reservation(
+            "id", "deskID", "room", "username", "start",
+            "end", "usageStart", "usageEnd", true, true,
             ReservationLinks(
-                NewReservation("link1"), SelfReservations("link2",true),
-                SelfReservations("link2",true), SelfReservations("link3",true)
-            ))
+                NewReservation("link1"), SelfReservations("link2", true),
+                SelfReservations("link2", true), SelfReservations("link3", true)
+            )
+        )
 
         Mockito.doAnswer { invocation ->
             val callback: Callback<Reservation> = invocation.getArgument(0)
@@ -72,7 +72,7 @@ class EndReservationRepositoryTest {
     fun endReservation_error() {
         Mockito.doReturn(mockRequestBody).`when`(mockEndReservationRepository).makeJsonObject(Mockito.anyBoolean())
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIEndReservation::class.java)
-        Mockito.doReturn(mockCall).`when`(mockRetrofit).endReservation("password","wrong_password", mockRequestBody)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).endReservation("password", "wrong_password", mockRequestBody)
 
         val response = "{error: \"Internal Server Error\", message:\"\", path:\"/ api/account/login\",status=400, timestamp:\"2021-04-13T15:39:37.015+00:00\"}"
         val errorResponse = response.toResponseBody("application/json".toMediaTypeOrNull())
@@ -87,18 +87,18 @@ class EndReservationRepositoryTest {
         assertTrue(mockEndReservationRepository.serverResponse.value?.peekContent() == Result.Error(exception = "Internal Server Error"))
     }
 
-   @Test
-   fun endReservation_exception() {
-       Mockito.doReturn(mockRequestBody).`when`(mockEndReservationRepository).makeJsonObject(Mockito.anyBoolean())
-       Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIEndReservation::class.java)
-        Mockito.doReturn(mockCall).`when`(mockRetrofit).endReservation("password","password", mockRequestBody)
+    @Test
+    fun endReservation_exception() {
+        Mockito.doReturn(mockRequestBody).`when`(mockEndReservationRepository).makeJsonObject(Mockito.anyBoolean())
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIEndReservation::class.java)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).endReservation("password", "password", mockRequestBody)
 
-       Mockito.doAnswer { invocation ->
-           val callback: Callback<Reservation> = invocation.getArgument(0)
-           callback.onFailure(mockCall, TimeoutException("Timeout"))
-           null
-      }.`when`(mockCall).enqueue(Mockito.any())
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<Reservation> = invocation.getArgument(0)
+            callback.onFailure(mockCall, TimeoutException("Timeout"))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
         mockEndReservationRepository.endReservation("password", "password", true)
-       assertTrue(mockEndReservationRepository.serverResponse.value?.peekContent() == Result.Error(exception = "Timeout"))
-   }
+        assertTrue(mockEndReservationRepository.serverResponse.value?.peekContent() == Result.Error(exception = "Timeout"))
+    }
 }

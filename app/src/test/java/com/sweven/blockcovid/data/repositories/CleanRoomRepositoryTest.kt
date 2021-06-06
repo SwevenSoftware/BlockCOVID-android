@@ -3,7 +3,6 @@ package com.sweven.blockcovid.data.repositories
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.sweven.blockcovid.data.Result
 import com.sweven.blockcovid.services.NetworkClient
-import com.sweven.blockcovid.services.apis.APIChangePassword
 import com.sweven.blockcovid.services.apis.APIClean
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -61,7 +60,7 @@ class CleanRoomRepositoryTest {
     @Test
     fun changePassword_error() {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIClean::class.java)
-        Mockito.doReturn(mockCall).`when`(mockRetrofit).cleanRoom(Mockito.anyString(),Mockito.anyString())
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).cleanRoom(Mockito.anyString(), Mockito.anyString())
 
         val response = "{error: \"Internal Server Error\", message:\"\", path:\"/ api/account/login\",status=400, timestamp:\"2021-04-13T15:39:37.015+00:00\"}"
         val errorResponse = response.toResponseBody("application/json".toMediaTypeOrNull())
@@ -79,7 +78,7 @@ class CleanRoomRepositoryTest {
     @Test
     fun changePassword_exception() {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIClean::class.java)
-        Mockito.doReturn(mockCall).`when`(mockRetrofit).cleanRoom(Mockito.anyString(),Mockito.anyString())
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).cleanRoom(Mockito.anyString(), Mockito.anyString())
 
         Mockito.doAnswer { invocation ->
             val callback: Callback<ResponseBody> = invocation.getArgument(0)
