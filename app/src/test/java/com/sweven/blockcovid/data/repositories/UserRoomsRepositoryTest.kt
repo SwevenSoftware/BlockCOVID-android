@@ -22,9 +22,13 @@ import org.mockito.Mockito
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
+import java.util.TimeZone
 import java.util.concurrent.TimeoutException
 
 class UserRoomsRepositoryTest {
@@ -151,8 +155,11 @@ class UserRoomsRepositoryTest {
     }
 
     @Test
-    fun utcToLocalDateTime_test() {
-        val result = "12:00"
-        assertTrue(mockUserRoomRepository.utcToLocalTime("10:00") == result)
+    fun utcToLocalTime_test() {
+        val utcTime = LocalTime.now(ZoneOffset.UTC)
+        val utcDate = LocalDate.now(ZoneOffset.UTC)
+        val utcTimeDate = ZonedDateTime.of(utcDate, utcTime, ZoneOffset.UTC)
+        val result = utcTimeDate.withZoneSameInstant(TimeZone.getDefault().toZoneId()).toLocalTime().toString()
+        assertTrue(mockUserRoomRepository.utcToLocalTime(utcTime.toString()) == result)
     }
 }
