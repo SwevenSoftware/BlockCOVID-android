@@ -22,9 +22,13 @@ import org.mockito.Mockito
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
+import java.util.TimeZone
 import java.util.concurrent.TimeoutException
 
 class UserRoomsRepositoryTest {
@@ -50,7 +54,7 @@ class UserRoomsRepositoryTest {
     }
 
     @Test
-    fun cleanerRooms_correct() {
+    fun cleanerRooms_null() {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIRooms::class.java)
         val nowLocalDateTime = LocalDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MINUTES).toString()
         Mockito.doReturn(mockCall).`when`(mockRetrofit).getRooms("clean", nowLocalDateTime, nowLocalDateTime)
@@ -62,7 +66,7 @@ class UserRoomsRepositoryTest {
                 List(1) {
                     RoomWithDesksList(
                         Room(
-                            "Stanza", false, "09:00:00", "09:00:00", List(1) { "MONDAY" },
+                            "Stanza", false, "02:00:00", "22:00:00", listOf("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"),
                             10, 10, "CLEAN"
                         ),
                         List(1) { Desk("123ABC", 1, 1, true) },
@@ -75,6 +79,26 @@ class UserRoomsRepositoryTest {
             ),
             Links(Self("link4"))
         )
+
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<Rooms> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
+
+        mockUserRoomRepository.userRooms("clean")
+        assertTrue(mockUserRoomRepository.serverResponse.value?.peekContent() is Result.Success)
+    }
+
+    @Test
+    fun cleanerRooms_correct() {
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIRooms::class.java)
+        val nowLocalDateTime = LocalDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MINUTES).toString()
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).getRooms("clean", nowLocalDateTime, nowLocalDateTime)
+        Mockito.doReturn("09:00").`when`(mockUserRoomRepository).utcToLocalTime("09:00")
+        Mockito.doReturn(true).`when`(mockUserRoomRepository).isOpen("clean", "ct", Array(1) { "array" })
+
+        val response = null
 
         Mockito.doAnswer { invocation ->
             val callback: Callback<Rooms> = invocation.getArgument(0)
@@ -123,5 +147,19 @@ class UserRoomsRepositoryTest {
 
         mockUserRoomRepository.userRooms("clean")
         assertTrue(mockUserRoomRepository.serverResponse.value?.peekContent() == Result.Error(exception = "Timeout"))
+    }
+
+    @Test
+    fun isOpen_check() {
+        assertTrue(!mockUserRoomRepository.isOpen("10:00", "12:00", arrayOf()))
+    }
+
+    @Test
+    fun utcToLocalTime_test() {
+        val utcTime = LocalTime.now(ZoneOffset.UTC)
+        val utcDate = LocalDate.now(ZoneOffset.UTC)
+        val utcTimeDate = ZonedDateTime.of(utcDate, utcTime, ZoneOffset.UTC)
+        val result = utcTimeDate.withZoneSameInstant(TimeZone.getDefault().toZoneId()).toLocalTime().toString()
+        assertTrue(mockUserRoomRepository.utcToLocalTime(utcTime.toString()) == result)
     }
 }

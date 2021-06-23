@@ -43,7 +43,7 @@ class DeskInfoRepositoryTest {
     }
 
     @Test
-    fun changePassword_correct() {
+    fun deskInfo_correct() {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDeskInfo::class.java)
         Mockito.doReturn(mockCall).`when`(mockRetrofit).getDeskInfo("token", "stanza1")
 
@@ -60,7 +60,24 @@ class DeskInfoRepositoryTest {
     }
 
     @Test
-    fun changePassword_error() {
+    fun deskInfo_some_null() {
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDeskInfo::class.java)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).getDeskInfo("token", "stanza1")
+
+        val response = null
+
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<DeskInfo> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
+
+        mockDeskInfoRepository.deskInfo("token", "stanza1")
+        assertTrue(mockDeskInfoRepository.serverResponse.value?.peekContent() is Result.Success)
+    }
+
+    @Test
+    fun deskInfo_error() {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDeskInfo::class.java)
         Mockito.doReturn(mockCall).`when`(mockRetrofit).getDeskInfo("token", "stanza1")
 
@@ -78,7 +95,7 @@ class DeskInfoRepositoryTest {
     }
 
     @Test
-    fun changePassword_exception() {
+    fun deskInfo_exception() {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDeskInfo::class.java)
         Mockito.doReturn(mockCall).`when`(mockRetrofit).getDeskInfo("token", "stanza1")
 

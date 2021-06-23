@@ -146,4 +146,44 @@ class EditReservationViewModelTest {
         assertTrue(mockEditReservationViewModel.editReservationForm.value?.exitTimeError == 2131755176)
         assertTrue(mockEditReservationViewModel.editReservationForm.value?.selectedDateError == 2131755177)
     }
+
+    @Test
+    fun inputDataChanged_check_1() {
+        val localDateTime = LocalDateTime.parse("2021-12-04T10:00")
+        mockEditReservationViewModel.inputDataChanged(
+            localDateTime, "11:00", "10:00", "2021-12-04", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockEditReservationViewModel.editReservationForm.value?.isDataValid == false)
+    }
+
+    @Test
+    fun inputDataChanged_check_2() {
+        val localDateTime = LocalDateTime.parse("2021-01-04T09:00")
+        mockEditReservationViewModel.inputDataChanged(
+            localDateTime, "10:00", "10:00", "2021-01-04", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockEditReservationViewModel.editReservationForm.value?.isDataValid == true)
+    }
+
+    @Test
+    fun inputDataChanged_check_3() {
+        val localDateTime = LocalDateTime.parse("2021-12-04T10:00")
+        mockEditReservationViewModel.inputDataChanged(
+            localDateTime, "09:00", "10:00", "2021-01-04", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockEditReservationViewModel.editReservationForm.value?.isDataValid == false)
+    }
+
+    @Test
+    fun inputDataChanged_check_4() {
+        val localDateTime = LocalDateTime.parse("2021-12-04T10:00")
+        mockEditReservationViewModel.inputDataChanged(
+            localDateTime, "09:00", "10:00", "2021-12-04", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockEditReservationViewModel.editReservationForm.value?.isDataValid == false)
+    }
 }

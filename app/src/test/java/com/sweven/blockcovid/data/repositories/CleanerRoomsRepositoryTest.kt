@@ -22,6 +22,11 @@ import org.mockito.Mockito
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.util.TimeZone
 import java.util.concurrent.TimeoutException
 
 class CleanerRoomsRepositoryTest {
@@ -58,7 +63,7 @@ class CleanerRoomsRepositoryTest {
                 List(1) {
                     RoomWithDesksList(
                         Room(
-                            "Stanza", false, "09:00", "11:00", List(1) { "MONDAY" },
+                            "Stanza", false, "02:00", "23:00", listOf("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"),
                             10, 10, "CLEAN"
                         ),
                         List(1) { Desk("123ABC", 1, 1, true) },
@@ -71,6 +76,25 @@ class CleanerRoomsRepositoryTest {
             ),
             Links(Self("link4"))
         )
+
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<Rooms> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
+
+        mockCleanerRoomRepository.cleanerRooms("clean")
+        assertTrue(mockCleanerRoomRepository.serverResponse.value?.peekContent() is Result.Success)
+    }
+
+    @Test
+    fun cleanerRooms_null() {
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIRooms::class.java)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).getRooms(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())
+        Mockito.doReturn("09:00").`when`(mockCleanerRoomRepository).utcToLocalTime(Mockito.anyString())
+        Mockito.doReturn(true).`when`(mockCleanerRoomRepository).isOpen(Mockito.anyString(), Mockito.anyString(), Array(Mockito.anyInt()) { Mockito.anyString() })
+
+        val response = null
 
         Mockito.doAnswer { invocation ->
             val callback: Callback<Rooms> = invocation.getArgument(0)
@@ -113,5 +137,19 @@ class CleanerRoomsRepositoryTest {
 
         mockCleanerRoomRepository.cleanerRooms("")
         assertTrue(mockCleanerRoomRepository.serverResponse.value?.peekContent() == Result.Error(exception = "Timeout"))
+    }
+
+    @Test
+    fun isOpen_check() {
+        assertTrue(!mockCleanerRoomRepository.isOpen("10:00", "12:00", arrayOf()))
+    }
+
+    @Test
+    fun utcToLocalTime_test() {
+        val utcTime = LocalTime.now(ZoneOffset.UTC)
+        val utcDate = LocalDate.now(ZoneOffset.UTC)
+        val utcTimeDate = ZonedDateTime.of(utcDate, utcTime, ZoneOffset.UTC)
+        val result = utcTimeDate.withZoneSameInstant(TimeZone.getDefault().toZoneId()).toLocalTime().toString()
+        assertTrue(mockCleanerRoomRepository.utcToLocalTime(utcTime.toString()) == result)
     }
 }

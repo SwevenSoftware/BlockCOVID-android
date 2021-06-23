@@ -112,10 +112,61 @@ class CustomReservationViewModelTest {
         assertTrue(mockCustomReservationViewModel.customReservationForm.value?.exitTimeError == 2131755176)
         assertTrue(mockCustomReservationViewModel.customReservationForm.value?.selectedDateError == 2131755177)
     }
+
     @Test
-    fun isOpenInterval_test() {
+    fun inputDataChanged_check_1() {
+        val localDateTime = LocalDateTime.parse("2021-01-01T10:00")
+        mockCustomReservationViewModel.inputDataChanged(
+            localDateTime, "10:00", "09:00", "2021-01-01", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockCustomReservationViewModel.customReservationForm.value?.isDataValid == false)
+    }
+
+    @Test
+    fun inputDataChanged_check_2() {
+        val localDateTime = LocalDateTime.parse("2021-02-01T10:00")
+        mockCustomReservationViewModel.inputDataChanged(
+            localDateTime, "10:00", "11:00", "2021-01-01", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockCustomReservationViewModel.customReservationForm.value?.isDataValid == false)
+    }
+
+    @Test
+    fun inputDataChanged_check_3() {
+        val localDateTime = LocalDateTime.parse("2021-01-01T11:00")
+        mockCustomReservationViewModel.inputDataChanged(
+            localDateTime, "10:00", "11:00", "2021-01-01", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockCustomReservationViewModel.customReservationForm.value?.isDataValid == false)
+    }
+
+    @Test
+    fun isOpenInterval_test0() {
         assertTrue(
             !mockCustomReservationViewModel.isOpenInterval("10:00", "10:00", "2021-12-04", "10:00", "10:00", Array(1) { "MONDAY" })
+        )
+    }
+
+    @Test
+    fun isOpenInterval_test1() {
+        assertTrue(
+            !mockCustomReservationViewModel.isOpenInterval(
+                "10:00", "10:00", "2021-12-04", "09:00", "10:00",
+                arrayOf("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY")
+            )
+        )
+    }
+
+    @Test
+    fun isOpenInterval_test2() {
+        assertTrue(
+            mockCustomReservationViewModel.isOpenInterval(
+                "10:00", "10:00", "2021-12-04", "09:00", "11:00",
+                arrayOf("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY")
+            )
         )
     }
 }
