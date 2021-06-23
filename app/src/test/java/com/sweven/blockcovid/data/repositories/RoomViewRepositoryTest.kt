@@ -77,6 +77,24 @@ class RoomViewRepositoryTest {
     }
 
     @Test
+    fun cleanerRooms_null() {
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDesks::class.java)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).getDesks("authorization", "roomName", "17:00", "18:00")
+        Mockito.doReturn("09:00").`when`(mockRoomViewRepository).UTCToLocalTime("17:00")
+
+        val response = null
+
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<RoomWithDesks> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
+
+        mockRoomViewRepository.showRoom("17:00", "18:00", "authorization", "roomName")
+        assertTrue(mockRoomViewRepository.serverResponse.value?.peekContent() is Result.Success)
+    }
+
+    @Test
     fun cleanerRoom_error() {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDesks::class.java)
         Mockito.doReturn(mockCall).`when`(mockRetrofit).getDesks("authorization", "roomName", "17:00", "18:00")
@@ -106,5 +124,11 @@ class RoomViewRepositoryTest {
 
         mockRoomViewRepository.showRoom("17:00", "18:00", "authorization", "roomName")
         assertTrue(mockRoomViewRepository.serverResponse.value?.peekContent() == Result.Error(exception = "Timeout"))
+    }
+
+    @Test
+    fun utcToLocalDateTime_test() {
+        val result = "12:00"
+        assertTrue(mockRoomViewRepository.UTCToLocalTime("10:00") == result)
     }
 }

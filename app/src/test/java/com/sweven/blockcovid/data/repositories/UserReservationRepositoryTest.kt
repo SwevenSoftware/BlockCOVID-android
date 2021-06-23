@@ -24,6 +24,7 @@ import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
+import java.util.TimeZone
 import java.util.concurrent.TimeoutException
 
 class UserReservationRepositoryTest {
@@ -85,6 +86,26 @@ class UserReservationRepositoryTest {
     }
 
     @Test
+    fun cleanerRooms_null() {
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIReservations::class.java)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).getReservations("authorization", "timestamp")
+        val localDateTime = LocalDateTime.parse("1996-12-04T09:09")
+        val zoneDateTime = ZonedDateTime.of(localDateTime, ZoneOffset.UTC)
+        Mockito.doReturn(zoneDateTime).`when`(mockUserReservationsRepository).UTCToLocalDateTime("1996-12-04T09:09")
+
+        val response = null
+
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<Reservations> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
+
+        mockUserReservationsRepository.userReservations("authorization", "timestamp")
+        assertTrue(mockUserReservationsRepository.serverResponse.value?.peekContent() is Result.Success)
+    }
+
+    @Test
     fun cleanerRoom_error() {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIReservations::class.java)
         Mockito.doReturn(mockCall).`when`(mockRetrofit).getReservations("authorization", "timestamp")
@@ -116,5 +137,12 @@ class UserReservationRepositoryTest {
 
         mockUserReservationsRepository.userReservations("authorization", "timestamp")
         assertTrue(mockUserReservationsRepository.serverResponse.value?.peekContent() == Result.Error(exception = "Timeout"))
+    }
+
+    @Test
+    fun utcToLocalDateTime_test() {
+        val localDateTime = LocalDateTime.parse("2021-06-23T10:00")
+        val result = ZonedDateTime.of(localDateTime, ZoneOffset.UTC).withZoneSameInstant(TimeZone.getDefault().toZoneId())
+        assertTrue(mockUserReservationsRepository.UTCToLocalDateTime("2021-06-23T10:00") == result)
     }
 }

@@ -69,6 +69,48 @@ class DeskStatusRepositoryTest {
     }
 
     @Test
+    fun cleanerRooms_some_null() {
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDeskStatus::class.java)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).getDeskStatus("authorization", "timestamp", "from")
+        Mockito.doReturn(mockDateTime).`when`(mockDeskStatusRepository).UTCToLocalDateTime("1996-12-04T09:09")
+
+        val response = DeskStatusLinks(
+            true, null,
+            Link(
+                "rel", "href", "hreflang",
+                "media", "title", "type", "deprecation", "profile", "name"
+            )
+        )
+
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<DeskStatusLinks> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
+
+        mockDeskStatusRepository.deskStatus("authorization", "timestamp", "from")
+        assertTrue(mockDeskStatusRepository.serverResponse.value?.peekContent() is Result.Success)
+    }
+
+    @Test
+    fun cleanerRooms_null() {
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDeskStatus::class.java)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).getDeskStatus("authorization", "timestamp", "from")
+        Mockito.doReturn(mockDateTime).`when`(mockDeskStatusRepository).UTCToLocalDateTime("1996-12-04T09:09")
+
+        val response = null
+
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<DeskStatusLinks> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
+
+        mockDeskStatusRepository.deskStatus("authorization", "timestamp", "from")
+        assertTrue(mockDeskStatusRepository.serverResponse.value?.peekContent() is Result.Success)
+    }
+
+    @Test
     fun cleanerRoom_error() {
         Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDeskStatus::class.java)
         Mockito.doReturn(mockCall).`when`(mockRetrofit).getDeskStatus("authorization", "timestamp", "from")
@@ -100,5 +142,11 @@ class DeskStatusRepositoryTest {
 
         mockDeskStatusRepository.deskStatus("authorization", "timestamp", "from")
         assertTrue(mockDeskStatusRepository.serverResponse.value?.peekContent() == Result.Error(exception = "Timeout"))
+    }
+
+    @Test
+    fun utcToLocalDateTime_test() {
+        val result = LocalDateTime.parse("2021-06-23T12:00")
+        assertTrue(mockDeskStatusRepository.UTCToLocalDateTime("2021-06-23T10:00") == result)
     }
 }

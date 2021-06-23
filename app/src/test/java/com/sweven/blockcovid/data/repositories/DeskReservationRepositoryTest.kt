@@ -57,7 +57,15 @@ class DeskReservationRepositoryTest {
 
         val response = Reservations(
             Embedded(
-                List(1) {
+                List(2) {
+                    Reservation(
+                        "id", "deskid", "room", "username", "1996-12-04T07:09",
+                        "1996-12-04T10:10", "1996-12-04T09:09", "1996-12-04T10:10", true, true,
+                        ReservationLinks(
+                            NewReservation("link1"), SelfReservations("link2", true),
+                            SelfReservations("link2", true), SelfReservations("link3", true)
+                        )
+                    )
                     Reservation(
                         "id", "deskid", "room", "username", "1996-12-04T09:09",
                         "1996-12-04T10:10", "1996-12-04T09:09", "1996-12-04T10:10", true, true,
@@ -70,6 +78,64 @@ class DeskReservationRepositoryTest {
             ),
             ReservationsLinks(SelfReservations("string", true))
         )
+
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<Reservations> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
+
+        mockDeskReservationRepository.deskReservation("authorization", "deskid", "from")
+        assertTrue(mockDeskReservationRepository.serverResponse.value?.peekContent() is Result.Success)
+    }
+
+    @Test
+    fun cleanerRooms_some_null() {
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDeskReservation::class.java)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).getDeskReservation("authorization", "deskid", "from")
+        Mockito.doReturn(mockDateTime).`when`(mockDeskReservationRepository).UTCToLocalDateTime("1996-12-04T09:09")
+
+        val response = Reservations(
+            Embedded(
+                List(2) {
+                    Reservation(
+                        "id", "deskid", "room", "username", "1996-12-04T07:09",
+                        "1996-12-04T10:10", null, null, true, true,
+                        ReservationLinks(
+                            NewReservation("link1"), SelfReservations("link2", true),
+                            SelfReservations("link2", true), SelfReservations("link3", true)
+                        )
+                    )
+                    Reservation(
+                        "id", "deskid", "room", "username", "1996-12-04T05:09",
+                        "1996-12-04T10:10", null, null, true, true,
+                        ReservationLinks(
+                            NewReservation("link1"), SelfReservations("link2", true),
+                            SelfReservations("link2", true), SelfReservations("link3", true)
+                        )
+                    )
+                }
+            ),
+            ReservationsLinks(SelfReservations("string", true))
+        )
+
+        Mockito.doAnswer { invocation ->
+            val callback: Callback<Reservations> = invocation.getArgument(0)
+            callback.onResponse(mockCall, Response.success(response))
+            null
+        }.`when`(mockCall).enqueue(Mockito.any())
+
+        mockDeskReservationRepository.deskReservation("authorization", "deskid", "from")
+        assertTrue(mockDeskReservationRepository.serverResponse.value?.peekContent() is Result.Success)
+    }
+
+    @Test
+    fun cleanerRooms_null() {
+        Mockito.doReturn(mockRetrofit).`when`(mockNetworkClient).buildService(APIDeskReservation::class.java)
+        Mockito.doReturn(mockCall).`when`(mockRetrofit).getDeskReservation("authorization", "deskid", "from")
+        Mockito.doReturn(mockDateTime).`when`(mockDeskReservationRepository).UTCToLocalDateTime("1996-12-04T09:09")
+
+        val response = null
 
         Mockito.doAnswer { invocation ->
             val callback: Callback<Reservations> = invocation.getArgument(0)
@@ -113,5 +179,11 @@ class DeskReservationRepositoryTest {
 
         mockDeskReservationRepository.deskReservation("authorization", "deskid", "from")
         assertTrue(mockDeskReservationRepository.serverResponse.value?.peekContent() == Result.Error(exception = "Timeout"))
+    }
+
+    @Test
+    fun utcToLocalDateTime_test() {
+        val result = LocalDateTime.parse("2021-06-23T12:00")
+        assertTrue(mockDeskReservationRepository.UTCToLocalDateTime("2021-06-23T10:00") == result)
     }
 }

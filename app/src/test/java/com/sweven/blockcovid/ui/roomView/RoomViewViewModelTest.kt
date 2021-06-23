@@ -87,6 +87,46 @@ class RoomViewViewModelTest {
     }
 
     @Test
+    fun inputDataChanged_check1() {
+        val localDateTime = LocalDateTime.parse("2021-12-04T10:00")
+        mockRoomViewViewModel.inputDataChanged(
+            localDateTime, "11:00", "10:00", "2021-12-04", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockRoomViewViewModel.roomViewForm.value?.isDataValid == false)
+    }
+
+    @Test
+    fun inputDataChanged_check2() {
+        val localDateTime = LocalDateTime.parse("2021-12-04T10:00")
+        mockRoomViewViewModel.inputDataChanged(
+            localDateTime, "10:00", "10:00", "2021-01-04", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockRoomViewViewModel.roomViewForm.value?.isDataValid == false)
+    }
+
+    @Test
+    fun inputDataChanged_check3() {
+        val localDateTime = LocalDateTime.parse("2021-01-04T10:00")
+        mockRoomViewViewModel.inputDataChanged(
+            localDateTime, "09:00", "10:00", "2021-01-04", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockRoomViewViewModel.roomViewForm.value?.isDataValid == false)
+    }
+
+    @Test
+    fun inputDataChanged_check_4() {
+        val localDateTime = LocalDateTime.parse("2021-01-04T09:00")
+        mockRoomViewViewModel.inputDataChanged(
+            localDateTime, "10:00", "10:00", "2021-01-04", "10:00", "10:00",
+            Array(1) { "MONDAY" }
+        )
+        assertTrue(mockRoomViewViewModel.roomViewForm.value?.isDataValid == true)
+    }
+
+    @Test
     fun isOpenInterval_test() {
         assertTrue(
             !mockRoomViewViewModel.isOpenInterval("10:00", "10:00", "2021-12-04", "10:00", "10:00", Array(1) { "MONDAY" })
